@@ -39,7 +39,7 @@ export async function generateMetadata(
         openGraph: {
             title: property.title,
             description: `Valor: ${property.price?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} | ${property.neighborhood}, ${property.city}`,
-            url: `https://katiaeflavioimoveis.com.br/imovel/${slug}`,
+            url: `https://www.katiaeflavioimoveis.com.br/imovel/${slug}`,
             siteName: 'Kátia e Flávio Imóveis',
             images: [
                 {

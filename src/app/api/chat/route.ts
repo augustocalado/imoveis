@@ -44,7 +44,7 @@ async function getInventory() {
                 const urlCode = p.slug || p.id || 'notfound';
                 const ref = (p.id || '000000').substring(0, 6).toUpperCase();
 
-                return `- Ref ${ref}: [${tipo}] ${p.title} em ${local}. Preço: ${preco}${detalhes}${desc}. Link: https://katiaeflavioimoveis.com.br/imovel/${urlCode}`;
+                return `- Ref ${ref}: [${tipo}] ${p.title} em ${local}. Preço: ${preco}${detalhes}${desc}. Link: https://www.katiaeflavioimoveis.com.br/imovel/${urlCode}`;
             }).join('\n    ');
         }
     } catch (e) {
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
                     headers: {
                         "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
                         "Content-Type": "application/json",
-                        "HTTP-Referer": "https://katiaeflavioimoveis.com.br",
+                        "HTTP-Referer": "https://www.katiaeflavioimoveis.com.br",
                         "X-Title": "Kátia e Flávio Imóveis"
                     },
                     body: JSON.stringify({ 

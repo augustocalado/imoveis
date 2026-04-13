@@ -9,6 +9,7 @@ const anekLatin = Anek_Latin({
 });
 
 export const metadata: Metadata = {
+    metadataBase: new URL("https://www.katiaeflavioimoveis.com.br"),
     title: {
         default: "Kátia e Flávio Imóveis | Imóveis em Praia Grande SP | Apartamentos à venda",
         template: "%s | Kátia e Flávio Imóveis",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     creator: "Kátia e Flávio Imóveis",
     publisher: "Kátia e Flávio Imóveis",
     alternates: {
-        canonical: 'https://katiaeflavioimoveis.com.br',
+        canonical: 'https://www.katiaeflavioimoveis.com.br',
     },
     icons: {
         icon: '/logo.png',
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     openGraph: {
         type: "website",
         locale: "pt_BR",
-        url: "https://katiaeflavioimoveis.com.br",
+        url: "https://www.katiaeflavioimoveis.com.br",
         siteName: "Kátia e Flávio Imóveis",
         title: "Kátia e Flávio Imóveis | Oportunidades em Praia Grande SP",
         description: "Confira nosso catálogo completo de imóveis em Praia Grande e fale com um especialista agora mesmo.",
