@@ -1,0 +1,945 @@
+﻿commit d81f0cacb08bdfa09c3fbdea9fb1f80de4d2cc94
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Tue Mar 24 08:47:49 2026 -0300
+
+    feat: create sitemap page and add link to footer
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index f6c2c68..553896c 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -49,6 +49,7 @@ export default function Footer() {
+                     <ul className="space-y-4 text-sm font-bold text-gray-400">
+                         <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├ítia e Fl├ívio</Link></li>
+                         <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
++                        <li><Link href="/mapa-do-site" className="hover:text-white transition-colors">Mapa do Site</Link></li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Pol├¡tica de Privacidade</li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
+                     </ul>
+
+commit c086f332cae48265d53793dd79edbc308af71754
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Tue Mar 24 08:46:06 2026 -0300
+
+    feat: implement drag and drop image reordering in property creation and update label
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index a563ffd..f6c2c68 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -31,16 +31,6 @@ export default function Footer() {
+                         </p>
+                     </div>
+ 
+-                    <div className="space-y-4">
+-                        <div className="flex items-start gap-4 text-gray-400 group">
+-                            <MapPin className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-[13px] leading-relaxed">Meridian Prime Offices<br />Rua Fumio Miyazi, 141 - Sala 811<br />Boqueir├úo - Praia Grande/SP</span>
+-                        </div>
+-                        <div className="flex items-center gap-4 text-gray-400 group">
+-                            <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-[13px]">(13) 99782-6694 / 99679-4782</span>
+-                        </div>
+-                    </div>
+                 </div>
+ 
+                 <div className="space-y-6 md:pt-4">
+@@ -65,13 +55,21 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-8 md:pt-4">
+-                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+-                    <p className="text-sm text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
+-                    <div className="flex gap-2">
+-                        <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-sm flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
+-                        <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
+-                            <ArrowRight className="h-4 w-4" />
+-                        </button>
++                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Onde Estamos</h4>
++                    <div className="space-y-6">
++                        <div className="flex items-start gap-4 text-gray-400 group">
++                            <MapPin className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
++                            <span className="text-[13px] leading-relaxed">Meridian Prime Offices<br />Rua Fumio Miyazi, 141 - Sala 811<br />Boqueir├úo - Praia Grande/SP</span>
++                        </div>
++                        <div className="flex items-center gap-4 text-gray-400 group">
++                            <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
++                            <span className="text-[13px]">(13) 99782-6694 / 99679-4782</span>
++                        </div>
++                        <div className="flex items-center gap-4 text-white/40 pt-4 border-t border-white/5">
++                            <Link href="#" className="hover:text-accent transition-colors"><Instagram className="h-5 w-5" /></Link>
++                            <Link href="#" className="hover:text-accent transition-colors"><Facebook className="h-5 w-5" /></Link>
++                            <Link href="#" className="hover:text-accent transition-colors"><Mail className="h-5 w-5" /></Link>
++                        </div>
+                     </div>
+                 </div>
+             </div>
+
+commit 540c6755957de6747b1b84eadcdbc9ae90d4b4b5
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 22:35:51 2026 -0300
+
+    style: align footer columns and improve layout
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 077b0da..a563ffd 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -16,45 +16,45 @@ export default function Footer() {
+ 
+     return (
+         <footer className="bg-primary-900 pt-32 pb-16 ">
+-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
+-                <div className="space-y-6">
+-                    <div className="flex flex-col -ml-4">
++            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20 items-start">
++                <div className="space-y-8">
++                    <div className="flex flex-col">
+                         <img
+                             src={logoUrl}
+                             alt="K├ítia e Fl├ívio Im├│veis"
+-                            width={180}
+-                            height={60}
+-                            className="h-32 w-auto object-contain brightness-110 drop-shadow-2xl"
++                            width={140}
++                            height={50}
++                            className="h-24 w-auto object-contain brightness-110 drop-shadow-2xl mb-6"
+                         />
+-                        <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-sm">
++                        <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-sm text-sm">
+                             K├ítia e Fl├ívio Im├│veis: Sua refer├¬ncia em im├│veis de alto padr├úo e oportunidades exclusivas em Praia Grande SP.
+                         </p>
+                     </div>
+ 
+-                    <div className="space-y-6">
++                    <div className="space-y-4">
+                         <div className="flex items-start gap-4 text-gray-400 group">
+                             <MapPin className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-sm">Meridian Prime Offices<br />Rua Fumio Miyazi, 141 - Sala 811<br />Boqueir├úo - Praia Grande/SP</span>
++                            <span className="text-[13px] leading-relaxed">Meridian Prime Offices<br />Rua Fumio Miyazi, 141 - Sala 811<br />Boqueir├úo - Praia Grande/SP</span>
+                         </div>
+                         <div className="flex items-center gap-4 text-gray-400 group">
+                             <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-sm">(13) 99782-6694 / 99679-4782</span>
++                            <span className="text-[13px]">(13) 99782-6694 / 99679-4782</span>
+                         </div>
+                     </div>
+                 </div>
+ 
+-                <div className="space-y-6">
++                <div className="space-y-6 md:pt-4">
+                     <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├üreas</h4>
+                     <ul className="space-y-3 text-sm font-semibold text-white/40">
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
+                         <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├ºamentos em Praia Grande</Link></li>
+-                        <li><Link href="/bairros" className="hover:text-white transition-colors">Bairros e Cidades</Link></li>
++                        <li><Link href="/bairros" className="hover:text-white transition-colors text-accent">Bairros e Cidades</Link></li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├│vel</li>
+                     </ul>
+                 </div>
+ 
+-                <div className="space-y-6">
++                <div className="space-y-6 md:pt-4">
+                     <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
+                     <ul className="space-y-4 text-sm font-bold text-gray-400">
+                         <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├ítia e Fl├ívio</Link></li>
+@@ -64,7 +64,7 @@ export default function Footer() {
+                     </ul>
+                 </div>
+ 
+-                <div className="space-y-8">
++                <div className="space-y-8 md:pt-4">
+                     <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+                     <p className="text-sm text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
+                     <div className="flex gap-2">
+
+commit 7345fc437500d31d74a1398510e78992ebf2b8dc
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 22:26:33 2026 -0300
+
+    feat: bairros e cidades page, z-index fixes, and search refinement
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 994d447..077b0da 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -49,7 +49,7 @@ export default function Footer() {
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
+                         <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├ºamentos em Praia Grande</Link></li>
+-                        <li><Link href="/imoveis" className="hover:text-white transition-colors">Bairros e Cidades</Link></li>
++                        <li><Link href="/bairros" className="hover:text-white transition-colors">Bairros e Cidades</Link></li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├│vel</li>
+                     </ul>
+                 </div>
+
+commit dc4971c50517481856706e358fac8c2397efc3be
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 22:09:59 2026 -0300
+
+    feat: cep auto-complete and footer fixes
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 5b34327..994d447 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -44,11 +44,12 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-6">
+-                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├â├âÔÇÜ├é┬üreas</h4>
++                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├üreas</h4>
+                     <ul className="space-y-3 text-sm font-semibold text-white/40">
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
+                         <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├ºamentos em Praia Grande</Link></li>
++                        <li><Link href="/imoveis" className="hover:text-white transition-colors">Bairros e Cidades</Link></li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├│vel</li>
+                     </ul>
+                 </div>
+@@ -86,4 +87,3 @@ export default function Footer() {
+         </footer>
+     );
+ }
+-
+
+commit e1700dc580227b0f6c8d2b9764b5fe1487053836
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 20:47:00 2026 -0300
+
+    style: increase font sizes project-wide
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 6980492..5b34327 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -44,7 +44,7 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-6">
+-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├â├âÔÇÜ├é┬üreas</h4>
++                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├â├âÔÇÜ├é┬üreas</h4>
+                     <ul className="space-y-3 text-sm font-semibold text-white/40">
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
+@@ -54,7 +54,7 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-6">
+-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
++                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
+                     <ul className="space-y-4 text-sm font-bold text-gray-400">
+                         <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├ítia e Fl├ívio</Link></li>
+                         <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
+@@ -64,10 +64,10 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-8">
+-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+-                    <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
++                    <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
++                    <p className="text-sm text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
+                     <div className="flex gap-2">
+-                        <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
++                        <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-sm flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
+                         <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
+                             <ArrowRight className="h-4 w-4" />
+                         </button>
+@@ -77,7 +77,7 @@ export default function Footer() {
+ 
+             <div className="max-w-7xl mx-auto px-4">
+                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├üTIA E FL├üVIO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <p className="text-[11px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├üTIA E FL├üVIO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+                     <div className="flex gap-4">
+                         <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                     </div>
+@@ -86,3 +86,4 @@ export default function Footer() {
+         </footer>
+     );
+ }
++
+
+commit b379a943dfc5d1f6dbefa814a1c6a8fd6a2289a8
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 12:54:18 2026 -0300
+
+    feat: atualizacao de telefones de contato e links whatsapp
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 9844d67..6980492 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -38,7 +38,7 @@ export default function Footer() {
+                         </div>
+                         <div className="flex items-center gap-4 text-gray-400 group">
+                             <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-sm">(13) 3474-0000</span>
++                            <span className="text-sm">(13) 99782-6694 / 99679-4782</span>
+                         </div>
+                     </div>
+                 </div>
+
+commit e1bb0635c7922ccfa222eae7d983b769cf2d3206
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 12:28:21 2026 -0300
+
+    feat: atualizacao de endereco comercial e correcoes finais
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index e748283..9844d67 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -34,7 +34,7 @@ export default function Footer() {
+                     <div className="space-y-6">
+                         <div className="flex items-start gap-4 text-gray-400 group">
+                             <MapPin className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-sm">Canto do Forte<br />Praia Grande - SP</span>
++                            <span className="text-sm">Meridian Prime Offices<br />Rua Fumio Miyazi, 141 - Sala 811<br />Boqueir├úo - Praia Grande/SP</span>
+                         </div>
+                         <div className="flex items-center gap-4 text-gray-400 group">
+                             <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+
+commit 90073241f370564aa48626508182d15f03e9fe59
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Mon Mar 23 09:16:06 2026 -0300
+
+    revert: removendo modal de leads e newsletter que estavam instabilizando pacotes na vercel
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 847c0fb..e748283 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -5,9 +5,6 @@ import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight, Loader2, CheckCir
+ 
+ export default function Footer() {
+     const [logoUrl, setLogoUrl] = useState('/logo.png');
+-    const [email, setEmail] = useState('');
+-    const [isSubmitting, setIsSubmitting] = useState(false);
+-    const [isSuccess, setIsSuccess] = useState(false);
+ 
+     useEffect(() => {
+         const fetchLogo = async () => {
+@@ -69,45 +66,11 @@ export default function Footer() {
+                 <div className="space-y-8">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+                     <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
+-                    <div className="flex gap-2 relative">
+-                        {isSuccess ? (
+-                            <div className="flex items-center gap-2 text-accent font-bold text-[10px] uppercase animate-in fade-in zoom-in duration-500">
+-                                <CheckCircle2 className="h-4 w-4" /> E-mail cadastrado!
+-                            </div>
+-                        ) : (
+-                            <>
+-                                <input
+-                                    type="email"
+-                                    placeholder="Seu melhor e-mail"
+-                                    className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white"
+-                                    value={email}
+-                                    onChange={(e) => setEmail(e.target.value)}
+-                                    disabled={isSubmitting}
+-                                />
+-                                <button
+-                                    onClick={async () => {
+-                                        if (!email) return;
+-                                        setIsSubmitting(true);
+-                                        const { error } = await supabase.from('leads').insert({
+-                                            name: 'Newsletter Subscriber',
+-                                            customer_whatsapp: 'E-mail: ' + email,
+-                                            message: 'Inscrito via Newsletter no Rodap├®',
+-                                            status: 'novo'
+-                                        });
+-                                        if (!error) {
+-                                            setIsSuccess(true);
+-                                            setEmail('');
+-                                            setTimeout(() => setIsSuccess(false), 3000);
+-                                        }
+-                                        setIsSubmitting(false);
+-                                    }}
+-                                    disabled={isSubmitting}
+-                                    className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20 flex items-center justify-center min-w-[48px]"
+-                                >
+-                                    {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+-                                </button>
+-                            </>
+-                        )}
++                    <div className="flex gap-2">
++                        <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
++                        <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
++                            <ArrowRight className="h-4 w-4" />
++                        </button>
+                     </div>
+                 </div>
+             </div>
+
+commit 93f84a164151ed2b6cf58aa07233be1b53ed8089
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 23:07:34 2026 -0300
+
+    feat: implementa├º├úo completa de captura de leads (Home, Footer, Detalhes) e sincroniza├º├úo com CRM
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 81f6ed3..847c0fb 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -1,10 +1,13 @@
+ ´╗┐import { useEffect, useState } from 'react';
+ import { supabase } from '@/lib/supabase';
+ import Link from 'next/link';
+-import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight } from 'lucide-react';
++import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+ 
+ export default function Footer() {
+     const [logoUrl, setLogoUrl] = useState('/logo.png');
++    const [email, setEmail] = useState('');
++    const [isSubmitting, setIsSubmitting] = useState(false);
++    const [isSuccess, setIsSuccess] = useState(false);
+ 
+     useEffect(() => {
+         const fetchLogo = async () => {
+@@ -66,11 +69,45 @@ export default function Footer() {
+                 <div className="space-y-8">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+                     <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
+-                    <div className="flex gap-2">
+-                        <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
+-                        <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
+-                            <ArrowRight className="h-4 w-4" />
+-                        </button>
++                    <div className="flex gap-2 relative">
++                        {isSuccess ? (
++                            <div className="flex items-center gap-2 text-accent font-bold text-[10px] uppercase animate-in fade-in zoom-in duration-500">
++                                <CheckCircle2 className="h-4 w-4" /> E-mail cadastrado!
++                            </div>
++                        ) : (
++                            <>
++                                <input
++                                    type="email"
++                                    placeholder="Seu melhor e-mail"
++                                    className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white"
++                                    value={email}
++                                    onChange={(e) => setEmail(e.target.value)}
++                                    disabled={isSubmitting}
++                                />
++                                <button
++                                    onClick={async () => {
++                                        if (!email) return;
++                                        setIsSubmitting(true);
++                                        const { error } = await supabase.from('leads').insert({
++                                            name: 'Newsletter Subscriber',
++                                            customer_whatsapp: 'E-mail: ' + email,
++                                            message: 'Inscrito via Newsletter no Rodap├®',
++                                            status: 'novo'
++                                        });
++                                        if (!error) {
++                                            setIsSuccess(true);
++                                            setEmail('');
++                                            setTimeout(() => setIsSuccess(false), 3000);
++                                        }
++                                        setIsSubmitting(false);
++                                    }}
++                                    disabled={isSubmitting}
++                                    className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20 flex items-center justify-center min-w-[48px]"
++                                >
++                                    {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
++                                </button>
++                            </>
++                        )}
+                     </div>
+                 </div>
+             </div>
+
+commit 5f2a7e9053c9d332cdff8fbf213b7f6e11d2a7a2
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 22:58:10 2026 -0300
+
+    feat: logo din├ómico para master e corre├º├úo de exibi├º├úo na home
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 6acae43..81f6ed3 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -1,14 +1,26 @@
+-´╗┐import Link from 'next/link';
++´╗┐import { useEffect, useState } from 'react';
++import { supabase } from '@/lib/supabase';
++import Link from 'next/link';
+ import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight } from 'lucide-react';
+ 
+ export default function Footer() {
++    const [logoUrl, setLogoUrl] = useState('/logo.png');
++
++    useEffect(() => {
++        const fetchLogo = async () => {
++            const { data } = await supabase.from('site_settings').select('value').eq('key', 'site_logo').single();
++            if (data) setLogoUrl(data.value);
++        };
++        fetchLogo();
++    }, []);
++
+     return (
+         <footer className="bg-primary-900 pt-32 pb-16 ">
+             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
+                 <div className="space-y-6">
+                     <div className="flex flex-col -ml-4">
+                         <img
+-                            src="/logo.png"
++                            src={logoUrl}
+                             alt="K├ítia e Fl├ívio Im├│veis"
+                             width={180}
+                             height={60}
+
+commit 6df60c3464c12681eb2e5ea9be1a36c8fe649f25
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 22:18:10 2026 -0300
+
+    feat: CRM Leads avan├ºado e reparos globais de codifica├º├úo/privacidade
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 1527fe6..6acae43 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -22,7 +22,7 @@ export default function Footer() {
+                     <div className="space-y-6">
+                         <div className="flex items-start gap-4 text-gray-400 group">
+                             <MapPin className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+-                            <span className="text-sm">Av. Marechal Mallet, 1200<br />Praia Grande - SP</span>
++                            <span className="text-sm">Canto do Forte<br />Praia Grande - SP</span>
+                         </div>
+                         <div className="flex items-center gap-4 text-gray-400 group">
+                             <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
+@@ -65,7 +65,7 @@ export default function Footer() {
+ 
+             <div className="max-w-7xl mx-auto px-4">
+                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">├é┬® 2026 K├â├âÔÇÜ├é┬üTIA E FL├â├âÔÇÜ├é┬üVIO IM├â├â┬ó├óÔÇÜ┬¼├àÔÇ£VEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├üTIA E FL├üVIO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+                     <div className="flex gap-4">
+                         <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                     </div>
+
+commit b0bd5458ecf5acb1c8ddf7f5f3ccbbf7653aa2e1
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 21:45:01 2026 -0300
+
+    fix: Filtro de endere├ºo, formul├írio de WhatsApp, exibi├º├úo de amenidades e atualiza├º├úo de e-mail
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 75efc48..1527fe6 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -1,9 +1,9 @@
+-import Link from 'next/link';
++´╗┐import Link from 'next/link';
+ import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight } from 'lucide-react';
+ 
+ export default function Footer() {
+     return (
+-        <footer className="bg-primary-900 pt-32 pb-16 font-outfit">
++        <footer className="bg-primary-900 pt-32 pb-16 ">
+             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
+                 <div className="space-y-6">
+                     <div className="flex flex-col -ml-4">
+@@ -32,7 +32,7 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-6">
+-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├âãÆ├é┬üreas</h4>
++                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├â├âÔÇÜ├é┬üreas</h4>
+                     <ul className="space-y-3 text-sm font-semibold text-white/40">
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
+                         <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
+@@ -65,7 +65,7 @@ export default function Footer() {
+ 
+             <div className="max-w-7xl mx-auto px-4">
+                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├âãÆ├é┬üTIA E FL├âãÆ├é┬üVIO IM├âãÆ├óÔé¼┼ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">├é┬® 2026 K├â├âÔÇÜ├é┬üTIA E FL├â├âÔÇÜ├é┬üVIO IM├â├â┬ó├óÔÇÜ┬¼├àÔÇ£VEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+                     <div className="flex gap-4">
+                         <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                     </div>
+
+commit 4145226736d7a1ac57609b7a4a1abbb28804e661
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 21:35:46 2026 -0300
+
+    fix: Reparando double-encoding e caracteres corrompidos nas p├íginas
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 59b1cb0..75efc48 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -9,13 +9,13 @@ export default function Footer() {
+                     <div className="flex flex-col -ml-4">
+                         <img
+                             src="/logo.png"
+-                            alt="K├âãÆ├é┬ítia e Fl├âãÆ├é┬ívio Im├âãÆ├é┬│veis"
++                            alt="K├ítia e Fl├ívio Im├│veis"
+                             width={180}
+                             height={60}
+                             className="h-32 w-auto object-contain brightness-110 drop-shadow-2xl"
+                         />
+                         <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-sm">
+-                            K├âãÆ├é┬ítia e Fl├âãÆ├é┬ívio Im├âãÆ├é┬│veis: Sua refer├âãÆ├é┬¬ncia em im├âãÆ├é┬│veis de alto padr├âãÆ├é┬úo e oportunidades exclusivas em Praia Grande SP.
++                            K├ítia e Fl├ívio Im├│veis: Sua refer├¬ncia em im├│veis de alto padr├úo e oportunidades exclusivas em Praia Grande SP.
+                         </p>
+                     </div>
+ 
+@@ -34,26 +34,26 @@ export default function Footer() {
+                 <div className="space-y-6">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├âãÆ├é┬üreas</h4>
+                     <ul className="space-y-3 text-sm font-semibold text-white/40">
+-                        <li><Link href="/comprar" className="hover:text-white transition-colors">Im├âãÆ├é┬│veis no Canto do Forte</Link></li>
+-                        <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├âãÆ├é┬úo</Link></li>
+-                        <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├âãÆ├é┬ºamentos em Praia Grande</Link></li>
+-                        <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├âãÆ├é┬│vel</li>
++                        <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
++                        <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
++                        <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├ºamentos em Praia Grande</Link></li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├│vel</li>
+                     </ul>
+                 </div>
+ 
+                 <div className="space-y-6">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
+                     <ul className="space-y-4 text-sm font-bold text-gray-400">
+-                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├âãÆ├é┬ítia e Fl├âãÆ├é┬ívio</Link></li>
++                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├ítia e Fl├ívio</Link></li>
+                         <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
+-                        <li className="hover:text-white transition-colors cursor-pointer">Pol├âãÆ├é┬¡tica de Privacidade</li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Pol├¡tica de Privacidade</li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
+                     </ul>
+                 </div>
+ 
+                 <div className="space-y-8">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+-                    <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├âãÆ├é┬│veis em Praia Grande SP diretamente no seu e-mail.</p>
++                    <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
+                     <div className="flex gap-2">
+                         <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
+                         <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
+@@ -65,7 +65,7 @@ export default function Footer() {
+ 
+             <div className="max-w-7xl mx-auto px-4">
+                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">├âÔÇÜ├é┬® 2026 K├âãÆ├é┬üTIA E FL├âãÆ├é┬üVIO IM├âãÆ├óÔé¼┼ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├âãÆ├é┬üTIA E FL├âãÆ├é┬üVIO IM├âãÆ├óÔé¼┼ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+                     <div className="flex gap-4">
+                         <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                     </div>
+
+commit 140b25ec3664738a7e3bc61b5e323dc0d6e7ffd4
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 21:32:52 2026 -0300
+
+    fix: Corrigindo encoding dos arquivos para UTF-8
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 34416b6..59b1cb0 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -9,13 +9,13 @@ export default function Footer() {
+                     <div className="flex flex-col -ml-4">
+                         <img
+                             src="/logo.png"
+-                            alt="K├ítia e Fl├ívio Im├│veis"
++                            alt="K├âãÆ├é┬ítia e Fl├âãÆ├é┬ívio Im├âãÆ├é┬│veis"
+                             width={180}
+                             height={60}
+                             className="h-32 w-auto object-contain brightness-110 drop-shadow-2xl"
+                         />
+                         <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-sm">
+-                            K├ítia e Fl├ívio Im├│veis: Sua refer├¬ncia em im├│veis de alto padr├úo e oportunidades exclusivas em Praia Grande SP.
++                            K├âãÆ├é┬ítia e Fl├âãÆ├é┬ívio Im├âãÆ├é┬│veis: Sua refer├âãÆ├é┬¬ncia em im├âãÆ├é┬│veis de alto padr├âãÆ├é┬úo e oportunidades exclusivas em Praia Grande SP.
+                         </p>
+                     </div>
+ 
+@@ -32,28 +32,28 @@ export default function Footer() {
+                 </div>
+ 
+                 <div className="space-y-6">
+-                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├üreas</h4>
++                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├âãÆ├é┬üreas</h4>
+                     <ul className="space-y-3 text-sm font-semibold text-white/40">
+-                        <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
+-                        <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
+-                        <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├ºamentos em Praia Grande</Link></li>
+-                        <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├│vel</li>
++                        <li><Link href="/comprar" className="hover:text-white transition-colors">Im├âãÆ├é┬│veis no Canto do Forte</Link></li>
++                        <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├âãÆ├é┬úo</Link></li>
++                        <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├âãÆ├é┬ºamentos em Praia Grande</Link></li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├âãÆ├é┬│vel</li>
+                     </ul>
+                 </div>
+ 
+                 <div className="space-y-6">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
+                     <ul className="space-y-4 text-sm font-bold text-gray-400">
+-                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├ítia e Fl├ívio</Link></li>
++                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├âãÆ├é┬ítia e Fl├âãÆ├é┬ívio</Link></li>
+                         <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
+-                        <li className="hover:text-white transition-colors cursor-pointer">Pol├¡tica de Privacidade</li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Pol├âãÆ├é┬¡tica de Privacidade</li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
+                     </ul>
+                 </div>
+ 
+                 <div className="space-y-8">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
+-                    <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
++                    <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├âãÆ├é┬│veis em Praia Grande SP diretamente no seu e-mail.</p>
+                     <div className="flex gap-2">
+                         <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
+                         <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
+@@ -65,7 +65,7 @@ export default function Footer() {
+ 
+             <div className="max-w-7xl mx-auto px-4">
+                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├üTIA E FL├üVIO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">├âÔÇÜ├é┬® 2026 K├âãÆ├é┬üTIA E FL├âãÆ├é┬üVIO IM├âãÆ├óÔé¼┼ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+                     <div className="flex gap-4">
+                         <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                     </div>
+
+commit d20cd312cbc155604ed486bc7be6b922ec8efd99
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 21:29:32 2026 -0300
+
+    fix: Rebranding global para K├ítia e Fl├ívio Im├│veis e restaura├º├úo das caracter├¡sticas no admin
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index c49c9e7..34416b6 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -9,13 +9,13 @@ export default function Footer() {
+                     <div className="flex flex-col -ml-4">
+                         <img
+                             src="/logo.png"
+-                            alt="Augusto Calado Im├│veis"
++                            alt="K├ítia e Fl├ívio Im├│veis"
+                             width={180}
+                             height={60}
+                             className="h-32 w-auto object-contain brightness-110 drop-shadow-2xl"
+                         />
+                         <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-sm">
+-                            Augusto Calado Im├│veis: Sua refer├¬ncia em im├│veis de alto padr├úo e oportunidades exclusivas em Praia Grande SP.
++                            K├ítia e Fl├ívio Im├│veis: Sua refer├¬ncia em im├│veis de alto padr├úo e oportunidades exclusivas em Praia Grande SP.
+                         </p>
+                     </div>
+ 
+@@ -44,7 +44,7 @@ export default function Footer() {
+                 <div className="space-y-6">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
+                     <ul className="space-y-4 text-sm font-bold text-gray-400">
+-                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre Augusto Calado</Link></li>
++                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre K├ítia e Fl├ívio</Link></li>
+                         <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Pol├¡tica de Privacidade</li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
+@@ -65,7 +65,7 @@ export default function Footer() {
+ 
+             <div className="max-w-7xl mx-auto px-4">
+                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 AUGUSTO CALADO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 K├üTIA E FL├üVIO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+                     <div className="flex gap-4">
+                         <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                     </div>
+
+commit f3c87083417eb508b26becc2a3a0bcc29717681d
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sun Mar 22 20:18:31 2026 -0300
+
+    chore: branding global Augusto Calado e unificacao de contatos
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 26a66e8..c49c9e7 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -9,28 +9,24 @@ export default function Footer() {
+                     <div className="flex flex-col -ml-4">
+                         <img
+                             src="/logo.png"
+-                            alt="KF Im├│veis"
++                            alt="Augusto Calado Im├│veis"
++                            width={180}
++                            height={60}
+                             className="h-32 w-auto object-contain brightness-110 drop-shadow-2xl"
+                         />
+-                        <div className="flex items-center gap-2 -mt-4 ml-4">
+-                            <div className="h-1 w-6 bg-accent rounded-full" />
+-                            <span className="text-[10px] font-black uppercase text-accent tracking-[0.4em]">Praia Grande</span>
+-                        </div>
++                        <p className="text-gray-400 font-medium leading-relaxed mb-8 max-w-sm">
++                            Augusto Calado Im├│veis: Sua refer├¬ncia em im├│veis de alto padr├úo e oportunidades exclusivas em Praia Grande SP.
++                        </p>
+                     </div>
+ 
+                     <div className="space-y-6">
+-                        <div className="flex items-start gap-4 group">
+-                            <MapPin className="h-5 w-5 text-accent mt-1" />
+-                            <div className="text-sm font-semibold text-white/40 group-hover:text-white transition-colors">
+-                                <p className="text-xs uppercase tracking-widest text-white/20 mb-1">Sede Canto do Forte</p>
+-                                <p>Av. Marechal Mallet, 1200 - Praia Grande, SP</p>
+-                            </div>
++                        <div className="flex items-start gap-4 text-gray-400 group">
++                            <MapPin className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
++                            <span className="text-sm">Av. Marechal Mallet, 1200<br />Praia Grande - SP</span>
+                         </div>
+-                        <div className="flex items-center gap-4 group">
+-                            <Phone className="h-5 w-5 text-accent" />
+-                            <div className="text-sm font-semibold text-white/40 group-hover:text-white transition-colors">
+-                                <p>(13) 3474-0000</p>
+-                            </div>
++                        <div className="flex items-center gap-4 text-gray-400 group">
++                            <Phone className="h-5 w-5 text-accent shrink-0 group-hover:text-white transition-colors" />
++                            <span className="text-sm">(13) 3474-0000</span>
+                         </div>
+                     </div>
+                 </div>
+@@ -47,8 +43,8 @@ export default function Footer() {
+ 
+                 <div className="space-y-6">
+                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
+-                    <ul className="space-y-3 text-sm font-semibold text-white/40">
+-                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre a KF Im├│veis</Link></li>
++                    <ul className="space-y-4 text-sm font-bold text-gray-400">
++                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre Augusto Calado</Link></li>
+                         <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Pol├¡tica de Privacidade</li>
+                         <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
+@@ -67,10 +63,12 @@ export default function Footer() {
+                 </div>
+             </div>
+ 
+-            <div className="max-w-7xl mx-auto px-4 pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+-                <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 KF IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
+-                <div className="flex gap-4">
+-                    <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
++            <div className="max-w-7xl mx-auto px-4">
++                <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
++                    <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 AUGUSTO CALADO IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                    <div className="flex gap-4">
++                        <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
++                    </div>
+                 </div>
+             </div>
+         </footer>
+
+commit 6a20c7fbdb5326b4f34bc0a3f3b001ce65fd3913
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sat Mar 21 20:24:30 2026 -0300
+
+    Branding Optimization: Increased logo dimensions in Navbar and integrated official logo into Footer for high-impact brand consistency
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 87be651..26a66e8 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -5,10 +5,14 @@ export default function Footer() {
+     return (
+         <footer className="bg-primary-900 pt-32 pb-16 font-outfit">
+             <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
+-                <div className="space-y-10">
+-                    <div className="flex flex-col">
+-                        <span className="text-3xl font-black text-white tracking-tighter hover:text-accent transition-colors cursor-pointer">KF IM├ôVEIS</span>
+-                        <div className="flex items-center gap-2 mt-2">
++                <div className="space-y-6">
++                    <div className="flex flex-col -ml-4">
++                        <img
++                            src="/logo.png"
++                            alt="KF Im├│veis"
++                            className="h-32 w-auto object-contain brightness-110 drop-shadow-2xl"
++                        />
++                        <div className="flex items-center gap-2 -mt-4 ml-4">
+                             <div className="h-1 w-6 bg-accent rounded-full" />
+                             <span className="text-[10px] font-black uppercase text-accent tracking-[0.4em]">Praia Grande</span>
+                         </div>
+
+commit 3e3996ae6b464ac1130f5283dfa13766b6ee3330
+Author: rmjtecnologia2026-cyber <rmjtecnologia2026@gmail.com>
+Date:   Sat Mar 21 12:50:17 2026 -0300
+
+    Platform Architecture Finalization: Integrated Comprar, Alugar, Lancamentos, Sobre Nos, and Contato pages with a global Footer component
+
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+new file mode 100644
+index 0000000..87be651
+--- /dev/null
++++ b/src/components/Footer.tsx
+@@ -0,0 +1,74 @@
++import Link from 'next/link';
++import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight } from 'lucide-react';
++
++export default function Footer() {
++    return (
++        <footer className="bg-primary-900 pt-32 pb-16 font-outfit">
++            <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
++                <div className="space-y-10">
++                    <div className="flex flex-col">
++                        <span className="text-3xl font-black text-white tracking-tighter hover:text-accent transition-colors cursor-pointer">KF IM├ôVEIS</span>
++                        <div className="flex items-center gap-2 mt-2">
++                            <div className="h-1 w-6 bg-accent rounded-full" />
++                            <span className="text-[10px] font-black uppercase text-accent tracking-[0.4em]">Praia Grande</span>
++                        </div>
++                    </div>
++
++                    <div className="space-y-6">
++                        <div className="flex items-start gap-4 group">
++                            <MapPin className="h-5 w-5 text-accent mt-1" />
++                            <div className="text-sm font-semibold text-white/40 group-hover:text-white transition-colors">
++                                <p className="text-xs uppercase tracking-widest text-white/20 mb-1">Sede Canto do Forte</p>
++                                <p>Av. Marechal Mallet, 1200 - Praia Grande, SP</p>
++                            </div>
++                        </div>
++                        <div className="flex items-center gap-4 group">
++                            <Phone className="h-5 w-5 text-accent" />
++                            <div className="text-sm font-semibold text-white/40 group-hover:text-white transition-colors">
++                                <p>(13) 3474-0000</p>
++                            </div>
++                        </div>
++                    </div>
++                </div>
++
++                <div className="space-y-6">
++                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Nossas ├üreas</h4>
++                    <ul className="space-y-3 text-sm font-semibold text-white/40">
++                        <li><Link href="/comprar" className="hover:text-white transition-colors">Im├│veis no Canto do Forte</Link></li>
++                        <li><Link href="/comprar" className="hover:text-white transition-colors">Apartamentos no Boqueir├úo</Link></li>
++                        <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lan├ºamentos em Praia Grande</Link></li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Venda seu Im├│vel</li>
++                    </ul>
++                </div>
++
++                <div className="space-y-6">
++                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h4>
++                    <ul className="space-y-3 text-sm font-semibold text-white/40">
++                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre a KF Im├│veis</Link></li>
++                        <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Pol├¡tica de Privacidade</li>
++                        <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
++                    </ul>
++                </div>
++
++                <div className="space-y-8">
++                    <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">Newsletter</h4>
++                    <p className="text-xs text-white/40 font-semibold leading-relaxed">Receba ofertas exclusivas de im├│veis em Praia Grande SP diretamente no seu e-mail.</p>
++                    <div className="flex gap-2">
++                        <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/10 p-3.5 rounded-xl text-xs flex-1 outline-none focus:ring-1 focus:ring-accent text-white" />
++                        <button className="bg-accent text-white p-3.5 rounded-xl hover:bg-white hover:text-primary-900 transition-all active:scale-95 shadow-lg shadow-accent/20">
++                            <ArrowRight className="h-4 w-4" />
++                        </button>
++                    </div>
++                </div>
++            </div>
++
++            <div className="max-w-7xl mx-auto px-4 pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
++                <p className="text-[9px] font-bold text-white/20 uppercase tracking-[0.4em]">┬® 2026 KF IM├ôVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
++                <div className="flex gap-4">
++                    <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
++                </div>
++            </div>
++        </footer>
++    );
++}

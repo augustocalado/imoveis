@@ -1,0 +1,39 @@
+﻿[
+  {
+    "id": "area",
+    "icon": "Maximize2",
+    "color": "text-emerald-500",
+    "field": "area",
+    "label": "├ürea",
+    "suffix": "m┬▓"
+  },
+  {
+    "id": "rooms",
+    "icon": "Bed",
+    "color": "text-blue-500",
+    "field": "rooms",
+    "label": "Dorm"
+  },
+  {
+    "id": "parking",
+    "icon": "Car",
+    "color": "text-amber-500",
+    "field": "parking_spaces",
+    "label": "Vagas"
+  },
+  {
+    "id": "bathrooms",
+    "icon": "Bath",
+    "color": "text-indigo-500",
+    "field": "bathrooms",
+    "label": "WC"
+  },
+  {
+    "id": "jvdjqeg9t",
+    "icon": "Sofa",
+    "color": "text-blue-500",
+    "field": "rooms",
+    "label": "sala (s)",
+    "suffix": ""
+  }
+]
