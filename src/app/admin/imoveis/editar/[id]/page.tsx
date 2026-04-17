@@ -18,6 +18,7 @@ import { generatePropertyFriendlySlug } from '@/utils/slug';
 import Toast, { ToastType } from '@/components/Toast';
 import SEOTitleAssistant from '@/components/admin/SEOTitleAssistant';
 import SEODescriptionAssistant from '@/components/admin/SEODescriptionAssistant';
+import AdminSearchBar from '@/components/admin/AdminSearchBar';
 
 const ICON_MAP: Record<string, any> = {
     Bed, Bath, Maximize2, Car, Star, Navigation, Building2, Home, Zap, Check, Info, Shield, Layers, MessageSquare, Phone, FileText, User, BedDouble, Hash, Maximize,
@@ -433,8 +434,10 @@ export default function EditarImovel() {
         const slugBase = generatePropertyFriendlySlug(
             formData.title,
             formData.neighborhood,
-            formData.city
+            formData.city,
+            formData.rooms
         );
+
 
         try {
             // Uniqueness check: se o slug já existe, tentamos variações numéricas até encontrar um livre
@@ -699,29 +702,36 @@ export default function EditarImovel() {
                         <h1 className="text-xl font-black tracking-tighter uppercase">Editar Imóvel: <span className="text-[#10b981]">{formData.reference_id}</span></h1>
                     </div>
 
-                    <div className="flex items-center gap-6">
-                        <button
-                            type="button"
-                            onClick={() => setIsAIModalOpen(true)}
-                            className="hidden md:flex items-center gap-3 bg-[#1B263B] text-white px-6 py-3 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-[#10b981] transition-all shadow-xl shadow-[#10b981]/10 group"
-                        >
-                            <Zap className="h-4 w-4 fill-[#10b981] text-[#10b981] group-hover:fill-white group-hover:text-white transition-colors" />
-                            Importar com IA
-                        </button>
-                        <div className="h-8 w-px bg-slate-100" />
-                        <div className="flex items-center gap-4 cursor-pointer group p-2 hover:bg-slate-50 rounded-2xl transition-all">
-                            <div className="flex flex-col text-right">
-                                <span className="text-sm font-black uppercase tracking-tight text-[#1B263B] group-hover:text-[#10b981] transition-colors">{currentUserProfile?.full_name || 'Usuário'}</span>
-                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{currentUserProfile?.role || 'Acesso'} Master</span>
-                            </div>
-                            <div className="h-12 w-12 rounded-2xl bg-[#1B263B] text-white flex items-center justify-center font-black group-hover:scale-110 group-hover:bg-[#10b981] transition-all shadow-xl shadow-[#1B263B]/10 overflow-hidden">
-                                {currentUserProfile?.avatar_url ? (
-                                    <img src={currentUserProfile.avatar_url} className="w-full h-full object-cover" alt="" />
-                                ) : (
-                                    currentUserProfile?.full_name?.charAt(0) || 'U'
-                                )}
+                    <div className="flex-1 flex items-center gap-8">
+                        <div className="hidden xl:block flex-1 max-w-md">
+                            <AdminSearchBar />
+                        </div>
+                        
+                        <div className="flex items-center gap-4 ml-auto">
+                            <button
+                                type="button"
+                                onClick={() => setIsAIModalOpen(true)}
+                                className="hidden md:flex items-center gap-3 bg-[#1B263B] text-white px-6 py-3 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-[#10b981] transition-all shadow-xl shadow-[#10b981]/10 group"
+                            >
+                                <Zap className="h-4 w-4 fill-[#10b981] text-[#10b981] group-hover:fill-white group-hover:text-white transition-colors" />
+                                Importar com IA
+                            </button>
+                            <div className="h-8 w-px bg-slate-100 hidden md:block" />
+                            <div className="flex items-center gap-4 cursor-pointer group p-2 hover:bg-slate-50 rounded-2xl transition-all">
+                                <div className="flex flex-col text-right">
+                                    <span className="text-sm font-black uppercase tracking-tight text-[#1B263B] group-hover:text-[#10b981] transition-colors">{currentUserProfile?.full_name || 'Usuário'}</span>
+                                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{currentUserProfile?.role || 'Acesso'} Master</span>
+                                </div>
+                                <div className="h-12 w-12 rounded-2xl bg-[#1B263B] text-white flex items-center justify-center font-black group-hover:scale-110 group-hover:bg-[#10b981] transition-all shadow-xl shadow-[#1B263B]/10 overflow-hidden">
+                                    {currentUserProfile?.avatar_url ? (
+                                        <img src={currentUserProfile.avatar_url} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        currentUserProfile?.full_name?.charAt(0) || 'U'
+                                    )}
+                                </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </header>
 

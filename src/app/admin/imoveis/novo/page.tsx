@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
@@ -18,6 +18,7 @@ import { generatePropertyFriendlySlug } from '@/utils/slug';
 import Toast, { ToastType } from '@/components/Toast';
 import SEOTitleAssistant from '@/components/admin/SEOTitleAssistant';
 import SEODescriptionAssistant from '@/components/admin/SEODescriptionAssistant';
+import AdminSearchBar from '@/components/admin/AdminSearchBar';
 
 const ICON_MAP: Record<string, any> = {
     Bed, Bath, Maximize2, Car, Star, Navigation, Building2, Home, Zap, Check, Info, Shield, Layers, MessageSquare, Phone, FileText, User, BedDouble, Hash, Maximize,
@@ -459,8 +460,10 @@ export default function NovoImovel() {
         const slugBase = generatePropertyFriendlySlug(
             formData.title,
             formData.neighborhood,
-            formData.city
+            formData.city,
+            formData.rooms
         );
+
 
         try {
             // Uniqueness check: se o slug já existe, tentamos variações numéricas até encontrar um livre
@@ -714,14 +717,20 @@ export default function NovoImovel() {
                             </div>
                         </div>
 
-                        <button
-                        type="button"
-                        onClick={() => setIsAIModalOpen(true)}
-                        className="flex items-center gap-3 bg-[#1B263B] text-white px-6 py-3 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-[#10b981] transition-all shadow-xl shadow-[#10b981]/10 group"
-                    >
-                        <Zap className="h-4 w-4 fill-[#10b981] text-[#10b981] group-hover:fill-white group-hover:text-white transition-colors" />
-                        Importar com IA
-                    </button>
+                        <div className="hidden xl:block flex-1 max-w-md mx-4">
+                            <AdminSearchBar />
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            <button
+                                type="button"
+                                onClick={() => setIsAIModalOpen(true)}
+                                className="flex items-center gap-3 bg-[#1B263B] text-white px-6 py-3 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:bg-[#10b981] transition-all shadow-xl shadow-[#10b981]/10 group"
+                            >
+                                <Zap className="h-4 w-4 fill-[#10b981] text-[#10b981] group-hover:fill-white group-hover:text-white transition-colors" />
+                                Importar com IA
+                            </button>
+                        </div>
                     </div>
                 </header>
 

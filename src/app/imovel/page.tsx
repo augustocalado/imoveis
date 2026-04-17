@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import {
@@ -10,7 +11,11 @@ import {
 import Link from 'next/link';
 import clsx from 'clsx';
 
-export default function PropertiesListPage() {
+function PropertiesListContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const idParam = searchParams.get('id');
+
     const [properties, setProperties] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -20,6 +25,33 @@ export default function PropertiesListPage() {
     const [city, setCity] = useState('');
     const [minPrice, setMinPrice] = useState('');
     const [maxPrice, setMaxPrice] = useState('');
+
+    useEffect(() => {
+        const handleLegacyRedirect = async () => {
+            if (idParam) {
+                const { data } = await supabase
+                    .from('properties')
+                    .select('slug')
+                    .or(`id.eq.${idParam},reference_id.eq.${idParam}`)
+                    .maybeSingle();
+                
+                if (data?.slug) {
+                    router.replace(`/${data.slug}`);
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        const init = async () => {
+            const redirected = await handleLegacyRedirect();
+            if (!redirected) {
+                fetchProperties();
+            }
+        };
+
+        init();
+    }, [idParam]);
 
     const fetchProperties = async () => {
         setIsLoading(true);
@@ -38,10 +70,6 @@ export default function PropertiesListPage() {
         setProperties(data || []);
         setIsLoading(false);
     };
-
-    useEffect(() => {
-        fetchProperties();
-    }, []);
 
     return (
         <div className="min-h-screen bg-white  text-primary-900 selection:bg-accent/30 lowercase">
@@ -157,7 +185,7 @@ export default function PropertiesListPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
                         {properties.map((prop, i) => (
-                            <Link key={prop.id} href={`/imovel/${prop.slug || prop.id}`} className="group relative block animate-in fade-in slide-in-from-bottom-5 duration-700" style={{ animationDelay: `${i * 100}ms` }}>
+                            <Link key={prop.id} href={`/${prop.slug}`} className="group relative block animate-in fade-in slide-in-from-bottom-5 duration-700" style={{ animationDelay: `${i * 100}ms` }}>
                                 <div className="space-y-6">
                                     <div className="relative aspect-[4/5] rounded-[50px] overflow-hidden shadow-2xl transition-transform duration-700 group-hover:-translate-y-4">
                                         <img
@@ -212,7 +240,7 @@ export default function PropertiesListPage() {
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     e.stopPropagation();
-                                                    const url = `${window.location.origin}/imovel/${prop.slug}`;
+                                                    const url = `${window.location.origin}/${prop.slug}`;
                                                     const message = `Confira este imóvel: ${prop.title} - ${url}`;
                                                     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
                                                 }}
@@ -229,5 +257,17 @@ export default function PropertiesListPage() {
                 )}
             </main>
         </div>
+    );
+}
+
+export default function PropertiesListPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex flex-col items-center justify-center py-40 gap-8">
+                <div className="h-20 w-20 border-4 border-slate-50 border-t-accent rounded-full animate-spin" />
+            </div>
+        }>
+            <PropertiesListContent />
+        </Suspense>
     );
 }

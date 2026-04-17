@@ -24,6 +24,7 @@ import ChatAIConfigSection from '@/components/admin/ChatAIConfigSection';
 import SystemToolsSection from '@/components/admin/SystemToolsSection';
 import Toast, { ToastType } from '@/components/Toast';
 import VisitsManagement from '@/components/admin/VisitsManagement';
+import AdminSearchBar from '@/components/admin/AdminSearchBar';
 
 type Tab = 'overview' | 'imoveis' | 'blog' | 'crm' | 'financeiro' | 'agenda' | 'documentos' | 'parceiros' | 'config' | 'marketing' | 'integracao' | 'smart-leads' | 'perfil';
 type ConfigTab = 'visual' | 'contatos' | 'home' | 'sobre' | 'master' | 'sede' | 'bairros' | 'chat_ai' | 'features' | 'specs';
@@ -406,7 +407,9 @@ function AdminDashboardContent() {
                     "hidden lg:flex h-24 border-b items-center justify-between px-12 sticky top-0 z-40 transition-all",
                     isDarkMode ? "bg-[#0b1120]/80 backdrop-blur-xl border-slate-800" : "bg-white border-slate-100"
                 )}>
-                    <div className="flex-1" />
+                    <div className="flex-1 max-w-xl">
+                        <AdminSearchBar />
+                    </div>
 
                     <div className="flex items-center gap-8">
                         <div className="flex items-center gap-4">

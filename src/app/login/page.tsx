@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { LogIn, User, Lock, Mail, Loader2, House, Sparkles, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { signInAction } from './loginActions';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -20,46 +21,24 @@ export default function LoginPage() {
         setError(null);
 
         try {
-            const { data, error: signInError } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+            const formData = new FormData(e.currentTarget as HTMLFormElement);
+            const result = await signInAction(null, formData);
 
-            if (signInError) throw signInError;
-
-            if (data.user) {
-                // Try to get profile with a small delay if not found immediately (trigger sync)
-                let role = data.user.user_metadata?.role;
-                
-                const fetchProfile = async () => {
-                    const { data: profile } = await supabase
-                        .from('profiles')
-                        .select('role')
-                        .eq('id', data.user.id)
-                        .single();
-                    return profile?.role;
-                };
-
-                let dbRole = await fetchProfile();
-                
-                // Fallback to metadata if DB role is not found or is default but metadata says otherwise
-                const finalRole = dbRole || role || 'cliente';
-
-                // Sync role to metadata if it's missing or different to ensure middleware works correctly
-                if (finalRole !== role) {
-                    await supabase.auth.updateUser({
-                        data: { role: finalRole }
-                    });
-                }
-
-                console.log('Login successful. Role detected:', finalRole);
-
-                if (finalRole === 'admin') router.push('/admin');
-                else if (finalRole === 'corretor') router.push('/corretor');
-                else router.push('/cliente');
+            if (!result.success) {
+                setError(result.error || 'Erro ao realizar login.');
+                return;
             }
+
+            const finalRole = result.role || 'cliente';
+            console.log('Login successful. Role detected:', finalRole);
+
+            if (finalRole === 'admin') router.push('/admin');
+            else if (finalRole === 'corretor') router.push('/corretor');
+            else router.push('/cliente');
+            
         } catch (err: any) {
-            setError(err.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : err.message);
+            setError('Ocorreu um erro inesperado. Tente novamente.');
+            console.error(err);
         } finally {
             setIsLoading(false);
         }
@@ -117,6 +96,7 @@ export default function LoginPage() {
                                 <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-[#1B263B] transition-colors" />
                                 <input
                                     type="email"
+                                    name="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="seu@email.com"
@@ -135,6 +115,7 @@ export default function LoginPage() {
                                 <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-[#1B263B] transition-colors" />
                                 <input
                                     type={showPassword ? "text" : "password"}
+                                    name="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"

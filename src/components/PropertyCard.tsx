@@ -93,7 +93,7 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
 
     return (
         <article className="group flex flex-col bg-white rounded-[40px] overflow-hidden p-2 shadow-xl hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] transition-all duration-700 border border-slate-100 relative h-full">
-            <Link href={`/imovel/${prop.slug}`} className="relative h-64 rounded-[32px] overflow-hidden mb-4 block group-hover:shadow-2xl transition-all duration-700">
+            <Link href={`/${prop.slug}`} className="relative h-64 rounded-[32px] overflow-hidden mb-4 block group-hover:shadow-2xl transition-all duration-700">
                 <Image
                     src={prop.images?.[0] || `https://images.unsplash.com/photo-${placeholderImages[index % 6]}?auto=format&fit=crop&q=80&w=800`}
                     alt={prop.title}
@@ -146,7 +146,7 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
                         <MapPin className="h-3 w-3 text-accent" aria-hidden="true" />
                         <p className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase truncate">{prop.neighborhood || 'Bairro Nobre'}, Praia Grande</p>
                     </div>
-                    <Link href={`/imovel/${prop.slug}`} className="block group flex-1">
+                    <Link href={`/${prop.slug}`} className="block group flex-1">
                         <h3 className="text-base font-bold text-primary-900 tracking-tight group-hover:text-accent transition-colors line-clamp-2 leading-tight">
                             {prop.category || 'Apartamento'} no {prop.neighborhood || 'Praia Grande'}
                         </h3>
@@ -199,7 +199,7 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
                             </p>
                         </div>
                         <Link
-                            href={`/imovel/${prop.slug}`}
+                            href={`/${prop.slug}`}
                             aria-label={`Ver detalhes de ${prop.category || 'Apartamento'} no ${prop.neighborhood || 'Praia Grande'}`}
                             className="bg-primary-900 text-white p-4 rounded-[20px] hover:bg-accent transition-all shadow-xl shadow-primary-900/10 active:scale-95 group/btn"
                         >
@@ -212,7 +212,7 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/imovel/${prop.slug}`;
+                                const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/${prop.slug}`;
                                 const message = `Confira este imóvel: ${prop.title} - ${url}`;
                                 window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
                             }}

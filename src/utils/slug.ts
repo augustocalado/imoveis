@@ -21,17 +21,22 @@ export function slugify(text: string): string {
 export function generatePropertyFriendlySlug(
   title: string,
   neighborhood: string,
-  city: string = 'Praia Grande'
+  city: string = 'Praia Grande',
+  rooms: number | string = 0
 ): string {
   // Extrai o tipo do imóvel (primeira palavra do título, ex: "Casa", "Apartamento")
   const type = title.trim().split(' ')[0] || 'imovel';
   
-  // Combina: tipo-bairro-cidade
-  const rawBase = `${type} ${neighborhood} ${city}`;
+  // Formata o texto de quartos
+  const roomsText = rooms && Number(rooms) > 0 ? `${rooms}-dormitorios` : '';
+  
+  // Combina: tipo + quartos + bairro + cidade
+  const parts = [type, roomsText, neighborhood, city].filter(Boolean);
+  const rawBase = parts.join(' ');
+  
   const slugified = slugify(rawBase);
   
-  // Limita a no máximo 5 "palavras" (partes separadas por hífen)
-  const parts = slugified.split('-').slice(0, 5);
-  
-  return parts.join('-');
+  // Aumentamos o limite para 10 palavras para acomodar o slug mais longo e descritivo
+  return slugified.split('-').slice(0, 10).join('-');
 }
+
