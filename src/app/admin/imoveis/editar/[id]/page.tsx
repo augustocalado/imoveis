@@ -732,7 +732,6 @@ export default function EditarImovel() {
                             </div>
                         </div>
                     </div>
-                    </div>
                 </header>
 
                 <div className="p-8 lg:p-12 max-w-5xl mx-auto w-full">
