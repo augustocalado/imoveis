@@ -103,9 +103,10 @@ export default function Navbar() {
         { name: 'Início', href: '/' },
         { name: 'Comprar', href: '/catalogo' },
         { name: 'Alugar', href: '/imoveis?type=aluguel' },
-        { name: 'Lançamentos', href: '#' },
-        { name: 'Sobre Nós', href: '#' },
-        { name: 'Contato', href: '#' },
+        { name: 'Lançamentos', href: '/lancamentos' },
+        { name: 'Bairros', href: '/bairros' },
+        { name: 'Guias', href: '/comprar-imovel-em-praia-grande' },
+        { name: 'Contato', href: '/contato' },
     ];
 
     if (pathname.startsWith('/admin') || pathname.startsWith('/corretor') || pathname.startsWith('/cliente')) return null;

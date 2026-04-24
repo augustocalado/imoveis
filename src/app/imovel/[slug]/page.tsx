@@ -1,5 +1,5 @@
 import { supabaseServer } from '@/lib/supabase-server';
-import { redirect } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -16,8 +16,8 @@ export default async function Page({ params }: Props) {
         .maybeSingle();
 
     if (property?.slug) {
-        // Redireciona para a nova rota na raiz
-        redirect(`/${property.slug}`);
+        // Redireciona permanentemente para a nova rota na raiz
+        permanentRedirect(`/${property.slug}`);
     }
 
     // Se não encontrou pelo slug, tenta pelo ID ou Reference ID (legado)
@@ -28,10 +28,10 @@ export default async function Page({ params }: Props) {
         .maybeSingle();
 
     if (fallbackProp?.slug) {
-        redirect(`/${fallbackProp.slug}`);
+        permanentRedirect(`/${fallbackProp.slug}`);
     }
 
-    // Se nada foi encontrado, redireciona para o catálogo
-    redirect('/catalogo');
+    // Se nada foi encontrado, redireciona permanentemente para o catálogo/imoveis
+    permanentRedirect('/imoveis');
 }
 

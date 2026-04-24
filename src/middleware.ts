@@ -1,16 +1,22 @@
-﻿import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
+    const url = req.nextUrl.clone();
+    const host = req.headers.get('host');
+
+    // 1. Force WWW redirect (Production only or if host is specified)
+    if (process.env.NODE_ENV === 'production' && host && !host.startsWith('www.') && !host.includes('localhost') && !host.includes('vercel.app')) {
+        return NextResponse.redirect(`https://www.katiaeflavioimoveis.com.br${url.pathname}${url.search}`, 301);
+    }
+
     const res = NextResponse.next();
     const supabase = createMiddlewareClient({ req, res });
 
     const {
         data: { session },
     } = await supabase.auth.getSession();
-
-    const url = req.nextUrl.clone();
 
     // If session doesn't exist and user is trying to access protected routes
     if (!session && (
@@ -62,5 +68,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+    matcher: ['/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };

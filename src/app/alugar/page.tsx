@@ -1,5 +1,5 @@
-﻿import { redirect } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 
 export default function AlugarRedirect() {
-    redirect('/imoveis?type=aluguel');
+    permanentRedirect('/imoveis?type=aluguel');
 }

@@ -120,7 +120,11 @@ export default function BairrosClient() {
                                         return (
                                             <Link
                                                 key={neb}
-                                                href={`/imoveis?city=${city.name}&neighborhood=${encodeURIComponent(displayName)}`}
+                                                href={
+                                                    ['guilhermina', 'canto do forte', 'caiçara', 'boqueirão'].includes(neb.toLowerCase())
+                                                        ? `/bairros/${neb.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '-')}`
+                                                        : `/imoveis?city=${city.name}&neighborhood=${encodeURIComponent(displayName)}`
+                                                }
                                                 className="group/box bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-accent/30 transition-all transform hover:-translate-y-1 relative overflow-hidden"
                                             >
                                                 <div className="relative z-10">

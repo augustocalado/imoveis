@@ -59,8 +59,8 @@ export default function Footer() {
                 <div className="space-y-6 md:pt-4">
                     <h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Nossas Áreas</h2>
                     <ul className="space-y-3 text-sm font-semibold text-white/70">
-                        <li><Link href="/imoveis?bairro=Canto do Forte" className="hover:text-white transition-colors">Imóveis no Canto do Forte</Link></li>
-                        <li><Link href="/imoveis?bairro=Boqueirão" className="hover:text-white transition-colors">Apartamentos no Boqueirão</Link></li>
+                        <li><Link href="/apartamento-frente-mar-praia-grande" className="hover:text-white transition-colors">Imóveis Frente Mar</Link></li>
+                        <li><Link href="/imoveis-com-piscina-praia-grande" className="hover:text-white transition-colors">Casas com Piscina</Link></li>
                         <li><Link href="/lancamentos" className="hover:text-white transition-colors">Lançamentos em Praia Grande</Link></li>
                         <li><Link href="/bairros" className="hover:text-white transition-colors text-accent">Bairros e Cidades</Link></li>
                         <li><Link href="/contato" className="hover:text-white transition-colors">Venda seu Imóvel</Link></li>
@@ -68,13 +68,13 @@ export default function Footer() {
                 </div>
 
                 <div className="space-y-6 md:pt-4">
-                    <h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Institucional</h2>
+                    <h2 className="text-[12px] font-black uppercase tracking-[0.3em] text-accent">Guias e Dicas</h2>
                     <ul className="space-y-4 text-sm font-bold text-white/70">
-                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre Kátia e Flávio</Link></li>
-                        <li><Link href="/contato" className="hover:text-white transition-colors">Fale Conosco</Link></li>
-                        <li><Link href="/mapa-do-site" className="hover:text-white transition-colors">Mapa do Site</Link></li>
-                        <li><Link href="/politica-de-privacidade" className="hover:text-white transition-colors">Política de Privacidade</Link></li>
-                        <li className="hover:text-white transition-colors cursor-pointer">Termos de Uso</li>
+                        <li><Link href="/comprar-imovel-em-praia-grande" className="hover:text-white transition-colors">Guia de Compra</Link></li>
+                        <li><Link href="/financiamento-imobiliario-praia-grande" className="hover:text-white transition-colors">Financiamento</Link></li>
+                        <li><Link href="/investimento-imobiliario-praia-grande" className="hover:text-white transition-colors">Investir no Litoral</Link></li>
+                        <li><Link href="/sobre-nos" className="hover:text-white transition-colors">Sobre a Empresa</Link></li>
+                        <li><Link href="/blog" className="hover:text-white transition-colors">Blog Imobiliário</Link></li>
                     </ul>
                 </div>
 
