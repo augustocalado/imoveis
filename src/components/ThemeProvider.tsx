@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 export default function ThemeProvider() {
     const [theme, setTheme] = useState({
         primary_color: '#1B263B',
-        button_color: '#10b981'
+        button_color: '#1B263B'
     });
 
     useEffect(() => {
