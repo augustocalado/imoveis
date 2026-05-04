@@ -24,37 +24,13 @@ export async function signInAction(prevState: any, formData: FormData): Promise<
     const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
 
     try {
-        // 1. Verificar se está bloqueado (RPC)
-        const { data: lockoutData, error: lockoutError } = await supabase.rpc('check_login_lockout', {
-            p_email: email,
-            p_ip: ip
-        });
-
-        if (lockoutError) {
-            console.error('Erro ao verificar bloqueio:', lockoutError);
-        } else if (lockoutData && lockoutData.length > 0 && lockoutData[0].is_locked) {
-            const mins = Math.ceil(lockoutData[0].seconds_remaining / 60);
-            return { 
-                success: false, 
-                error: `Muitas tentativas falhas. Bloqueado por mais ${mins} minutos.`,
-                locked: true,
-                secondsRemaining: lockoutData[0].seconds_remaining
-            };
-        }
-
-        // 2. Tentar login
+        // 1. Tentar login direto com Supabase
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
 
         if (signInError) {
-            // Registrar falha (RPC)
-            await supabase.rpc('record_login_failure', {
-                p_email: email,
-                p_ip: ip
-            });
-
             return { 
                 success: false, 
                 error: signInError.message === 'Invalid login credentials' 
@@ -64,12 +40,6 @@ export async function signInAction(prevState: any, formData: FormData): Promise<
         }
 
         if (data.user) {
-            // Resetar tentativas (RPC)
-            await supabase.rpc('reset_login_attempts', {
-                p_email: email,
-                p_ip: ip
-            });
-
             // Determinar o papel do usuário
             let role = data.user.user_metadata?.role;
             
