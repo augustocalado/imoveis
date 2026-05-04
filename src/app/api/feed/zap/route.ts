@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseServer } from '@/lib/supabase-server';
 
 export async function GET() {
     try {
         // Fetch all available properties
-        const { data: properties, error } = await supabase
+        const { data: properties, error } = await supabaseServer
             .from('properties')
             .select('*')
-            .eq('status', 'disponivel')
+            .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível'])
             .order('created_at', { ascending: false });
+
 
         if (error) throw error;
 

@@ -80,7 +80,7 @@ export default function SmartLeadsSection() {
             setSelectedLead({ ...selectedLead, name: editForm.name, phone: editForm.phone });
             setIsEditing(false);
         } else {
-            alert('Erro ao salvar: ' + error.message);
+            fireToast('Erro ao salvar: ' + error.message, 'error');
         }
     };
 

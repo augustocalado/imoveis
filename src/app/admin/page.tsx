@@ -260,7 +260,7 @@ function AdminDashboardContent() {
         const { error } = await supabase.from('properties').delete().eq('id', id);
 
         if (error) {
-            alert('Erro ao excluir imóvel: ' + error.message);
+            fireToast('Erro ao excluir imóvel: ' + error.message, 'error');
         } else {
             setProperties(properties.filter(p => p.id !== id));
         }
@@ -926,7 +926,7 @@ function AdminDashboardContent() {
                                                                         if (!error) {
                                                                             setUsers(users.filter(user => user.id !== u.id));
                                                                         } else {
-                                                                            alert('Erro ao excluir: ' + error.message);
+                                                                            fireToast('Erro ao excluir: ' + error.message, 'error');
                                                                         }
                                                                     }
                                                                 }}
@@ -1522,9 +1522,9 @@ function ThemeConfigSection() {
                 .getPublicUrl(filePath);
 
             setFaviconUrl(publicUrl);
-            alert('Favicon alterado com sucesso! Salve para aplicar.');
+            fireToast('Favicon alterado com sucesso! Salve para aplicar.', 'success');
         } catch (err: any) {
-            alert('Erro ao atualizar favicon: ' + err.message);
+            fireToast('Erro ao atualizar favicon: ' + err.message, 'error');
         } finally {
             setIsSaving(false);
         }
@@ -1906,8 +1906,8 @@ function ContactSettingsSection() {
         setIsSaving(true);
         const { error } = await supabase.from('site_settings').upsert({ key: 'site_contact', value: contact });
         setIsSaving(false);
-        if (error) alert('Erro ao salvar contatos: ' + error.message);
-        else alert('Informações de contato atualizadas!');
+        if (error) fireToast('Erro ao salvar contatos: ' + error.message, 'error');
+        else fireToast('Informações de contato atualizadas!', 'success');
     };
 
     return (
@@ -2026,8 +2026,8 @@ function HomeConfigSection() {
         setIsSaving(true);
         const { error } = await supabase.from('site_settings').upsert({ key: 'home_hero', value: settings });
         setIsSaving(false);
-        if (!error) alert('Configurações salvas com sucesso!');
-        else alert('Erro ao salvar: ' + error.message);
+        if (!error) fireToast('Configurações salvas com sucesso!', 'success');
+        else fireToast('Erro ao salvar: ' + error.message, 'error');
     };
 
     return (
@@ -2113,7 +2113,7 @@ function HomeConfigSection() {
                                         .upload(filePath, file);
 
                                     if (uploadError) {
-                                        alert('Erro no upload: ' + uploadError.message);
+                                        fireToast('Erro no upload: ' + uploadError.message, 'error');
                                         setIsSaving(false);
                                         return;
                                     }
@@ -3137,9 +3137,9 @@ function EditUserModal({ user, onClose, onUpdate }: { user: any, onClose: () => 
 
         if (!error && data && data.length > 0) {
             onUpdate({ ...user, full_name: fullName, role, is_approved: isApproved });
-            alert('Usuário atualizado com sucesso!');
+            fireToast('Usuário atualizado com sucesso!', 'success');
         } else {
-            alert('Erro ao atualizar: ' + (error?.message || 'Nenhuma linha afetada. Verifique as permissões de RLS.'));
+            fireToast('Erro ao atualizar: ' + (error?.message || 'Nenhuma linha afetada. Verifique as permissões de RLS.'), 'error');
         }
         setIsSaving(false);
     };
@@ -3149,9 +3149,9 @@ function EditUserModal({ user, onClose, onUpdate }: { user: any, onClose: () => 
             redirectTo: `${window.location.origin}/redefinir-senha`,
         });
         if (!error) {
-            alert(`E-mail de redefinição enviado para ${user.email}`);
+            fireToast(`E-mail de redefinição enviado para ${user.email}`, 'success');
         } else {
-            alert('Erro ao enviar e-mail: ' + error.message);
+            fireToast('Erro ao enviar e-mail: ' + error.message, 'error');
         }
     };
 

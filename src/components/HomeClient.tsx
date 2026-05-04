@@ -86,16 +86,17 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                             <h1 
                                 className="font-black text-white leading-[0.95] tracking-tighter drop-shadow-2xl transition-all duration-700 text-[2.2rem] md:text-[3rem] lg:text-[4.5rem]"
                             >
-                                {heroSettings.title.split('\n').map((line: string, i: number) => (
+                                {(heroSettings.title || 'Kátia e Flávio Imóveis').split('\n').map((line: string, i: number, arr: string[]) => (
                                     <span key={i}>
                                         {line}
-                                        {i < heroSettings.title.split('\n').length - 1 && <br className="hidden md:block" />}
+                                        {i < arr.length - 1 && <br className="hidden md:block" />}
                                     </span>
                                 ))}
                             </h1>
                             <p className="text-white/80 text-xl md:text-2xl font-medium max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-                                {heroSettings.subtitle}
+                                {heroSettings.subtitle || ''}
                             </p>
+
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-center gap-6 w-full max-w-4xl justify-center">

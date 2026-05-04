@@ -172,8 +172,7 @@ export default function EditarImovel() {
         setFormData(prev => ({ ...prev, ...extracted } as any));
         setIsAIModalOpen(false);
         setAiInput('');
-        setMessage({ type: 'success', text: 'Dados extraídos com Inteligência KF IMOVEIS!' });
-        setTimeout(() => setMessage(null), 3000);
+        showToast('Dados extraídos com Inteligência KF IMOVEIS!', 'success');
     };
 
     const toggleSection = (section: string) => {
@@ -405,7 +404,7 @@ export default function EditarImovel() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!userId) {
-            setMessage({ type: 'error', text: 'Você precisa estar logado para editar.' });
+            showToast('Você precisa estar logado para editar.', 'error');
             return;
         }
 
@@ -429,7 +428,6 @@ export default function EditarImovel() {
         }
 
         setIsLoading(true);
-        setMessage(null);
 
         const slugBase = generatePropertyFriendlySlug(
             formData.title,
@@ -530,9 +528,7 @@ export default function EditarImovel() {
                 throw new Error('Nenhuma linha foi alterada. Verifique as permissões de acesso ou se o imóvel ainda existe.');
             }
 
-            showToast('Imóvel atualizado com sucesso!');
-            // Mantém na mesma página para permitir continuar editando conforme solicitado
-            setTimeout(() => setMessage(null), 3000);
+            showToast('Imóvel atualizado com sucesso!', 'success');
         } catch (err: any) {
             console.error('Erro ao atualizar imóvel:', err);
             showToast(`Erro ao atualizar: ${err.message}`, 'error');
@@ -735,15 +731,6 @@ export default function EditarImovel() {
                 </header>
 
                 <div className="p-8 lg:p-12 max-w-5xl mx-auto w-full">
-                    {message && (
-                        <div className={clsx(
-                            "mb-8 p-6 rounded-[30px] border flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500",
-                            message.type === 'success' ? "bg-emerald-50 border-emerald-100 text-emerald-800" : "bg-red-50 border-red-100 text-red-800"
-                        )}>
-                            {message.type === 'success' ? <CheckCircle2 className="h-6 w-6" /> : <XCircle className="h-6 w-6" />}
-                            <p className="font-bold text-sm uppercase tracking-widest">{message.text}</p>
-                        </div>
-                    )}
                     
                     {auditData && (
                         <div className="mb-8 p-4 bg-[#1B263B]/5 border border-[#1B263B]/10 rounded-2xl flex items-center gap-3">
@@ -995,8 +982,16 @@ export default function EditarImovel() {
                                                     multiple
                                                     accept="image/*"
                                                     onChange={async (e) => {
-                                                        const files = e.target.files;
-                                                        if (!files || files.length === 0) return;
+                                                        const files = Array.from(e.target.files || []);
+                                                        if (files.length === 0) return;
+
+                                                        const currentCount = formData.images.length;
+                                                        const totalAfterSelection = currentCount + files.length;
+
+                                                        if (totalAfterSelection > 10) {
+                                                            showToast('Máximo de imagens 10', 'error');
+                                                            return;
+                                                        }
 
                                                         setIsLoading(true);
                                                         const uploadedUrls = [];
@@ -1008,7 +1003,7 @@ export default function EditarImovel() {
                                                             watermarkImg.onerror = resolve;
                                                         });
 
-                                                        for (const file of Array.from(files)) {
+                                                        for (const file of files) {
                                                             try {
                                                                 const imgUrl = URL.createObjectURL(file);
                                                                 const img = new Image();
@@ -1044,7 +1039,7 @@ export default function EditarImovel() {
                                                                             const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
                                                                             uploadedUrls.push(data.publicUrl);
                                                                         } else {
-                                                                            alert('Erro ao enviar: ' + uploadError.message);
+                                                                            showToast('Erro ao enviar: ' + uploadError.message, 'error');
                                                                         }
                                                                     }
                                                                 }

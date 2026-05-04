@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { LogIn, User, Lock, Mail, Loader2, House, Sparkles, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { signInAction } from './loginActions';
+import clsx from 'clsx';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -14,6 +15,11 @@ export default function LoginPage() {
     const [error, setError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
+
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [isResetLoading, setIsResetLoading] = useState(false);
+    const [resetMessage, setResetMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,6 +47,29 @@ export default function LoginPage() {
             console.error(err);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleForgotPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsResetLoading(true);
+        setResetMessage(null);
+
+        try {
+            const { error: resetError } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+                redirectTo: `${window.location.origin}/redefinir-senha`,
+            });
+
+            if (resetError) {
+                setResetMessage({ type: 'error', text: resetError.message });
+            } else {
+                setResetMessage({ type: 'success', text: 'E-mail de redefinição enviado! Verifique sua caixa de entrada.' });
+                setTimeout(() => setShowForgotPassword(false), 3000);
+            }
+        } catch (err: any) {
+            setResetMessage({ type: 'error', text: 'Erro ao processar solicitação.' });
+        } finally {
+            setIsResetLoading(false);
         }
     };
 
@@ -109,7 +138,12 @@ export default function LoginPage() {
                         <div className="space-y-3">
                             <div className="flex justify-between items-center px-4">
                                 <label className="text-[11px] font-black text-[#1B263B]/40 uppercase tracking-widest">Sua Senha</label>
-                                <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:underline cursor-pointer">Esqueceu?</span>
+                                <span 
+                                    onClick={() => setShowForgotPassword(true)}
+                                    className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:underline cursor-pointer"
+                                >
+                                    Esqueceu?
+                                </span>
                             </div>
                             <div className="relative group">
                                 <Lock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-[#1B263B] transition-colors" />
@@ -159,6 +193,61 @@ export default function LoginPage() {
                     <p className="text-[10px] font-black uppercase tracking-[0.5em]">Real Estate Excellence • {new Date().getFullYear()}</p>
                 </div>
             </div>
+
+            {/* Forgot Password Modal */}
+            {showForgotPassword && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#1B263B]/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="max-w-md w-full bg-white rounded-[40px] p-10 shadow-2xl animate-in zoom-in-95 duration-300">
+                        <div className="text-center mb-8">
+                            <div className="h-16 w-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <Lock className="h-8 w-8 text-indigo-600" />
+                            </div>
+                            <h3 className="text-2xl font-black text-[#1B263B] uppercase tracking-tighter">Recuperar Senha</h3>
+                            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-2">Enviaremos um link de acesso ao seu e-mail</p>
+                        </div>
+
+                        <form onSubmit={handleForgotPassword} className="space-y-6">
+                            {resetMessage && (
+                                <div className={clsx(
+                                    "p-4 rounded-2xl text-[11px] font-black uppercase tracking-widest text-center border",
+                                    resetMessage.type === 'success' ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-red-50 text-red-600 border-red-100"
+                                )}>
+                                    {resetMessage.text}
+                                </div>
+                            )}
+
+                            <div className="space-y-2">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-2">Seu E-mail</label>
+                                <input
+                                    type="email"
+                                    required
+                                    value={resetEmail}
+                                    onChange={(e) => setResetEmail(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-100 p-5 rounded-2xl text-sm font-bold text-[#1B263B] outline-none focus:ring-4 focus:ring-indigo-50"
+                                    placeholder="exemplo@email.com"
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    type="submit"
+                                    disabled={isResetLoading}
+                                    className="w-full bg-[#1B263B] text-white py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl disabled:opacity-50"
+                                >
+                                    {isResetLoading ? <Loader2 className="h-5 w-5 animate-spin mx-auto" /> : 'Enviar Link de Recuperação'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowForgotPassword(false)}
+                                    className="w-full py-4 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:text-[#1B263B] transition-all"
+                                >
+                                    Voltar para o Login
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

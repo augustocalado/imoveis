@@ -66,7 +66,7 @@ export default async function Page({ params }: Props) {
     
     // Lista de rotas estáticas que não devem ser tratadas como slugs de imóveis
     // Isso é uma segurança extra, embora o Next.js já dê prioridade a rotas estáticas.
-    const staticRoutes = ['admin', 'blog', 'contato', 'catalogo', 'imoveis', 'sobre-nos', 'login', 'api', 'bairros'];
+    const staticRoutes = ['admin', 'blog', 'contato', 'catalogo', 'imoveis', 'sobre-nos', 'login', 'api', 'bairros', 'redefinir-senha'];
     if (staticRoutes.includes(slug)) {
         notFound();
     }

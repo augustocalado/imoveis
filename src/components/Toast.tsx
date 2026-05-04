@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { CheckCircle2, XCircle, Info, X } from 'lucide-react';
 import clsx from 'clsx';
 
+import { translateError } from '@/utils/error-handler';
+
 export type ToastType = 'success' | 'error' | 'info';
 
 interface ToastProps {
@@ -15,6 +17,7 @@ interface ToastProps {
 
 export default function Toast({ message, type, duration = 5000, onClose }: ToastProps) {
     const [isExiting, setIsExiting] = useState(false);
+    const translatedMessage = type === 'error' ? translateError(message) : message;
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -55,7 +58,7 @@ export default function Toast({ message, type, duration = 5000, onClose }: Toast
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40 mb-0.5">
                     {type === 'success' ? 'Sucesso' : type === 'error' ? 'Erro' : 'Notificação'}
                 </span>
-                <p className="text-sm font-bold leading-tight">{message}</p>
+                <p className="text-sm font-bold leading-tight">{translatedMessage}</p>
             </div>
 
             <button 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import { Lock, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
@@ -37,6 +37,23 @@ export default function ResetPasswordPage() {
             }, 3000);
         }
     };
+
+    // Para suporte a PKCE (se o link contiver ?code=...)
+    useEffect(() => {
+        const handleCodeExchange = async () => {
+            const url = new URL(window.location.href);
+            const code = url.searchParams.get('code');
+            
+            if (code) {
+                const { error } = await supabase.auth.exchangeCodeForSession(code);
+                if (error) {
+                    console.error('Erro ao trocar código por sessão:', error.message);
+                }
+            }
+        };
+        
+        handleCodeExchange();
+    }, []);
 
     if (status === 'success') {
         return (

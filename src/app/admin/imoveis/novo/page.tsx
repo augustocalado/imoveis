@@ -986,8 +986,19 @@ export default function NovoImovel() {
                                                     multiple
                                                     accept="image/*"
                                                     onChange={async (e) => {
-                                                        const files = e.target.files;
-                                                        if (!files || files.length === 0) return;
+                                                        const files = Array.from(e.target.files || []);
+                                                        if (files.length === 0) return;
+
+                                                        const currentCount = formData.images.length;
+                                                        const totalAfterSelection = currentCount + files.length;
+
+                                                        if (totalAfterSelection > 10) {
+                                                            showToast('Máximo de imagens 10', 'error');
+                                                            // Opcional: Processar apenas as primeiras N imagens para completar 10
+                                                            // files = files.slice(0, 10 - currentCount);
+                                                            // if (files.length === 0) return;
+                                                            return;
+                                                        }
 
                                                         setIsLoading(true);
                                                         const uploadedUrls = [];
@@ -999,7 +1010,7 @@ export default function NovoImovel() {
                                                             watermarkImg.onerror = resolve;
                                                         });
 
-                                                        for (const file of Array.from(files)) {
+                                                        for (const file of files) {
                                                             try {
                                                                 const imgUrl = URL.createObjectURL(file);
                                                                 const img = new Image();
@@ -1035,7 +1046,7 @@ export default function NovoImovel() {
                                                                             const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
                                                                             uploadedUrls.push(data.publicUrl);
                                                                         } else {
-                                                                            alert('Erro ao enviar: ' + uploadError.message);
+                                                                            showToast('Erro ao enviar: ' + uploadError.message, 'error');
                                                                         }
                                                                     }
                                                                 }

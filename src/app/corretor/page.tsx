@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import { toPng } from 'html-to-image';
 import VisitsManagement from '@/components/admin/VisitsManagement';
 import TermoVisitaModal from '@/components/admin/TermoVisitaModal';
+import Toast, { ToastType } from '@/components/Toast';
+import SocialAISection from '@/components/admin/SocialAISection';
 
 type Tab = 'overview' | 'my-properties' | 'my-leads' | 'social-ai' | 'settings' | 'appointments';
 
@@ -45,6 +47,11 @@ export default function CorretorDashboard() {
         cnpj: ''
     });
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
+
+    const showToast = (message: string, type: ToastType = 'success') => {
+        setToast({ message, type });
+    };
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -158,10 +165,10 @@ export default function CorretorDashboard() {
 
             // Refresh local state
             setCurrentUserProfile({ ...currentUserProfile, full_name: editName, creci: editCreci, bio: editBio });
-            alert('Perfil atualizado com sucesso!');
+            showToast('Perfil atualizado com sucesso!', 'success');
         } catch (err: any) {
             console.error('Erro ao atualizar perfil:', err);
-            alert('Erro ao salvar: ' + err.message);
+            showToast('Erro ao salvar: ' + err.message, 'error');
         } finally {
             setIsSavingProfile(false);
         }
@@ -200,10 +207,10 @@ export default function CorretorDashboard() {
             if (updateError) throw updateError;
 
             setCurrentUserProfile({ ...currentUserProfile, avatar_url: data.publicUrl });
-            alert('Foto de perfil atualizada!');
+            showToast('Foto de perfil atualizada!', 'success');
         } catch (err: any) {
             console.error(`Erro no upload de avatar [${STORAGE_BUCKET}]:`, err);
-            alert(`Erro ao carregar imagem no bucket ${STORAGE_BUCKET}: ` + err.message + '. Certifique-se de que o bucket existe e é público.');
+            showToast(`Erro ao carregar imagem no bucket ${STORAGE_BUCKET}: ` + err.message + '. Certifique-se de que o bucket existe e é público.', 'error');
         } finally {
             setIsUploadingAvatar(false);
         }
@@ -1065,8 +1072,14 @@ function SocialAISection({ properties }: { properties: any[] }) {
                     )}
                 </div>
             </div>
+
+            {toast && (
+                <Toast 
+                    message={toast.message} 
+                    type={toast.type} 
+                    onClose={() => setToast(null)} 
+                />
+            )}
         </div>
     );
 }
-
-
