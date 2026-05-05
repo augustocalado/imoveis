@@ -880,22 +880,6 @@ export default function NovoImovel() {
                                             </select>
                                         </div>
 
-                                        {/* Novos Campos na Primeira Seção */}
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-2 ml-2">
-                                                <Maximize2 className="h-3.5 w-3.5 text-slate-400" />
-                                                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Área Útil (m²)</label>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                placeholder="Ex: 85"
-                                                className="w-full bg-slate-50 border border-slate-100 p-5 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all"
-                                                value={formData.area}
-                                                onChange={e => setFormData({ ...formData, area: e.target.value })}
-                                            />
-                                        </div>
-
-
 
                                         <div className="space-y-2 md:col-span-2 lg:col-span-4 relative">
                                             <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-2">Título do Anúncio (Nome do Imóvel) <span className="text-red-500">*</span></label>
@@ -1356,6 +1340,20 @@ export default function NovoImovel() {
                                                 className="w-full bg-slate-50 border border-slate-100 p-5 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all"
                                                 value={formData.parking_spaces}
                                                 onChange={e => setFormData({ ...formData, parking_spaces: Number(e.target.value) })}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 ml-2">
+                                                <Maximize2 className="h-3.5 w-3.5 text-slate-400" />
+                                                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Área Útil (m²)</label>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Ex: 85"
+                                                className="w-full bg-slate-50 border border-slate-100 p-5 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all"
+                                                value={formData.area}
+                                                onChange={e => setFormData({ ...formData, area: e.target.value })}
                                             />
                                         </div>
 
