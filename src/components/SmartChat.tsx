@@ -33,7 +33,7 @@ export default function SmartChat() {
         q1_label: '🔑 Quero comprar',
         q2_label: '💰 Quero vender',
         q3_label: '📊 Simular financiamento',
-        q4_label: '📞 WhatsApp 24h',
+        q4_label: '📞 Atendimento WhatsApp',
         responseDelay: 1,
         faqs: []
     });

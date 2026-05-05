@@ -76,7 +76,7 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
                 let finalSpecs = data?.value || [
                     { id: 'rooms', label: 'Dorm', field: 'rooms', icon: 'Bed' },
                     { id: 'suites', label: 'Suítes', field: 'suites', icon: 'BedDouble' },
-                    { id: 'bathrooms', label: 'Banheiros', field: 'bathrooms', icon: 'Bath' },
+                    { id: 'bathrooms', label: 'WC', field: 'bathrooms', icon: 'Bath' },
                     { id: 'parking', label: 'Vagas', field: 'parking_spaces', icon: 'Car' },
                     { id: 'area', label: 'Área', field: 'area', icon: 'Maximize2', suffix: 'm²' }
                 ];
@@ -158,18 +158,18 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-5 gap-2 py-3 border-y border-slate-50 min-h-[4rem] items-center">
-                    {specs.slice(0, 5).map((spec) => {
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    {specs.map((spec: any, i: number) => {
                         const IconComp = ICON_MAP[spec.icon] || Info;
                         const value = prop[spec.field] || 0;
+                        
+                        // Se for o campo de suítes e o valor for 0, não exibe
+                        if (spec.field === 'suites' && (!value || value === 0)) return null;
+
                         return (
-                            <div key={spec.id} className="flex flex-col items-center gap-1" title={spec.label}>
-                                <div className="p-1.5 bg-slate-50 rounded-lg group-hover:bg-accent/5 transition-colors">
-                                    <IconComp className="h-4 w-4 text-accent" aria-hidden="true" />
-                                </div>
-                                <span className="text-[9px] font-black text-slate-500 tracking-widest uppercase text-center truncate w-full px-1">
-                                    {value}{spec.suffix || ''}
-                                </span>
+                            <div key={i} className="flex items-center gap-1.5 bg-slate-50 p-2 rounded-2xl group/item hover:bg-accent/10 transition-colors">
+                                <IconComp className="h-3.5 w-3.5 text-slate-400 group-hover/item:text-accent transition-colors" />
+                                <span className="text-[10px] font-black text-primary-900">{value}{spec.suffix || ''}</span>
                             </div>
                         );
                     })}

@@ -422,6 +422,10 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                             {specs.map((spec: any, i: number) => {
                                 const IconComp = ICON_MAP[spec.icon] || Info;
                                 const value = property[spec.field] || 0;
+                                
+                                // Se for o campo de suítes e o valor for 0, não exibe
+                                if (spec.field === 'suites' && (!value || value === 0)) return null;
+
                                 return (
                                     <div key={i} className="bg-slate-50 p-8 rounded-[40px] flex flex-col items-center text-center gap-3 border border-slate-100 hover:bg-white hover:shadow-2xl transition-all duration-500">
                                         <IconComp className={clsx("h-8 w-8 mb-2", spec.color || "text-accent")} />

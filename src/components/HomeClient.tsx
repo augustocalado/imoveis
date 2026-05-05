@@ -123,7 +123,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                                 className="w-full md:w-auto bg-[#25d366] text-white px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-green-500/20 group uppercase"
                             >
                                 <MessageCircle className="h-6 w-6 fill-current group-hover:rotate-12 transition-transform" />
-                                WhatsApp 24h
+                                Atendimento WhatsApp
                             </a>
                         </div>
 
