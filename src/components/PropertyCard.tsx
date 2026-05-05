@@ -73,17 +73,22 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
         if (!initialSpecs) {
             const fetchSpecs = async () => {
                 const { data } = await supabase.from('site_settings').select('value').eq('key', 'property_specs').single();
-                if (data && data.value) {
-                    setSpecs(data.value);
-                } else {
-                    setSpecs([
-                        { id: 'area', label: 'Área', field: 'area', icon: 'Maximize2', suffix: 'm²' },
-                        { id: 'rooms', label: 'Dorm', field: 'rooms', icon: 'Bed' },
-                        { id: 'suites', label: 'Suítes', field: 'suites', icon: 'BedDouble' },
-                        { id: 'bathrooms', label: 'Banheiros', field: 'bathrooms', icon: 'Bath' },
-                        { id: 'parking', label: 'Vagas', field: 'parking_spaces', icon: 'Car' }
-                    ]);
+                let finalSpecs = data?.value || [
+                    { id: 'rooms', label: 'Dorm', field: 'rooms', icon: 'Bed' },
+                    { id: 'suites', label: 'Suítes', field: 'suites', icon: 'BedDouble' },
+                    { id: 'bathrooms', label: 'Banheiros', field: 'bathrooms', icon: 'Bath' },
+                    { id: 'parking', label: 'Vagas', field: 'parking_spaces', icon: 'Car' },
+                    { id: 'area', label: 'Área', field: 'area', icon: 'Maximize2', suffix: 'm²' }
+                ];
+
+                // Garantir que a Área Útil fique sempre por último
+                const areaIndex = finalSpecs.findIndex((s: any) => s.id === 'area' || s.field === 'area');
+                if (areaIndex > -1 && areaIndex !== finalSpecs.length - 1) {
+                    const areaSpec = finalSpecs.splice(areaIndex, 1)[0];
+                    finalSpecs.push(areaSpec);
                 }
+
+                setSpecs(finalSpecs);
             };
             fetchSpecs();
         } else {

@@ -136,14 +136,22 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
 
                 // Busca as especificações configuradas
                 const { data: specsData } = await supabase.from('site_settings').select('value').eq('key', 'property_specs').single();
-                if (specsData) setSpecs(specsData.value);
-                else setSpecs([
-                    { id: 'area', label: 'Área', field: 'area', icon: 'Maximize2', suffix: 'm²' },
+                let finalSpecs = specsData?.value || [
                     { id: 'rooms', label: 'Dorm', field: 'rooms', icon: 'Bed' },
                     { id: 'suites', label: 'Suítes', field: 'suites', icon: 'BedDouble' },
                     { id: 'parking', label: 'Vagas', field: 'parking_spaces', icon: 'Car' },
-                    { id: 'bathrooms', label: 'WC', field: 'bathrooms', icon: 'Bath' }
-                ]);
+                    { id: 'bathrooms', label: 'WC', field: 'bathrooms', icon: 'Bath' },
+                    { id: 'area', label: 'Área', field: 'area', icon: 'Maximize2', suffix: 'm²' }
+                ];
+
+                // Garantir que a Área Útil fique sempre por último
+                const areaIndex = finalSpecs.findIndex((s: any) => s.id === 'area' || s.field === 'area');
+                if (areaIndex > -1 && areaIndex !== finalSpecs.length - 1) {
+                    const areaSpec = finalSpecs.splice(areaIndex, 1)[0];
+                    finalSpecs.push(areaSpec);
+                }
+                
+                setSpecs(finalSpecs);
             }
             setIsLoading(false);
         };
