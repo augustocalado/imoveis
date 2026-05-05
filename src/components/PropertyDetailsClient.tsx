@@ -450,16 +450,16 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                         {/* Características extras */}
                         {property.features && property.features.length > 0 && (
                             <div className="space-y-8">
-                                <h3 className="text-xl font-black tracking-tighter text-slate-300">Infraestrutura e Lazer</h3>
+                                <h3 className="text-xl font-black tracking-tighter text-primary-900">Infraestrutura e Lazer</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     {property.features.map((feat: string, i: number) => {
                                         const FeatureIcon = getFeatureIcon(feat);
                                         return (
                                             <div key={i} className="bg-white px-6 py-5 rounded-3xl border border-slate-100 flex items-center gap-4 hover:border-accent transition-all shadow-sm group">
                                                 <div className="h-8 w-8 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
-                                                    <FeatureIcon className="h-4 w-4 text-accent opacity-40 group-hover:opacity-100 transition-opacity" />
+                                                    <FeatureIcon className="h-4 w-4 text-accent opacity-70 group-hover:opacity-100 transition-opacity" />
                                                 </div>
-                                                <span className="text-[11px] font-black text-slate-500 tracking-widest uppercase">{feat}</span>
+                                                <span className="text-[11px] font-black text-slate-800 tracking-widest uppercase">{feat}</span>
                                             </div>
                                         );
                                     })}
