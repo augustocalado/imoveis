@@ -989,17 +989,6 @@ export default function NovoImovel() {
                                                         const files = Array.from(e.target.files || []);
                                                         if (files.length === 0) return;
 
-                                                        const currentCount = formData.images.length;
-                                                        const totalAfterSelection = currentCount + files.length;
-
-                                                        if (totalAfterSelection > 10) {
-                                                            showToast('Máximo de imagens 10', 'error');
-                                                            // Opcional: Processar apenas as primeiras N imagens para completar 10
-                                                            // files = files.slice(0, 10 - currentCount);
-                                                            // if (files.length === 0) return;
-                                                            return;
-                                                        }
-
                                                         setIsLoading(true);
                                                         const uploadedUrls = [];
 

@@ -985,14 +985,6 @@ export default function EditarImovel() {
                                                         const files = Array.from(e.target.files || []);
                                                         if (files.length === 0) return;
 
-                                                        const currentCount = formData.images.length;
-                                                        const totalAfterSelection = currentCount + files.length;
-
-                                                        if (totalAfterSelection > 10) {
-                                                            showToast('Máximo de imagens 10', 'error');
-                                                            return;
-                                                        }
-
                                                         setIsLoading(true);
                                                         const uploadedUrls = [];
 
