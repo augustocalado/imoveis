@@ -153,7 +153,7 @@ function AdminDashboardContent() {
                     totalLeads: leadsCount || 0,
                     monthlyRevenue,
                     occupancyRate: propsCount ? Math.round((activeProps! / propsCount) * 100) : 0,
-                    conversionRate: 28
+                    conversionRate: leadsCount ? Math.round((activeProps! / leadsCount) * 10) : 0 // Exemplo de cálculo mais dinâmico ou manter 0
                 });
 
                 // Get auth user and profile
@@ -484,11 +484,11 @@ function AdminDashboardContent() {
                         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
                             {/* KPI Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {[
-                                    { label: 'Receita Mensal', value: `R$ ${stats.monthlyRevenue.toLocaleString('pt-BR')}`, sub: '+12.5% vs. mês passado', icon: DollarSign },
-                                    { label: 'Total de Leads', value: stats.totalLeads.toString(), sub: '+5 novos hoje', icon: UserPlus },
-                                    { label: 'Imóveis Ativos', value: stats.totalProperties.toString(), sub: 'No banco de dados', icon: Building2 },
-                                    { label: 'Conversão', value: `${stats.conversionRate}%`, sub: '-2% vs. semana passada', icon: TrendingUp },
+                                [
+                                    { label: 'Receita Mensal', value: `R$ ${stats.monthlyRevenue.toLocaleString('pt-BR')}`, sub: 'Total recebido', icon: DollarSign },
+                                    { label: 'Total de Leads', value: stats.totalLeads.toString(), sub: 'Cadastrados no sistema', icon: UserPlus },
+                                    { label: 'Imóveis Ativos', value: stats.totalProperties.toString(), sub: 'Publicados no site', icon: Building2 },
+                                    { label: 'Taxa de Ocupação', value: `${stats.occupancyRate}%`, sub: 'Imóveis disponíveis', icon: TrendingUp },
                                 ].map((stat, i) => (
                                     <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
                                         <div className="flex items-center gap-4 mb-4">
@@ -498,9 +498,8 @@ function AdminDashboardContent() {
                                             <p className="text-sm font-medium text-slate-500">{stat.label}</p>
                                         </div>
                                         <h4 className="text-2xl font-bold tracking-tight text-slate-800 mb-2">{stat.value}</h4>
-                                        <p className="text-xs font-medium text-emerald-600 flex items-center gap-1">
-                                            {stat.sub.includes('+') ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3 text-red-500" />}
-                                            <span className={stat.sub.includes('-') ? 'text-red-500' : ''}>{stat.sub}</span>
+                                        <p className="text-xs font-medium text-slate-400 flex items-center gap-1">
+                                            <span>{stat.sub}</span>
                                         </p>
                                     </div>
                                 ))}
@@ -521,13 +520,16 @@ function AdminDashboardContent() {
                                     </div>
                                     {/* SVG Area Chart Placeholder */}
                                     <div className="h-80 w-full bg-slate-50 rounded-[35px] relative overflow-hidden group">
-                                        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#10b981]/5 to-transparent" />
+                            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#10b981]/5 to-transparent" />
                                     </div>
                                 </div>
 
                                 <div className="lg:col-span-4 space-y-10">
                                     {/* Agenda de Visitas Card */}
-                                    {visits.filter(v => v.status === 'agendado').length > 0 && (
+                                    {visits.filter(v => {
+                                        const today = new Date().toISOString().split('T')[0];
+                                        return v.status === 'agendado' && v.visit_date === today;
+                                    }).length > 0 && (
                                         <div className="bg-[#1B263B] p-10 rounded-[50px] shadow-2xl relative overflow-hidden group min-h-[400px]">
                                             <div className="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/10 blur-[80px] group-hover:bg-[#10b981]/20 transition-all duration-1000" />
                                             <div className="relative z-10 space-y-8">
@@ -535,10 +537,16 @@ function AdminDashboardContent() {
                                                     <h3 className="text-xl font-black text-white tracking-tighter uppercase flex items-center gap-3">
                                                         <Calendar className="h-5 w-5 text-[#10b981]" /> Agenda de Hoje
                                                     </h3>
-                                                    <span className="bg-[#10b981] text-white text-[9px] font-black px-3 py-1 rounded-lg uppercase">{visits.filter(v => v.status === 'agendado').length} Visitas</span>
+                                                    <span className="bg-[#10b981] text-white text-[9px] font-black px-3 py-1 rounded-lg uppercase">{visits.filter(v => {
+                                                            const today = new Date().toISOString().split('T')[0];
+                                                            return v.status === 'agendado' && v.visit_date === today;
+                                                        }).length} Visitas</span>
                                                 </div>
                                                 <div className="space-y-4">
-                                                    {visits.filter(v => v.status === 'agendado').slice(0, 3).map((v, i) => (
+                                                    {visits.filter(v => {
+                                                        const today = new Date().toISOString().split('T')[0];
+                                                        return v.status === 'agendado' && v.visit_date === today;
+                                                    }).slice(0, 3).map((v, i) => (
                                                         <div key={i} onClick={() => setCurrentTab('agenda')} className="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
                                                             <div className="flex justify-between items-start mb-2">
                                                                 <p className="text-sm font-black text-white uppercase tracking-tight">{v.client_name}</p>
