@@ -484,7 +484,7 @@ function AdminDashboardContent() {
                         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
                             {/* KPI Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                [
+                                {[
                                     { label: 'Receita Mensal', value: `R$ ${stats.monthlyRevenue.toLocaleString('pt-BR')}`, sub: 'Total recebido', icon: DollarSign },
                                     { label: 'Total de Leads', value: stats.totalLeads.toString(), sub: 'Cadastrados no sistema', icon: UserPlus },
                                     { label: 'Imóveis Ativos', value: stats.totalProperties.toString(), sub: 'Publicados no site', icon: Building2 },
