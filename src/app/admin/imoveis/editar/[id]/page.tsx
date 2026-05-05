@@ -1252,16 +1252,6 @@ export default function EditarImovel() {
                                 <div className="p-10 pt-0 space-y-8 animate-in fade-in slide-in-from-top-2 duration-300">
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                                         <div className="space-y-2">
-                                            <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-2">Ano de Construção</label>
-                                            <input
-                                                type="text"
-                                                placeholder="Ex: 2020"
-                                                className="w-full bg-slate-50 border border-slate-100 p-5 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all"
-                                                value={formData.year_built}
-                                                onChange={e => setFormData({ ...formData, year_built: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
                                             <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-2">Região</label>
                                             <input
                                                 type="text"
