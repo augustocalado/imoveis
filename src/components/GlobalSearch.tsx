@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Search, MapPin, DollarSign, ChevronDown, Check, Home } from 'lucide-react';
+import { Search, MapPin, DollarSign, ChevronDown, Check, Home, Bed } from 'lucide-react';
 
 import { useRouter, usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -14,30 +14,17 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
     const [price, setPrice] = useState('');
     const [reference, setReference] = useState('');
     const [category, setCategory] = useState('');
+    const [rooms, setRooms] = useState('');
     const [isBairroOpen, setIsBairroOpen] = useState(false);
 
     useEffect(() => {
         const fetchNeighborhoods = async () => {
-            // First try to get from settings for a complete list
-            const { data: settingsData } = await supabase
-                .from('site_settings')
-                .select('value')
-                .eq('key', 'site_locations')
-                .single();
-
-            if (settingsData?.value) {
-                const allNeighborhoods = settingsData.value.flatMap((city: any) => city.neighborhoods || []);
-                const unique = Array.from(new Set(allNeighborhoods)) as string[];
-                setNeighborhoods(unique.sort());
-            } else {
-                // Fallback to existing properties
-                const { data } = await supabase
-                    .from('properties')
-                    .select('neighborhood')
-                    .not('neighborhood', 'is', null);
-                const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
-                setNeighborhoods(unique.sort());
-            }
+            const { data } = await supabase
+                .from('properties')
+                .select('neighborhood')
+                .not('neighborhood', 'is', null);
+            const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
+            setNeighborhoods(unique.sort());
         };
         fetchNeighborhoods();
     }, []);
@@ -51,6 +38,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
         if (price) params.set('maxPrice', price);
         if (reference) params.set('ref', reference);
         if (category) params.set('cat', category);
+        if (rooms) params.set('rooms', rooms);
         
         const targetPath = pathname === '/catalogo' ? '/catalogo' : '/imoveis';
         router.push(`${targetPath}?${params.toString()}`);
@@ -164,6 +152,28 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
                     <option value="Kitnet" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Kitnet</option>
                     <option value="Terreno" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Terreno</option>
                     <option value="Comercial" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Comercial</option>
+                </select>
+                <ChevronDown className={clsx("absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none", isLight ? "text-slate-400" : "text-white/20")} aria-hidden="true" />
+            </div>
+
+            <div className="flex-1 w-full relative">
+                <Bed className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
+                <select
+                    value={rooms}
+                    aria-label="Dormitórios"
+                    onChange={(e) => setRooms(e.target.value)}
+                    className={clsx(
+                        "w-full p-4 pl-12 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all appearance-none cursor-pointer",
+                        isLight ? "bg-slate-50 border border-slate-200 text-slate-900" : "bg-white/5 border border-white/10 text-white",
+                        !rooms && isLight && "text-slate-400",
+                        !rooms && !isLight && "text-white/40"
+                    )}
+                >
+                    <option value="" className={isLight ? "bg-white text-slate-400" : "bg-primary-900"}>Dormitórios</option>
+                    <option value="1" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>1 Dormitório</option>
+                    <option value="2" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>2 Dormitórios</option>
+                    <option value="3" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>3 Dormitórios</option>
+                    <option value="4" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>4+ Dormitórios</option>
                 </select>
                 <ChevronDown className={clsx("absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none", isLight ? "text-slate-400" : "text-white/20")} aria-hidden="true" />
             </div>

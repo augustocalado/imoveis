@@ -29,6 +29,7 @@ function CatalogResults() {
         const maxPrice = searchParams.get('maxPrice');
         const ref = searchParams.get('ref');
         const cat = searchParams.get('cat');
+        const rooms = searchParams.get('rooms');
 
         let query = supabase
             .from('properties')
@@ -61,6 +62,15 @@ function CatalogResults() {
 
             if (cat) {
                 query = query.ilike('category', `%${cat}%`);
+            }
+
+            if (rooms) {
+                const minRooms = parseInt(rooms);
+                if (minRooms >= 4) {
+                    query = query.gte('rooms', minRooms);
+                } else {
+                    query = query.eq('rooms', minRooms);
+                }
             }
         }
 

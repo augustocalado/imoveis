@@ -90,6 +90,7 @@ function AdminDashboardContent() {
     const [filterCategory, setFilterCategory] = useState('');
     const [filterMaxPrice, setFilterMaxPrice] = useState('');
     const [filterRef, setFilterRef] = useState('');
+    const [filterRooms, setFilterRooms] = useState('');
     const [showFilters, setShowFilters] = useState(false);
     const [isBairroOpen, setIsBairroOpen] = useState(false);
 
@@ -100,23 +101,12 @@ function AdminDashboardContent() {
 
     useEffect(() => {
         const fetchNeighborhoods = async () => {
-            const { data: settingsData } = await supabase
-                .from('site_settings')
-                .select('value')
-                .eq('key', 'site_locations')
-                .single();
-            if (settingsData?.value) {
-                const allNeighborhoods = settingsData.value.flatMap((city: any) => city.neighborhoods || []);
-                const unique = Array.from(new Set(allNeighborhoods)) as string[];
-                setNeighborhoods(unique.sort());
-            } else {
-                const { data } = await supabase
-                    .from('properties')
-                    .select('neighborhood')
-                    .not('neighborhood', 'is', null);
-                const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
-                setNeighborhoods(unique.sort());
-            }
+            const { data } = await supabase
+                .from('properties')
+                .select('neighborhood')
+                .not('neighborhood', 'is', null);
+            const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
+            setNeighborhoods(unique.sort());
         };
         fetchNeighborhoods();
     }, []);
@@ -137,14 +127,14 @@ function AdminDashboardContent() {
         setToast({ message, type });
     };
 
-    const fetchProperties = async (search?: string, filters?: { neighborhoods?: string[], category?: string, maxPrice?: string, ref?: string }) => {
+    const fetchProperties = async (search?: string, filters?: { neighborhoods?: string[], category?: string, maxPrice?: string, ref?: string, rooms?: string }) => {
         try {
             let query = supabase
                 .from('properties')
                 .select('*, profiles!corretor_id(full_name)')
                 .order('created_at', { ascending: false });
 
-            const f = filters || { neighborhoods: selectedNeighborhoods, category: filterCategory, maxPrice: filterMaxPrice, ref: filterRef };
+            const f = filters || { neighborhoods: selectedNeighborhoods, category: filterCategory, maxPrice: filterMaxPrice, ref: filterRef, rooms: filterRooms };
 
             if (search) {
                 const s = search.trim();
@@ -167,7 +157,16 @@ function AdminDashboardContent() {
                 query = query.lte('price', parseFloat(f.maxPrice));
             }
 
-            if (!search && !f.ref && (!f.neighborhoods || f.neighborhoods.length === 0) && !f.category && !f.maxPrice) {
+            if (f.rooms) {
+                const minRooms = parseInt(f.rooms);
+                if (minRooms >= 4) {
+                    query = query.gte('rooms', minRooms);
+                } else {
+                    query = query.eq('rooms', minRooms);
+                }
+            }
+
+            if (!search && !f.ref && (!f.neighborhoods || f.neighborhoods.length === 0) && !f.category && !f.maxPrice && !f.rooms) {
                 query = query.limit(50);
             }
 
@@ -183,7 +182,7 @@ function AdminDashboardContent() {
             fetchProperties(searchTerm);
         }, 500);
         return () => clearTimeout(timeoutId);
-    }, [searchTerm, selectedNeighborhoods, filterCategory, filterMaxPrice, filterRef]);
+    }, [searchTerm, selectedNeighborhoods, filterCategory, filterMaxPrice, filterRef, filterRooms]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -690,13 +689,14 @@ function AdminDashboardContent() {
                                 >
                                     <Filter className="h-4 w-4" /> Filtros
                                 </button>
-                                {(selectedNeighborhoods.length > 0 || filterCategory || filterMaxPrice || filterRef) && (
+                                {(selectedNeighborhoods.length > 0 || filterCategory || filterMaxPrice || filterRef || filterRooms) && (
                                     <button
                                         onClick={() => {
                                             setSelectedNeighborhoods([]);
                                             setFilterCategory('');
                                             setFilterMaxPrice('');
                                             setFilterRef('');
+                                            setFilterRooms('');
                                         }}
                                         className="text-[11px] font-black text-red-400 uppercase tracking-[0.2em] hover:text-red-500 transition-colors"
                                     >
@@ -707,7 +707,7 @@ function AdminDashboardContent() {
 
                             {showFilters && (
                                 <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm mb-8 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                                         {/* Referência */}
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Referência</label>
@@ -808,6 +808,26 @@ function AdminDashboardContent() {
                                                     <option value="750000">Até R$ 750 Mil</option>
                                                     <option value="1000000">Até R$ 1 Milhão</option>
                                                     <option value="2000000">Até R$ 2 Milhões</option>
+                                                </select>
+                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                                            </div>
+                                        </div>
+
+                                        {/* Dormitórios */}
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Dormitórios</label>
+                                            <div className="relative">
+                                                <Bed className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
+                                                <select
+                                                    value={filterRooms}
+                                                    onChange={(e) => setFilterRooms(e.target.value)}
+                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all appearance-none cursor-pointer text-slate-900"
+                                                >
+                                                    <option value="">Qualquer</option>
+                                                    <option value="1">1 Dormitório</option>
+                                                    <option value="2">2 Dormitórios</option>
+                                                    <option value="3">3 Dormitórios</option>
+                                                    <option value="4">4+ Dormitórios</option>
                                                 </select>
                                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                                             </div>
