@@ -309,7 +309,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 <div className="mt-4 flex flex-col items-end gap-1">
                                     {property.down_payment > 0 && (
                                         <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                            Entrada: <span className="text-primary-900">{property.down_payment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                                            Valor de Entrada: <span className="text-primary-900">{property.down_payment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                                         </div>
                                     )}
                                     {property.condo_fee > 0 && (

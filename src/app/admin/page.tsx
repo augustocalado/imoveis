@@ -85,10 +85,40 @@ function AdminDashboardContent() {
     const [visits, setVisits] = useState<any[]>([]);
     const [chatLeads, setChatLeads] = useState<any[]>([]);
     const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
+    const [neighborhoods, setNeighborhoods] = useState<string[]>([]);
+    const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
+    const [filterCategory, setFilterCategory] = useState('');
+    const [filterMaxPrice, setFilterMaxPrice] = useState('');
+    const [filterRef, setFilterRef] = useState('');
+    const [showFilters, setShowFilters] = useState(false);
+    const [isBairroOpen, setIsBairroOpen] = useState(false);
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('kf_admin_theme');
         if (savedTheme === 'dark') setIsDarkMode(true);
+    }, []);
+
+    useEffect(() => {
+        const fetchNeighborhoods = async () => {
+            const { data: settingsData } = await supabase
+                .from('site_settings')
+                .select('value')
+                .eq('key', 'site_locations')
+                .single();
+            if (settingsData?.value) {
+                const allNeighborhoods = settingsData.value.flatMap((city: any) => city.neighborhoods || []);
+                const unique = Array.from(new Set(allNeighborhoods)) as string[];
+                setNeighborhoods(unique.sort());
+            } else {
+                const { data } = await supabase
+                    .from('properties')
+                    .select('neighborhood')
+                    .not('neighborhood', 'is', null);
+                const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
+                setNeighborhoods(unique.sort());
+            }
+        };
+        fetchNeighborhoods();
     }, []);
 
     useEffect(() => {
@@ -107,18 +137,38 @@ function AdminDashboardContent() {
         setToast({ message, type });
     };
 
-    const fetchProperties = async (search?: string) => {
+    const fetchProperties = async (search?: string, filters?: { neighborhoods?: string[], category?: string, maxPrice?: string, ref?: string }) => {
         try {
             let query = supabase
                 .from('properties')
                 .select('*, profiles!corretor_id(full_name)')
                 .order('created_at', { ascending: false });
 
+            const f = filters || { neighborhoods: selectedNeighborhoods, category: filterCategory, maxPrice: filterMaxPrice, ref: filterRef };
+
             if (search) {
                 const s = search.trim();
                 query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%`);
-            } else {
-                query = query.limit(50); // Show more by default
+            }
+
+            if (f.ref) {
+                query = query.ilike('reference_id', `%${f.ref.trim()}%`);
+            }
+
+            if (f.neighborhoods && f.neighborhoods.length > 0) {
+                query = query.in('neighborhood', f.neighborhoods);
+            }
+
+            if (f.category) {
+                query = query.eq('category', f.category);
+            }
+
+            if (f.maxPrice) {
+                query = query.lte('price', parseFloat(f.maxPrice));
+            }
+
+            if (!search && !f.ref && (!f.neighborhoods || f.neighborhoods.length === 0) && !f.category && !f.maxPrice) {
+                query = query.limit(50);
             }
 
             const { data } = await query;
@@ -133,7 +183,7 @@ function AdminDashboardContent() {
             fetchProperties(searchTerm);
         }, 500);
         return () => clearTimeout(timeoutId);
-    }, [searchTerm]);
+    }, [searchTerm, selectedNeighborhoods, filterCategory, filterMaxPrice, filterRef]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -626,6 +676,145 @@ function AdminDashboardContent() {
                                     </Link>
                                 </div>
                             </div>
+
+                            {/* Filtros Avançados */}
+                            <div className="flex items-center gap-4 mb-6">
+                                <button
+                                    onClick={() => setShowFilters(!showFilters)}
+                                    className={clsx(
+                                        "flex items-center gap-2 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all border",
+                                        showFilters
+                                            ? "bg-[#10b981] text-white border-[#10b981] shadow-lg shadow-[#10b981]/20"
+                                            : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
+                                    )}
+                                >
+                                    <Filter className="h-4 w-4" /> Filtros
+                                </button>
+                                {(selectedNeighborhoods.length > 0 || filterCategory || filterMaxPrice || filterRef) && (
+                                    <button
+                                        onClick={() => {
+                                            setSelectedNeighborhoods([]);
+                                            setFilterCategory('');
+                                            setFilterMaxPrice('');
+                                            setFilterRef('');
+                                        }}
+                                        className="text-[11px] font-black text-red-400 uppercase tracking-[0.2em] hover:text-red-500 transition-colors"
+                                    >
+                                        Limpar filtros
+                                    </button>
+                                )}
+                            </div>
+
+                            {showFilters && (
+                                <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm mb-8 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        {/* Referência */}
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Referência</label>
+                                            <div className="relative">
+                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Ref. do Imóvel"
+                                                    value={filterRef}
+                                                    onChange={(e) => setFilterRef(e.target.value)}
+                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-4 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all placeholder:text-slate-300"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Bairro */}
+                                        <div className="space-y-2 relative">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Bairro</label>
+                                            <div className="relative">
+                                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsBairroOpen(!isBairroOpen)}
+                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all text-left flex items-center justify-between"
+                                                >
+                                                    <span className={clsx("truncate", selectedNeighborhoods.length === 0 && "text-slate-400")}>
+                                                        {selectedNeighborhoods.length === 0 ? 'Todos os Bairros' : `${selectedNeighborhoods.length} selecionados`}
+                                                    </span>
+                                                    <ChevronDown className={clsx("h-4 w-4 text-slate-400 transition-transform", isBairroOpen && "rotate-180")} />
+                                                </button>
+                                                {isBairroOpen && (
+                                                    <>
+                                                        <div className="fixed inset-0 z-40" onClick={() => setIsBairroOpen(false)} />
+                                                        <div className="absolute top-full left-0 right-0 mt-2 border border-slate-100 bg-white rounded-2xl shadow-2xl z-50 max-h-56 overflow-y-auto p-3 space-y-1">
+                                                            {neighborhoods.map((n) => (
+                                                                <label key={n} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer hover:bg-slate-50 transition-all">
+                                                                    <div className={clsx(
+                                                                        "h-5 w-5 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0",
+                                                                        selectedNeighborhoods.includes(n) ? "bg-[#10b981] border-[#10b981]" : "border-slate-200"
+                                                                    )}>
+                                                                        {selectedNeighborhoods.includes(n) && <Check className="h-3 w-3 text-white" />}
+                                                                    </div>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        className="sr-only"
+                                                                        checked={selectedNeighborhoods.includes(n)}
+                                                                        onChange={() => setSelectedNeighborhoods(prev =>
+                                                                            prev.includes(n) ? prev.filter(item => item !== n) : [...prev, n]
+                                                                        )}
+                                                                    />
+                                                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-600">{n}</span>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Categoria */}
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Categoria</label>
+                                            <div className="relative">
+                                                <Home className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
+                                                <select
+                                                    value={filterCategory}
+                                                    onChange={(e) => setFilterCategory(e.target.value)}
+                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all appearance-none cursor-pointer text-slate-900"
+                                                >
+                                                    <option value="">Todas as Categorias</option>
+                                                    <option value="Apartamento">Apartamento</option>
+                                                    <option value="Casa">Casa</option>
+                                                    <option value="Casa de Condomínio">Casa de Condomínio</option>
+                                                    <option value="Sobrado">Sobrado</option>
+                                                    <option value="Sobrado de Condomínio">Sobrado de Condomínio</option>
+                                                    <option value="Kitnet">Kitnet</option>
+                                                    <option value="Terreno">Terreno</option>
+                                                    <option value="Comercial">Comercial</option>
+                                                </select>
+                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                                            </div>
+                                        </div>
+
+                                        {/* Preço Máximo */}
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Até o valor</label>
+                                            <div className="relative">
+                                                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
+                                                <select
+                                                    value={filterMaxPrice}
+                                                    onChange={(e) => setFilterMaxPrice(e.target.value)}
+                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all appearance-none cursor-pointer text-slate-900"
+                                                >
+                                                    <option value="">Sem limite</option>
+                                                    <option value="100000">Até R$ 100 Mil</option>
+                                                    <option value="300000">Até R$ 300 Mil</option>
+                                                    <option value="500000">Até R$ 500 Mil</option>
+                                                    <option value="750000">Até R$ 750 Mil</option>
+                                                    <option value="1000000">Até R$ 1 Milhão</option>
+                                                    <option value="2000000">Até R$ 2 Milhões</option>
+                                                </select>
+                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Property Grid (Boxes) */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
