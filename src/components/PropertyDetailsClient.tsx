@@ -305,8 +305,13 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                             <div className="text-4xl md:text-6xl font-black text-primary-900 tracking-tighter leading-none">
                                 {property.price?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                             </div>
-                            {(property.condo_fee > 0 || property.iptu > 0) && (
+                            {(property.down_payment > 0 || property.condo_fee > 0 || property.iptu > 0) && (
                                 <div className="mt-4 flex flex-col items-end gap-1">
+                                    {property.down_payment > 0 && (
+                                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                            Entrada: <span className="text-primary-900">{property.down_payment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                                        </div>
+                                    )}
                                     {property.condo_fee > 0 && (
                                         <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                                             Condomínio: <span className="text-primary-900">{property.condo_fee.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>

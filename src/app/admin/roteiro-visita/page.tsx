@@ -39,6 +39,7 @@ interface Property {
   city: string;
   condo_fee: number;
   iptu: number;
+  down_payment: number;
 }
 
 export default function RoteiroVisitaPage() {
@@ -235,9 +236,10 @@ export default function RoteiroVisitaPage() {
                         <MapPin className="h-3 w-3 text-[#10b981]" /> {prop.address}, {prop.address_number} - {prop.neighborhood}, {prop.city}
                      </p>
                      <div className="flex gap-6">
-                        <p className="text-[10px] font-black uppercase text-[#1B263B]">Cond: <span className="text-slate-400">R$ {prop.condo_fee || '0,00'}</span></p>
-                        <p className="text-[10px] font-black uppercase text-[#1B263B]">IPTU: <span className="text-slate-400">R$ {prop.iptu || '0,00'}</span></p>
-                     </div>
+                        {prop.down_payment > 0 && <p className="text-[10px] font-black uppercase text-[#1B263B]">Entrada: <span className="text-slate-400">R$ {prop.down_payment?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></p>}
+                         <p className="text-[10px] font-black uppercase text-[#1B263B]">Cond: <span className="text-slate-400">R$ {prop.condo_fee || '0,00'}</span></p>
+                         <p className="text-[10px] font-black uppercase text-[#1B263B]">IPTU: <span className="text-slate-400">R$ {prop.iptu || '0,00'}</span></p>
+                      </div>
                   </div>
                 </div>
 

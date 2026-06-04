@@ -484,8 +484,9 @@ function VisitItineraryPDF({ visit, properties, corretor, onClose }: { visit: an
                                             <div className="bg-slate-900 text-white px-2 py-0.5 rounded text-[8px] font-black uppercase">REF: {p.reference_id}</div>
                                         </div>
                                         <div className="flex gap-4 text-[9px] font-black text-slate-400 uppercase">
-                                            {p.condo_fee > 0 && <span>Cond: R$ {p.condo_fee}</span>}
-                                            {p.iptu > 0 && <span>IPTU: R$ {p.iptu}</span>}
+                                             {p.down_payment > 0 && <span>Entrada: R$ {p.down_payment}</span>}
+                                             {p.condo_fee > 0 && <span>Cond: R$ {p.condo_fee}</span>}
+                                             {p.iptu > 0 && <span>IPTU: R$ {p.iptu}</span>}
                                         </div>
                                         <div className="flex gap-3 text-[9px] font-bold text-slate-500 uppercase overflow-hidden">
                                             <span>{p.rooms} qts</span>
