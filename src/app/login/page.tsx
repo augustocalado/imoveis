@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
 import { LogIn, User, Lock, Mail, Loader2, House, Sparkles, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { signInAction } from './loginActions';
@@ -14,7 +13,6 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter();
 
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState('');
@@ -38,9 +36,10 @@ export default function LoginPage() {
             const finalRole = result.role || 'cliente';
             console.log('Login successful. Role detected:', finalRole);
 
-            if (finalRole === 'admin') router.push('/admin');
-            else if (finalRole === 'corretor') router.push('/corretor');
-            else router.push('/cliente');
+            // Full navigation to ensure cookies are picked up by middleware
+            if (finalRole === 'admin') window.location.href = '/admin';
+            else if (finalRole === 'corretor') window.location.href = '/corretor';
+            else window.location.href = '/cliente';
             
         } catch (err: any) {
             setError('Ocorreu um erro inesperado. Tente novamente.');
