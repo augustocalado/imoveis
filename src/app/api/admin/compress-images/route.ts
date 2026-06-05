@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase-admin';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import sharp from 'sharp';
 
 export async function POST() {
     try {
+        const supabaseAdmin = getSupabaseAdmin();
         const { data: files, error: listError } = await supabaseAdmin
             .storage
             .from('properties')
