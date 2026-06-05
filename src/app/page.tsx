@@ -1,6 +1,8 @@
 import HomeClient from '@/components/HomeClient';
 import { supabaseServer } from '@/lib/supabase-server';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
     // Fetch all data on the server
     let heroRes, configRes, propsRes, blogRes, neighborRes, hqRes, contactRes, specsRes, partnersRes;
