@@ -3,42 +3,46 @@ import { supabaseServer } from '@/lib/supabase-server';
 
 export const dynamic = 'force-dynamic';
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
+    return Promise.race([
+        promise,
+        new Promise<T | null>((resolve) => setTimeout(() => resolve(null), ms)),
+    ]);
+}
+
 export default async function Home() {
-    // Fetch all data on the server
-    let heroRes, configRes, propsRes, blogRes, neighborRes, hqRes, contactRes, specsRes, partnersRes;
-    
-    try {
-        [
-            heroRes,
-            configRes,
-            propsRes,
-            blogRes,
-            neighborRes,
-            hqRes,
-            contactRes,
-            specsRes,
-            partnersRes
-        ] = await Promise.all([
-            supabaseServer.from('site_settings').select('value').eq('key', 'home_hero').maybeSingle(),
-            supabaseServer.from('site_settings').select('value').eq('key', 'home_config').maybeSingle(),
+    const results = await Promise.allSettled([
+        withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'home_hero').maybeSingle(), 8000),
+        withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'home_config').maybeSingle(), 8000),
+        withTimeout(
             supabaseServer.from('properties')
                 .select('*, profiles!corretor_id(full_name)')
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível'])
                 .eq('is_featured', true)
                 .limit(100),
-            supabaseServer.from('blog_posts').select('*').order('created_at', { ascending: false }).limit(3),
-            supabaseServer.from('properties').select('neighborhood').not('neighborhood', 'is', null),
-            supabaseServer.from('site_settings').select('value').eq('key', 'home_hq').maybeSingle(),
-            supabaseServer.from('site_settings').select('value').eq('key', 'site_contact').maybeSingle(),
-            supabaseServer.from('site_settings').select('value').eq('key', 'property_specs').maybeSingle(),
-            supabaseServer.from('partners').select('*').order('created_at', { ascending: false })
-        ]);
-    } catch (e) {
-        console.error("Error fetching data:", e);
-    }
+            15000
+        ),
+        withTimeout(supabaseServer.from('blog_posts').select('*').order('created_at', { ascending: false }).limit(3), 8000),
+        withTimeout(supabaseServer.from('properties').select('neighborhood').not('neighborhood', 'is', null), 10000),
+        withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'home_hq').maybeSingle(), 8000),
+        withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'site_contact').maybeSingle(), 8000),
+        withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'property_specs').maybeSingle(), 8000),
+        withTimeout(supabaseServer.from('partners').select('*').order('created_at', { ascending: false }), 8000),
+    ]);
 
+    const extract = (index: number) =>
+        results[index]?.status === 'fulfilled' ? (results[index] as PromiseFulfilledResult<any>).value : null;
 
-    // Data processing
+    const heroRes = extract(0);
+    const configRes = extract(1);
+    const propsRes = extract(2);
+    const blogRes = extract(3);
+    const neighborRes = extract(4);
+    const hqRes = extract(5);
+    const contactRes = extract(6);
+    const specsRes = extract(7);
+    const partnersRes = extract(8);
+
     const heroSettings = heroRes?.data?.value || {
         title: 'Encontre seu imóvel \nna Praia Grande \ncom atendimento rápido',
         subtitle: 'As melhores oportunidades no Canto do Forte, Boqueirão e toda região da Baixada Santista.',
@@ -58,8 +62,8 @@ export default async function Home() {
 
     const properties = propsRes?.data || [];
     const blogPosts = blogRes?.data || [];
-    
-    const neighborhoods = neighborRes?.data 
+
+    const neighborhoods = neighborRes?.data
         ? Array.from(new Set(neighborRes.data.map((p: any) => p.neighborhood))).filter(Boolean) as string[]
         : [];
     neighborhoods.sort();
@@ -69,7 +73,6 @@ export default async function Home() {
         hq_description: 'Venha nos visitar e conhecer as melhores oportunidades imobiliárias pessoalmente.',
         hq_maps_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.4682014844397!2d-46.4172448!3d-24.004944!2m3!1f0!2f0!3f3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce1c4f00000001%3A0x0!2zMjTCsDAwJzE3LjgiUyA0NsKwMjUnMDIuMSJX!5e0!3m2!1spt-BR!2sbr!4v1714589254321!5m2!1spt-BR!2sbr'
     };
-
 
     const siteContact = contactRes?.data?.value || {
         phone: '(13) 3474-0000',
@@ -87,8 +90,6 @@ export default async function Home() {
 
     const partners = partnersRes?.data || [];
 
-
-    // Schema.org Data for Local SEO (Standardized to www)
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "RealEstateAgent",
