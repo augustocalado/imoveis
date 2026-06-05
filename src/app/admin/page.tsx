@@ -138,7 +138,7 @@ function AdminDashboardContent() {
 
             if (search) {
                 const s = search.trim();
-                query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%`);
+                query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%,rooms::text.ilike.%${s}%`);
             }
 
             if (f.ref) {
