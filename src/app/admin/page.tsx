@@ -91,7 +91,6 @@ function AdminDashboardContent() {
     const [filterMaxPrice, setFilterMaxPrice] = useState('');
     const [filterRef, setFilterRef] = useState('');
     const [filterRooms, setFilterRooms] = useState('');
-    const [showFilters, setShowFilters] = useState(false);
     const [isBairroOpen, setIsBairroOpen] = useState(false);
 
     useEffect(() => {
@@ -676,19 +675,8 @@ function AdminDashboardContent() {
                                 </div>
                             </div>
 
-                            {/* Filtros Avançados */}
-                            <div className="flex items-center gap-4 mb-6">
-                                <button
-                                    onClick={() => setShowFilters(!showFilters)}
-                                    className={clsx(
-                                        "flex items-center gap-2 px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all border",
-                                        showFilters
-                                            ? "bg-[#10b981] text-white border-[#10b981] shadow-lg shadow-[#10b981]/20"
-                                            : "bg-white text-slate-400 border-slate-100 hover:border-slate-200"
-                                    )}
-                                >
-                                    <Filter className="h-4 w-4" /> Filtros
-                                </button>
+                            {/* Filtros */}
+                            <div className="mb-8">
                                 {(selectedNeighborhoods.length > 0 || filterCategory || filterMaxPrice || filterRef || filterRooms) && (
                                     <button
                                         onClick={() => {
@@ -698,15 +686,12 @@ function AdminDashboardContent() {
                                             setFilterRef('');
                                             setFilterRooms('');
                                         }}
-                                        className="text-[11px] font-black text-red-400 uppercase tracking-[0.2em] hover:text-red-500 transition-colors"
+                                        className="text-[11px] font-black text-red-400 uppercase tracking-[0.2em] hover:text-red-500 transition-colors mb-4 block"
                                     >
                                         Limpar filtros
                                     </button>
                                 )}
-                            </div>
-
-                            {showFilters && (
-                                <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm mb-8 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm mb-8 space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                                         {/* Referência */}
                                         <div className="space-y-2">
@@ -834,7 +819,7 @@ function AdminDashboardContent() {
                                         </div>
                                     </div>
                                 </div>
-                            )}
+                            </div>
 
                             {/* Property Grid (Boxes) */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
