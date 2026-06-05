@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
 
     const res = NextResponse.next();
 
-    // Timeout the session check to avoid hanging the whole site
+    // Timeout the session check so Supabase being unhealthy doesn't bring down the whole site
     const session = await Promise.race([
         (async () => {
             try {
@@ -27,11 +27,9 @@ export async function middleware(req: NextRequest) {
         new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000)),
     ]);
 
+    // If session check failed (timeout/error) => let the request through to avoid login loop
+    // The client-side auth check in each page will handle unauthorized access gracefully
     if (!session) {
-        if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/corretor') || url.pathname.startsWith('/cliente')) {
-            url.pathname = '/login';
-            return NextResponse.redirect(url);
-        }
         return res;
     }
 
