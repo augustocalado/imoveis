@@ -10,12 +10,15 @@ import {
   ShieldCheck, 
   Loader2,
   AlertTriangle,
-  History
+  History,
+  Image
 } from 'lucide-react';
 
 export default function SystemToolsSection() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [compressing, setCompressing] = useState(false);
+  const [compressResult, setCompressResult] = useState<string | null>(null);
 
   const resetTable = async (table: string, name: string) => {
     if (!confirm(`TEM CERTEZA? Isso excluirá permanentemente todos os ${name} do banco de dados!`)) return;
@@ -57,7 +60,7 @@ export default function SystemToolsSection() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Database Health Card */}
             <div className="bg-white/5 border border-white/10 p-10 rounded-[40px] hover:bg-white/10 transition-all group/card">
               <div className="flex items-center justify-between mb-8">
@@ -99,6 +102,54 @@ export default function SystemToolsSection() {
                   <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">OK</span>
                 </div>
               </div>
+            </div>
+
+            {/* Compress Images Card */}
+            <div className="bg-white/5 border border-white/10 p-10 rounded-[40px] hover:bg-white/10 transition-all group/card">
+              <div className="flex items-center justify-between mb-8">
+                <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
+                  <Image className="h-6 w-6 text-emerald-400" />
+                </div>
+                <div className="px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-500/30">
+                  <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Otimização</span>
+                </div>
+              </div>
+              <h4 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Comprimir Imagens</h4>
+              <p className="text-white/40 text-sm font-bold leading-relaxed mb-8 italic">Reduza o espaço ocupado pelas fotos no Supabase Storage.</p>
+              
+              {compressResult && (
+                <div className="mb-6 p-4 rounded-2xl bg-white/5 border border-white/10 text-[11px] font-bold text-white/70 leading-relaxed">
+                  {compressResult}
+                </div>
+              )}
+
+              <button 
+                onClick={async () => {
+                  setCompressing(true);
+                  setCompressResult(null);
+                  try {
+                    const res = await fetch('/api/admin/compress-images', { method: 'POST' });
+                    const data = await res.json();
+                    if (data.error) {
+                      setCompressResult(`Erro: ${data.error}`);
+                    } else {
+                      setCompressResult(
+                        `Economia total: ${data.totalSavedFormatted}\n` +
+                        (data.files?.filter((f: any) => f.saved > 0).length || 0) + ' imagens comprimidas.'
+                      );
+                    }
+                  } catch (err: any) {
+                    setCompressResult('Erro de conexão: ' + err.message);
+                  } finally {
+                    setCompressing(false);
+                  }
+                }}
+                disabled={compressing}
+                className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/10 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+              >
+                {compressing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Image className="h-4 w-4" />}
+                {compressing ? 'Comprimindo...' : 'Comprimir Imagens'}
+              </button>
             </div>
 
             {/* Danger Zone Card */}
