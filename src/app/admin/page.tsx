@@ -521,6 +521,16 @@ function AdminDashboardContent() {
 
                     {currentTab === 'overview' && (
                         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                            {/* Welcome */}
+                            <div>
+                                <h2 className="text-3xl font-black tracking-tighter uppercase text-[#1B263B]">
+                                    Olá, {currentUserProfile?.full_name?.split(' ')[0] || 'Admin'}
+                                </h2>
+                                <p className="text-[13px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1">
+                                    {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                                </p>
+                            </div>
+
                             {/* KPI Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {[
@@ -544,72 +554,58 @@ function AdminDashboardContent() {
                                 ))}
                             </div>
 
-                            {/* Main Grid: Performance & Real-time Active */}
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                                <div className="lg:col-span-8 bg-white p-10 rounded-[50px] border border-slate-100 shadow-sm space-y-10">
-                                    <div className="flex justify-between items-center">
-                                        <h3 className="text-xl font-black tracking-tighter uppercase flex items-center gap-3">
-                                            <BarChart3 className="h-5 w-5 text-[#10b981]" /> Performance de Vendas & Locação
-                                        </h3>
-                                        <div className="flex gap-2">
-                                            {['6M', '3M', '1M'].map(t => (
-                                                <button key={t} className="px-3 py-1 text-[11px] font-black uppercase rounded-lg bg-slate-50 text-slate-400 hover:bg-[#1B263B] hover:text-white transition-all">{t}</button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {/* SVG Area Chart Placeholder */}
-                                    <div className="h-80 w-full bg-slate-50 rounded-[35px] relative overflow-hidden group">
-                            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#10b981]/5 to-transparent" />
-                                    </div>
-                                </div>
-
-                                <div className="lg:col-span-4 space-y-10">
-                                    {/* Agenda de Visitas Card */}
-                                    {visits.filter(v => {
-                                        const today = new Date().toISOString().split('T')[0];
-                                        return v.status === 'agendado' && v.visit_date === today;
-                                    }).length > 0 && (
-                                        <div className="bg-[#1B263B] p-10 rounded-[50px] shadow-2xl relative overflow-hidden group min-h-[400px]">
-                                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/10 blur-[80px] group-hover:bg-[#10b981]/20 transition-all duration-1000" />
-                                            <div className="relative z-10 space-y-8">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="text-xl font-black text-white tracking-tighter uppercase flex items-center gap-3">
-                                                        <Calendar className="h-5 w-5 text-[#10b981]" /> Agenda de Hoje
-                                                    </h3>
-                                                    <span className="bg-[#10b981] text-white text-[9px] font-black px-3 py-1 rounded-lg uppercase">{visits.filter(v => {
-                                                            const today = new Date().toISOString().split('T')[0];
-                                                            return v.status === 'agendado' && v.visit_date === today;
-                                                        }).length} Visitas</span>
-                                                </div>
-                                                <div className="space-y-4">
-                                                    {visits.filter(v => {
+                            {/* Bottom Grid: Agenda + Activities */}
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                {/* Agenda de Visitas Card */}
+                                {visits.filter(v => {
+                                    const today = new Date().toISOString().split('T')[0];
+                                    return v.status === 'agendado' && v.visit_date === today;
+                                }).length > 0 && (
+                                    <div className="bg-[#1B263B] p-10 rounded-[50px] shadow-2xl relative overflow-hidden group min-h-[400px]">
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/10 blur-[80px] group-hover:bg-[#10b981]/20 transition-all duration-1000" />
+                                        <div className="relative z-10 space-y-8">
+                                            <div className="flex items-center justify-between">
+                                                <h3 className="text-xl font-black text-white tracking-tighter uppercase flex items-center gap-3">
+                                                    <Calendar className="h-5 w-5 text-[#10b981]" /> Agenda de Hoje
+                                                </h3>
+                                                <span className="bg-[#10b981] text-white text-[9px] font-black px-3 py-1 rounded-lg uppercase">{visits.filter(v => {
                                                         const today = new Date().toISOString().split('T')[0];
                                                         return v.status === 'agendado' && v.visit_date === today;
-                                                    }).slice(0, 3).map((v, i) => (
-                                                        <div key={i} onClick={() => setCurrentTab('agenda')} className="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
-                                                            <div className="flex justify-between items-start mb-2">
-                                                                <p className="text-sm font-black text-white uppercase tracking-tight">{v.client_name}</p>
-                                                                <span className="text-[10px] font-black text-[#10b981]">{v.visit_time.slice(0, 5)}h</span>
-                                                            </div>
-                                                            <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-relaxed">
-                                                                {v.property_ids?.length || 0} Imóveis selecionados
-                                                            </p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <button 
-                                                    onClick={() => setCurrentTab('agenda')}
-                                                    className="w-full py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all"
-                                                >
-                                                    Ver Agenda Completa
-                                                </button>
+                                                    }).length} Visitas</span>
                                             </div>
+                                            <div className="space-y-4">
+                                                {visits.filter(v => {
+                                                    const today = new Date().toISOString().split('T')[0];
+                                                    return v.status === 'agendado' && v.visit_date === today;
+                                                }).slice(0, 3).map((v, i) => (
+                                                    <div key={i} onClick={() => setCurrentTab('agenda')} className="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 hover:bg-white/10 transition-all cursor-pointer">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <p className="text-sm font-black text-white uppercase tracking-tight">{v.client_name}</p>
+                                                            <span className="text-[10px] font-black text-[#10b981]">{v.visit_time.slice(0, 5)}h</span>
+                                                        </div>
+                                                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-relaxed">
+                                                            {v.property_ids?.length || 0} Imóveis selecionados
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <button 
+                                                onClick={() => setCurrentTab('agenda')}
+                                                className="w-full py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all"
+                                            >
+                                                Ver Agenda Completa
+                                            </button>
                                         </div>
-                                    )}
+                                    </div>
+                                )}
 
-                                    <h3 className="text-xl font-black tracking-tighter uppercase">Atividades Recentes</h3>
+                                {/* Atividades Recentes */}
+                                <div className="bg-white p-10 rounded-[50px] border border-slate-100 shadow-sm space-y-8">
+                                    <h3 className="text-xl font-black tracking-tighter uppercase flex items-center gap-3">
+                                        <BarChart3 className="h-5 w-5 text-[#10b981]" /> Atividades Recentes
+                                    </h3>
                                     <div className="space-y-6">
-                                        {activities.map((activity, i) => (
+                                        {activities.length > 0 ? activities.map((activity, i) => (
                                             <div key={i} onClick={() => setCurrentTab('crm')} className="flex gap-5 group cursor-pointer hover:bg-slate-50 p-2 rounded-2xl transition-all">
                                                 <div className="h-10 w-10 min-w-[40px] rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:border-[#10b981] group-hover:text-[#10b981] transition-all shadow-sm">
                                                     <activity.icon className="h-4 w-4" />
@@ -620,13 +616,12 @@ function AdminDashboardContent() {
                                                     <span className="text-[11px] font-bold text-slate-300 italic">{activity.time}</span>
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                    <div className="bg-[#1B263B] p-10 rounded-[45px] shadow-2xl relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#10b981]/20 blur-[60px]" />
-                                        <PieChart className="h-8 w-8 text-[#10b981] mb-6" />
-                                        <h4 className="text-white text-lg font-black leading-tight mb-4">Seu portfólio cresceu 40% este ano.</h4>
-                                        <button className="text-[12px] font-black text-[#10b981] uppercase tracking-[0.2em] flex items-center gap-2 hover:translate-x-2 transition-transform">Ver Relatório Anual <ArrowUpRight className="h-4 w-4" /></button>
+                                        )) : (
+                                            <div className="text-center py-12">
+                                                <BarChart3 className="h-12 w-12 text-slate-200 mx-auto mb-4" />
+                                                <p className="text-sm font-bold text-slate-300">Nenhuma atividade recente</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
