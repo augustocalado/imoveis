@@ -59,10 +59,12 @@ export const metadata: Metadata = {
     },
 };
 
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
-import SmartChat from "@/components/SmartChat";
-import LGPDConsent from "@/components/LGPDConsent";
+
+const SmartChat = dynamic(() => import("@/components/SmartChat"));
+const LGPDConsent = dynamic(() => import("@/components/LGPDConsent"));
 
 export default function RootLayout({
     children,
@@ -74,15 +76,6 @@ export default function RootLayout({
             <head>
                 <link rel="preconnect" href="https://fuoipsehqjnpafhqjnyo.supabase.co" />
                 <link rel="preconnect" href="https://images.unsplash.com" />
-                <link rel="dns-prefetch" href="https://fuoipsehqjnpafhqjnyo.supabase.co" />
-                <link rel="dns-prefetch" href="https://images.unsplash.com" />
-                <link rel="dns-prefetch" href="https://logodownload.org" />
-                <link
-                    rel="preload"
-                    href="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1920"
-                    as="image"
-                    fetchPriority="high"
-                />
             </head>
             <body className={`${anekLatin.className} antialiased`}>
                 <ThemeProvider />
