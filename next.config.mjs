@@ -3,6 +3,7 @@ const nextConfig = {
     reactStrictMode: true,
     trailingSlash: false,
     images: {
+        formats: ['image/avif', 'image/webp'],
         remotePatterns: [
             { protocol: 'https', hostname: 'images.unsplash.com' },
             { protocol: 'https', hostname: 'res.cloudinary.com' },
@@ -18,7 +19,29 @@ const nextConfig = {
     },
 
 
-    // Removendo comentários referentes a provedores para maior discrição
+    async headers() {
+        return [
+            {
+                source: '/:path*\\.(jpg|jpeg|png|webp|avif|gif|svg|ico|woff2?|ttf|otf|eot)',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+                ],
+            },
+            {
+                source: '/_next/static/:path*',
+                headers: [
+                    { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+                ],
+            },
+            {
+                source: '/:path*',
+                headers: [
+                    { key: 'X-DNS-Prefetch-Control', value: 'on' },
+                ],
+            },
+        ];
+    },
+
     typescript: {
         ignoreBuildErrors: true,
     },
