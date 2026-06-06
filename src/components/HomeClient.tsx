@@ -71,7 +71,6 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                         className="object-cover scale-105 animate-slow-zoom"
                         alt="Imóveis em Praia Grande"
                         priority={true}
-                        unoptimized
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-primary-900/60 via-primary-900/40 to-primary-900/80" />
                     <div className="absolute inset-0 bg-black/20" />
