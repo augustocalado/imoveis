@@ -156,8 +156,11 @@ export default function Navbar() {
                                 <img
                                     src={logoUrl}
                                     alt="Kátia e Flávio Imóveis"
+                                    width={200}
+                                    height={theme.logo_height || 56}
                                     style={{ height: `${theme.logo_height || 56}px` }}
                                     className="w-auto object-contain brightness-110 drop-shadow-2xl"
+                                    fetchPriority="high"
                                 />
                             </Link>
                         </div>

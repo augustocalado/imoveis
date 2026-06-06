@@ -14,7 +14,6 @@ import {
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
-import { toPng } from 'html-to-image';
 import VisitsManagement from '@/components/admin/VisitsManagement';
 import TermoVisitaModal from '@/components/admin/TermoVisitaModal';
 import Toast, { ToastType } from '@/components/Toast';
@@ -846,6 +845,7 @@ function SocialAISection({ properties }: { properties: any[] }) {
             const width = format === 'feed' ? 1080 : 1080;
             const height = format === 'feed' ? 1350 : 1920;
 
+            const { toPng } = await import('html-to-image');
             const dataUrl = await toPng(templateRef.current, { 
                 cacheBust: true,
                 canvasWidth: width,

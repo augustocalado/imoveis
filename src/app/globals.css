@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Anek+Latin:wght@300;400;500;600;700;800&display=swap');
-
 :root {
   --foreground-rgb: 33, 37, 41;
   /* Dark Gray from aliancaimoveis.net */
@@ -21,32 +19,6 @@ body {
   color: rgb(var(--foreground-rgb));
   background: white;
   min-height: 100vh;
-  font-family: 'Anek Latin', 'Inter', system-ui, sans-serif;
-}
-
-@layer components {
-  .btn-primary {
-    background-color: var(--button-color);
-    @apply text-white px-6 py-3 rounded-xl font-bold transition-all hover:opacity-90 active:scale-95 shadow-md flex items-center justify-center;
-  }
-
-  .btn-accent {
-    background-color: var(--primary-color);
-    @apply text-white px-6 py-3 rounded-xl font-bold transition-all hover:opacity-90 active:scale-95 shadow-md flex items-center justify-center;
-  }
-
-  .card-property {
-    @apply bg-white border border-gray-100 rounded-[32px] overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2;
-  }
-
-  .glass-card {
-    @apply bg-white/70 backdrop-blur-md border border-white shadow-xl;
-  }
-}
-
-/* Base Accessibility / SEO stability */
-img {
-  @apply max-w-full h-auto;
 }
 
 /* Custom Scrollbar for Premium Feel */

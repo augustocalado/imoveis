@@ -43,8 +43,11 @@ export default function Footer() {
                         <img
                             src={logoUrl}
                             alt="Kátia e Flávio Imóveis"
+                            width={200}
+                            height={theme.logo_height || 56}
                             style={{ height: `${theme.logo_height || 56}px` }}
                             className="w-auto object-contain brightness-110 drop-shadow-2xl mb-6"
+                            loading="lazy"
                         />
                         <p className="text-white/70 font-medium leading-relaxed mb-8 max-w-sm text-sm">
                             Kátia e Flávio Imóveis: Sua referência em imóveis de alto padrão e oportunidades exclusivas em Praia Grande SP.
@@ -103,7 +106,7 @@ export default function Footer() {
                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
                     <p className="text-[11px] font-bold text-white/50 uppercase tracking-[0.4em]">© 2026 KÁTIA E FLÁVIO IMÓVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
                     <div className="flex gap-4">
-                        <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" />
+                        <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" width={32} height={32} className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" loading="lazy" />
                     </div>
                 </div>
             </div>
