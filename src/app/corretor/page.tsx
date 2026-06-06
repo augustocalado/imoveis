@@ -476,7 +476,7 @@ export default function CorretorDashboard() {
                                                         </div>
                                                         <div className="absolute bottom-4 right-4 flex gap-2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                                                             <Link href={`/admin/imoveis/editar/${item.id}`}>
-                                                                <button className="h-10 w-10 rounded-xl bg-white/90 backdrop-blur-md text-[#1B263B] hover:bg-[#10b981] hover:text-white transition-all flex items-center justify-center shadow-lg">
+                                                                <button aria-label="Editar imóvel" className="h-10 w-10 rounded-xl bg-white/90 backdrop-blur-md text-[#1B263B] hover:bg-[#10b981] hover:text-white transition-all flex items-center justify-center shadow-lg">
                                                                     <Pencil className="h-4 w-4" />
                                                                 </button>
                                                             </Link>

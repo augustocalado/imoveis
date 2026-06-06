@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Anek_Latin } from "next/font/google";
-import dynamic from "next/dynamic";
 import "./globals.css";
 
 const anekLatin = Anek_Latin({
@@ -62,9 +61,8 @@ export const metadata: Metadata = {
 
 import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
-
-const SmartChat = dynamic(() => import("@/components/SmartChat"));
-const LGPDConsent = dynamic(() => import("@/components/LGPDConsent"));
+import SmartChat from "@/components/SmartChat";
+import LGPDConsent from "@/components/LGPDConsent";
 
 export default function RootLayout({
     children,

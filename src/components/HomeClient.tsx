@@ -264,12 +264,14 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                                 <div className="flex gap-2">
                                     <button 
                                         onClick={() => scrollRef.current?.scrollBy({ left: -400, behavior: 'smooth' })}
+                                        aria-label="Anterior"
                                         className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-primary-900 hover:text-white hover:border-primary-900 transition-all shadow-sm"
                                     >
                                         <ChevronLeft className="h-5 w-5" />
                                     </button>
                                     <button 
                                         onClick={() => scrollRef.current?.scrollBy({ left: 400, behavior: 'smooth' })}
+                                        aria-label="Próximo"
                                         className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-primary-900 hover:text-white hover:border-primary-900 transition-all shadow-sm"
                                     >
                                         <ChevronRight className="h-5 w-5" />
@@ -407,7 +409,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                                         <time className="text-[12px] font-bold text-accent uppercase tracking-widest leading-none">Postado em março 2026</time>
                                         <h3 className="text-lg font-black text-primary-900 leading-tight group-hover:text-accent transition-colors">{post.title}</h3>
                                         <p className="text-sm text-slate-400 font-medium line-clamp-2 leading-relaxed">Descubra as principais tendências e oportunidades para quem busca viver ou investir em um apartamento em Praia Grande SP...</p>
-                                        <Link href="#" className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-widest text-primary-900 hover:text-accent transition-colors">Ler artigo <ArrowRight className="h-3.5 w-3.5" /></Link>
+                                        <span className="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-widest text-slate-300">Ler artigo <ArrowRight className="h-3.5 w-3.5" /></span>
                                     </div>
                                 </article>
                             ))
@@ -524,6 +526,7 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                     <div className="relative w-full max-w-6xl aspect-video rounded-[40px] overflow-hidden shadow-2xl border border-white/10 animate-in zoom-in-95 duration-500">
                         <button
                             onClick={() => setIsVideoOpen(false)}
+                            aria-label="Fechar vídeo"
                             className="absolute top-6 right-6 h-12 w-12 bg-white/10 hover:bg-white text-white hover:text-primary-900 rounded-full flex items-center justify-center backdrop-blur-md transition-all z-50 border border-white/10 active:scale-90"
                         >
                             <X className="h-6 w-6" />

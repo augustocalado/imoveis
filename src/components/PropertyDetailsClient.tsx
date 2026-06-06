@@ -748,7 +748,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 <h3 className="text-xl font-black tracking-tighter uppercase">Falar com Corretor</h3>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Identifique-se para começar</p>
                             </div>
-                            <button onClick={() => setShowLeadModal(false)} className="h-10 w-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 transition-all">
+                            <button onClick={() => setShowLeadModal(false)} aria-label="Fechar modal" className="h-10 w-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 transition-all">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
@@ -788,7 +788,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 {isSending ? 'Processando...' : 'Iniciar Conversa'}
                             </button>
                             <p className="text-[9px] text-center text-slate-300 font-bold uppercase tracking-widest">
-                                Ao prosseguir, você aceita nossa <Link href="/privacidade" className="underline hover:text-accent">Política de Privacidade</Link>
+                                Ao prosseguir, você aceita nossa <Link href="/politica-de-privacidade" className="underline hover:text-accent">Política de Privacidade</Link>
                             </p>
                         </div>
                     </div>

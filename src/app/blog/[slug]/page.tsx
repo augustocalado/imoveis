@@ -69,9 +69,9 @@ export default function BlogPostPage() {
 
             {/* Sticky Share Bar (Desktop) */}
             <div className="hidden lg:flex fixed left-10 top-1/2 -translate-y-1/2 flex-col gap-4 z-50">
-                <button className="h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-400 hover:text-accent hover:-translate-y-1 transition-all"><Facebook className="h-5 w-5" /></button>
-                <button className="h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-400 hover:text-accent hover:-translate-y-1 transition-all"><Instagram className="h-5 w-5" /></button>
-                <button className="h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-400 hover:text-accent hover:-translate-y-1 transition-all"><Share2 className="h-5 w-5" /></button>
+                <button aria-label="Compartilhar no Facebook" className="h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-400 hover:text-accent hover:-translate-y-1 transition-all"><Facebook className="h-5 w-5" /></button>
+                <button aria-label="Compartilhar no Instagram" className="h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-400 hover:text-accent hover:-translate-y-1 transition-all"><Instagram className="h-5 w-5" /></button>
+                <button aria-label="Compartilhar" className="h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center text-slate-400 hover:text-accent hover:-translate-y-1 transition-all"><Share2 className="h-5 w-5" /></button>
             </div>
 
             {/* Hero Section */}
