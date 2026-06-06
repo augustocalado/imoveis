@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { MessageSquare, MessageCircle, X, Send, ShieldCheck, ArrowRight, User, Phone, MapPin, Search, Home as HomeIcon } from 'lucide-react';
@@ -216,7 +217,7 @@ export default function SmartChat() {
                     <div className="flex items-center gap-3 relative z-10">
                         <div className="relative">
                             <div className="w-12 h-12 bg-white rounded-full overflow-hidden border-2 border-accent">
-                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150" alt="Catarina" width={48} height={48} className="w-full h-full object-cover" loading="lazy" />
+                                <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150" alt="Catarina" width={48} height={48} className="w-full h-full object-cover" loading="lazy" />
                             </div>
                             <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#1B263B]" />
                         </div>

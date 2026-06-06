@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -76,10 +77,13 @@ export default function BlogPostPage() {
 
             {/* Hero Section */}
             <section className="relative h-[70vh] w-full overflow-hidden">
-                <img 
+                <Image 
                     src={post.image_url || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d'} 
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     alt={post.title}
+                    priority
+                    sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#fcfcfc] via-primary-900/60 to-transparent" />
                 
@@ -123,8 +127,8 @@ export default function BlogPostPage() {
 
                             {/* Author Box */}
                             <div className="mt-20 pt-20 border-t border-slate-100 flex flex-col md:flex-row items-center gap-10">
-                                <div className="h-24 w-24 rounded-[32px] bg-primary-900 border-4 border-white shadow-xl overflow-hidden shrink-0">
-                                    <img src="https://i.pravatar.cc/150?u=kfimoveis" className="w-full h-full object-cover" alt="Author" />
+                                <div className="h-24 w-24 rounded-[32px] bg-primary-900 border-4 border-white shadow-xl overflow-hidden shrink-0 relative">
+                                    <Image src="https://i.pravatar.cc/150?u=kfimoveis" fill className="object-cover" alt="Author" />
                                 </div>
                                 <div className="space-y-2 text-center md:text-left">
                                     <span className="text-[10px] font-black text-accent uppercase tracking-[0.5em]">Escrito por</span>
@@ -159,7 +163,7 @@ export default function BlogPostPage() {
                             >
                                 <div className="bg-white p-3 rounded-[40px] border border-slate-100 hover:shadow-2xl transition-all duration-500">
                                     <div className="h-56 rounded-[32px] overflow-hidden mb-6 relative">
-                                        <img src={rPost.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" alt={rPost.title} />
+                                        <Image src={rPost.image_url} fill className="object-cover group-hover:scale-110 transition-all duration-1000" alt={rPost.title} sizes="(max-width: 768px) 100vw, 33vw" />
                                         <div className="absolute inset-0 bg-primary-900/20 group-hover:bg-transparent transition-all" />
                                     </div>
                                     <div className="p-4 space-y-4">

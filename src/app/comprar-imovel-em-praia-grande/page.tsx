@@ -1,6 +1,7 @@
 
 import * as React from 'react';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Search, MapPin, CheckCircle2, ArrowRight, Building2, Wallet, ShieldCheck, Star } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -24,10 +25,13 @@ export default function ComprarImovelPilar() {
             {/* Hero Section */}
             <section className="relative pt-40 pb-20 bg-[#1B263B] overflow-hidden">
                 <div className="absolute inset-0 opacity-20">
-                    <img 
+                    <Image 
                         src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1920" 
-                        className="w-full h-full object-cover" 
+                        fill
+                        className="object-cover" 
                         alt="Imóveis em Praia Grande"
+                        priority
+                        sizes="100vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-primary-900 to-transparent" />
                 </div>
@@ -58,11 +62,13 @@ export default function ComprarImovelPilar() {
             <section className="py-32 px-6">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                     <div className="relative">
-                        <div className="aspect-square rounded-[60px] overflow-hidden shadow-3xl">
-                            <img 
+                        <div className="aspect-square rounded-[60px] overflow-hidden shadow-3xl relative">
+                            <Image 
                                 src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=1200" 
-                                className="w-full h-full object-cover" 
+                                fill
+                                className="object-cover" 
                                 alt="Praia Grande SP"
+                                sizes="(max-width: 768px) 100vw, 50vw"
                             />
                         </div>
                         <div className="absolute -bottom-10 -right-10 bg-white p-12 rounded-[40px] shadow-2xl border border-slate-50 hidden md:block">

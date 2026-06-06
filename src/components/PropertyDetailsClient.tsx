@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -353,7 +354,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                             }}
                             className="md:col-span-2 md:row-span-2 relative rounded-[32px] overflow-hidden group shadow-xl border border-slate-100 cursor-pointer h-[300px] md:h-[480px]"
                         >
-                            <img src={images[0]} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Principal" />
+                            <Image src={images[0]} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" alt="Principal" priority sizes="(max-width: 768px) 100vw, 66vw" />
                             {property.video_url && (
                                 <button
                                     onClick={(e) => {
@@ -379,7 +380,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 }}
                                 className="relative rounded-[22px] overflow-hidden group shadow-lg border border-slate-100 cursor-pointer h-[140px] md:h-[220px]"
                             >
-                                <img src={images[1] || images[0]} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 1" />
+                                <Image src={images[1] || images[0]} fill className="object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 1" sizes="(max-width: 768px) 50vw, 33vw" />
                             </div>
                             <div 
                                 onClick={() => {
@@ -388,7 +389,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 }}
                                 className="relative rounded-[22px] overflow-hidden group shadow-lg border border-slate-100 cursor-pointer h-[140px] md:h-[220px]"
                             >
-                                <img src={images[2] || images[0]} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 2" />
+                                <Image src={images[2] || images[0]} fill className="object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 2" sizes="(max-width: 768px) 50vw, 33vw" />
                             </div>
                             <div
                                 onClick={() => {
@@ -397,7 +398,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 }}
                                 className="relative rounded-[22px] overflow-hidden group shadow-lg border border-slate-100 cursor-pointer h-[140px] md:h-[220px]"
                             >
-                                <img src={images[3] || images[0]} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 3" />
+                                <Image src={images[3] || images[0]} fill className="object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 3" sizes="(max-width: 768px) 50vw, 33vw" />
                             </div>
                             <button 
                                 onClick={() => {
@@ -407,7 +408,7 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                 aria-label={`Ver todas as ${images.length} fotos do imóvel`}
                                 className="relative rounded-[22px] overflow-hidden group shadow-lg border border-slate-100 h-[140px] md:h-[220px] text-center"
                             >
-                                <img src={images[4] || images[0]} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 4" />
+                                <Image src={images[4] || images[0]} fill className="object-cover transition-all duration-700 group-hover:scale-110" alt="Galeria 4" sizes="(max-width: 768px) 50vw, 33vw" />
                                 <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-2">
                                     <span className="text-white font-black text-xs tracking-widest uppercase">Ver +</span>
                                     <span className="bg-white/20 backdrop-blur-sm text-white font-bold text-xs px-3 py-1 rounded-full border border-white/30">{images.length}</span>
@@ -594,8 +595,8 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
 
                              <div className="pt-6 border-t border-slate-200">
                                 <div className="flex items-center gap-4">
-                                    <div className="h-14 w-14 rounded-2xl bg-slate-200 overflow-hidden">
-                                        <img src={corretor?.avatar_url || 'https://i.pravatar.cc/150'} className="w-full h-full object-cover" alt="Corretor" />
+                                    <div className="h-14 w-14 rounded-2xl bg-slate-200 overflow-hidden relative">
+                                        <Image src={corretor?.avatar_url || 'https://i.pravatar.cc/150'} fill className="object-cover" alt="Corretor" />
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold text-primary-900 tracking-widest">{corretor?.full_name || 'Kátia e Flávio'}</p>
@@ -624,8 +625,8 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                                         href={`/imovel/${prop.slug}`} 
                                         className="min-w-[85%] md:min-w-[calc(50%-1rem)] lg:min-w-[calc(25%-1.5rem)] snap-start group space-y-4"
                                     >
-                                        <div className="aspect-[4/3] rounded-[40px] overflow-hidden shadow-xl border border-slate-100">
-                                            <img src={prop.images?.[0] || images[0]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={prop.title} />
+                                        <div className="aspect-[4/3] rounded-[40px] overflow-hidden shadow-xl border border-slate-100 relative">
+                                            <Image src={prop.images?.[0] || images[0]} fill className="object-cover group-hover:scale-110 transition-transform duration-700" alt={prop.title} sizes="(max-width: 768px) 100vw, 25vw" />
                                         </div>
                                         <div className="px-4">
                                             <p className="text-[10px] font-bold text-accent tracking-widest">{prop.neighborhood}</p>
@@ -709,10 +710,13 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                     <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
                         {/* Desktop: One image at a time */}
                         <div className="hidden md:flex items-center justify-center w-full h-full p-10">
-                            <img 
+                            <Image 
                                 src={images[currentGalleryIndex]} 
+                                width={1200}
+                                height={800}
                                 className="max-w-[85vw] max-h-[85vh] object-contain shadow-2xl rounded-sm animate-in zoom-in-95 duration-500" 
-                                alt={`Foto ${currentGalleryIndex + 1}`} 
+                                alt={`Foto ${currentGalleryIndex + 1}`}
+                                style={{ width: 'auto', height: 'auto' }}
                             />
                         </div>
 
@@ -720,10 +724,13 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                         <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory w-full h-full no-scrollbar">
                             {images.map((img: string, i: number) => (
                                 <div key={i} className="min-w-full h-full snap-start flex items-center justify-center p-4">
-                                    <img 
+                                    <Image 
                                         src={img} 
+                                        width={800}
+                                        height={600}
                                         className="max-w-full max-h-full object-contain shadow-2xl" 
-                                        alt={`Foto ${i + 1}`} 
+                                        alt={`Foto ${i + 1}`}
+                                        style={{ width: 'auto', height: 'auto' }}
                                     />
                                 </div>
                             ))}

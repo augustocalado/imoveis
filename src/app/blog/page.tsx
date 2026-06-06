@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -81,10 +82,12 @@ export default function BlogListingPage() {
                                 >
                                     <article className="bg-white rounded-[40px] overflow-hidden group border border-slate-100 p-2 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-500">
                                         <div className="h-64 overflow-hidden rounded-[32px] mb-6 relative">
-                                            <img 
+                                            <Image 
                                                 src={post.image_url || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d'} 
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" 
+                                                fill
+                                                className="object-cover group-hover:scale-110 transition-all duration-1000" 
                                                 alt={post.title} 
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                             />
                                             <div className="absolute top-6 left-6 bg-[#1B263B]/80 backdrop-blur-md px-4 py-2 rounded-xl text-white text-[10px] font-black uppercase tracking-widest border border-white/10">
                                                 Tendência

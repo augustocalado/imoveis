@@ -1,6 +1,7 @@
 
 import * as React from 'react';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { TrendingUp, Coins, BarChart3, ArrowUpRight, CheckCircle2, Building, Ship, Umbrella } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -23,10 +24,13 @@ export default function InvestimentoPilar() {
             {/* Hero Section */}
             <section className="relative pt-40 pb-20 bg-primary-900 overflow-hidden">
                 <div className="absolute inset-0 opacity-20">
-                    <img 
+                    <Image 
                         src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1920" 
-                        className="w-full h-full object-cover" 
+                        fill
+                        className="object-cover" 
                         alt="Investimento Imobiliário"
+                        priority
+                        sizes="100vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-primary-900 to-transparent" />
                 </div>
@@ -113,11 +117,13 @@ export default function InvestimentoPilar() {
                         </div>
                         
                         <div className="relative">
-                            <div className="aspect-square rounded-[80px] overflow-hidden shadow-3xl">
-                                <img 
+                            <div className="aspect-square rounded-[80px] overflow-hidden shadow-3xl relative">
+                                <Image 
                                     src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200" 
-                                    className="w-full h-full object-cover" 
+                                    fill
+                                    className="object-cover" 
                                     alt="Resultados de Investimento"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
                                 />
                             </div>
                             <div className="absolute -bottom-10 -left-10 bg-accent p-12 rounded-[50px] shadow-2xl text-white">
