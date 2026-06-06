@@ -179,7 +179,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
             {isModalOpen && (
                 <div className="fixed inset-0 bg-[#1B263B]/80 backdrop-blur-md z-[200] flex items-center justify-center p-6 animate-in fade-in duration-300 overflow-y-auto">
                     <div className="bg-white w-full max-w-4xl rounded-[50px] shadow-2xl p-12 relative animate-in zoom-in-95 duration-500">
-                        <button onClick={() => setIsModalOpen(false)} aria-label="Fechar agendamento" className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-red-500 transition-all flex items-center justify-center border border-slate-100">
+                        <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-red-500 transition-all flex items-center justify-center border border-slate-100">
                             <X className="h-6 w-6" />
                         </button>
 
@@ -319,7 +319,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                                                         <div className="h-8 w-8 bg-slate-100 rounded flex-shrink-0"><img src={p?.images?.[0]} className="w-full h-full object-cover rounded" alt="" /></div>
                                                         <p className="text-[10px] font-black text-[#1B263B] truncate max-w-[150px]">{p?.reference_id} - {p?.neighborhood}</p>
                                                     </div>
-                                                    <button onClick={() => setSelectedPropIds(selectedPropIds.filter(v => v !== id))} aria-label="Remover imóvel" className="text-red-400 hover:text-red-600 p-2"><X className="h-4 w-4" /></button>
+                                                    <button onClick={() => setSelectedPropIds(selectedPropIds.filter(v => v !== id))} className="text-red-400 hover:text-red-600 p-2"><X className="h-4 w-4" /></button>
                                                 </div>
                                             );
                                         })
@@ -362,7 +362,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                                 <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2"><Search className="h-4 w-4 text-[#10b981]" /> Memória da Catarina</h3>
                                 <p className="text-white/50 text-xs font-bold uppercase tracking-widest mt-1">{selectedChatLead.name}</p>
                             </div>
-                            <button onClick={() => setSelectedChatLead(null)} aria-label="Fechar memória do lead" className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                            <button onClick={() => setSelectedChatLead(null)} className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
@@ -429,7 +429,7 @@ function VisitItineraryPDF({ visit, properties, corretor, onClose }: { visit: an
                         >
                             <Download className="h-5 w-5" /> Imprimir
                         </button>
-                        <button onClick={onClose} aria-label="Fechar impressão" className="h-14 w-14 rounded-xl bg-slate-50 text-slate-400 hover:text-red-500 flex items-center justify-center border border-slate-100">
+                        <button onClick={onClose} className="h-14 w-14 rounded-xl bg-slate-50 text-slate-400 hover:text-red-500 flex items-center justify-center border border-slate-100">
                             <X className="h-7 w-7" />
                         </button>
                     </div>

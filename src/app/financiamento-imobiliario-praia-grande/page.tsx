@@ -1,7 +1,6 @@
 
 import * as React from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import { Wallet, Calculator, FileText, CheckCircle2, ArrowRight, Landmark, PieChart, ShieldCheck } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -24,13 +23,10 @@ export default function FinanciamentoPilar() {
             {/* Hero Section */}
             <section className="relative pt-40 pb-20 bg-[#10b981] overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
-                    <Image 
+                    <img 
                         src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1920" 
-                        fill
-                        className="object-cover" 
+                        className="w-full h-full object-cover" 
                         alt="Financiamento Imobiliário"
-                        priority
-                        sizes="100vw"
                     />
                 </div>
                 
@@ -61,13 +57,11 @@ export default function FinanciamentoPilar() {
                 <div className="max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                         <div className="order-2 lg:order-1 relative">
-                            <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-3xl relative">
-                                <Image 
+                            <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-3xl">
+                                <img 
                                     src="https://images.unsplash.com/photo-1454165833202-d196c735aeb1?q=80&w=1200" 
-                                    fill
-                                    className="object-cover" 
+                                    className="w-full h-full object-cover" 
                                     alt="Processo de Financiamento"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
                                 />
                             </div>
                             <div className="absolute top-10 -left-10 bg-white p-8 rounded-[32px] shadow-2xl border border-slate-50 max-w-[280px]">

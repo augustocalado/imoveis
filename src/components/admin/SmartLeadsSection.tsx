@@ -247,7 +247,7 @@ export default function SmartLeadsSection() {
                                     <p className="text-accent text-xs font-bold uppercase tracking-widest">{selectedLead.name}</p>
                                 )}
                             </div>
-                            <button onClick={() => setSelectedLead(null)} aria-label="Fechar lead" className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                            <button onClick={() => setSelectedLead(null)} className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>

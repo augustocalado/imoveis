@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Anek_Latin } from "next/font/google";
+import dynamic from "next/dynamic";
 import "./globals.css";
 
 const anekLatin = Anek_Latin({
     subsets: ["latin"],
-    weight: ["400", "500", "600", "700", "800"],
+    weight: ["300", "400", "500", "600", "700", "800"],
     variable: "--font-anek-latin",
 });
 
@@ -59,7 +60,6 @@ export const metadata: Metadata = {
     },
 };
 
-import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
 
@@ -73,10 +73,6 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="pt-BR" className={anekLatin.variable}>
-            <head>
-                <link rel="preconnect" href="https://fuoipsehqjnpafhqjnyo.supabase.co" />
-                <link rel="preconnect" href="https://images.unsplash.com" />
-            </head>
             <body className={`${anekLatin.className} antialiased`}>
                 <ThemeProvider />
                 <Navbar />

@@ -349,14 +349,12 @@ function AdminDashboardContent() {
                 <div className="flex items-center gap-2">
                     <button 
                         onClick={() => setIsDarkMode(!isDarkMode)}
-                        aria-label={isDarkMode ? "Modo claro" : "Modo escuro"}
                         className="p-3 bg-white/5 rounded-xl border border-white/10"
                     >
                         {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                     </button>
                     <button
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        aria-label={isSidebarOpen ? "Fechar menu" : "Abrir menu"}
                         className="p-3 bg-white/5 rounded-xl border border-white/10"
                     >
                         {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -464,17 +462,16 @@ function AdminDashboardContent() {
                         <div className="flex items-center gap-4">
                             <button 
                                 onClick={() => setIsDarkMode(!isDarkMode)}
-                                aria-label={isDarkMode ? "Modo claro" : "Modo escuro"}
                                 className={clsx(
                                     "h-12 w-12 rounded-2xl flex items-center justify-center transition-all group",
                                     isDarkMode ? "bg-slate-800 text-yellow-400" : "bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-indigo-600"
                                 )}
+                                title={isDarkMode ? "Modo Claro" : "Modo Escuro"}
                             >
                                 {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                             </button>
                             <button 
                                 onClick={() => setCurrentTab('crm')}
-                                aria-label="CRM e leads"
                                 className={clsx(
                                     "h-12 w-12 rounded-2xl flex items-center justify-center relative transition-colors group",
                                     isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-50 text-slate-400 hover:bg-slate-100"
@@ -489,7 +486,6 @@ function AdminDashboardContent() {
                             </button>
                             <button 
                                 onClick={() => setCurrentTab('smart-leads')}
-                                aria-label="Leads inteligentes"
                                 className={clsx(
                                     "h-12 w-12 rounded-2xl flex items-center justify-center relative transition-colors group",
                                     isDarkMode ? "bg-slate-800 text-slate-300" : "bg-slate-50 text-slate-400 hover:bg-slate-100"
@@ -838,12 +834,12 @@ function AdminDashboardContent() {
                                                     <button
                                                         onClick={() => setSelectedProperty(item)}
                                                         className="h-10 w-10 rounded-xl bg-slate-50 text-[#1B263B] hover:bg-[#10b981] hover:text-white transition-all flex items-center justify-center border border-slate-100"
-                                                        aria-label="Visualizar imóvel"
+                                                        title="Visualizar"
                                                     >
                                                         <Search className="h-4 w-4" />
                                                     </button>
                                                     <Link href={`/admin/imoveis/editar/${item.id}`}>
-                                                        <button className="h-10 w-10 rounded-xl bg-slate-50 text-[#1B263B] hover:bg-[#10b981] hover:text-white transition-all flex items-center justify-center border border-slate-100" aria-label="Editar imóvel">
+                                                        <button className="h-10 w-10 rounded-xl bg-slate-50 text-[#1B263B] hover:bg-[#10b981] hover:text-white transition-all flex items-center justify-center border border-slate-100" title="Editar">
                                                             <Edit2 className="h-4 w-4" />
                                                         </button>
                                                     </Link>
@@ -851,7 +847,7 @@ function AdminDashboardContent() {
                                                         onClick={() => handleDeleteProperty(item.id)}
                                                         disabled={isDeleting === item.id}
                                                         className="h-10 w-10 rounded-xl bg-slate-50 text-[#1B263B] hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-slate-100 disabled:opacity-50"
-                                                        aria-label="Excluir imóvel"
+                                                        title="Excluir"
                                                     >
                                                         {isDeleting === item.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
                                                     </button>
@@ -914,7 +910,7 @@ function AdminDashboardContent() {
                                                             <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{doc.file_type || 'Geral'}</p>
                                                         </div>
                                                     </div>
-                                                    <button aria-label="Baixar documento" className="h-10 w-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-[#10b981] shadow-sm transform group-hover:scale-110 transition-all">
+                                                    <button className="h-10 w-10 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-[#10b981] shadow-sm transform group-hover:scale-110 transition-all">
                                                         <Download className="h-4 w-4" />
                                                     </button>
                                                 </div>
@@ -1064,7 +1060,7 @@ function AdminDashboardContent() {
                                                             <button
                                                                 onClick={() => setEditingUser(u)}
                                                                 className="h-10 w-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-all shadow-sm border border-indigo-100"
-                                                                aria-label="Editar usuário"
+                                                                title="Editar Usuário"
                                                             >
                                                                 <Edit2 className="h-4 w-4" />
                                                             </button>
@@ -1280,7 +1276,7 @@ function AdminDashboardContent() {
                                                                 }
                                                             }}
                                                             className="h-10 w-10 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-amber-50 hover:text-amber-500 transition-all border border-slate-200"
-                                                            aria-label="Editar status"
+                                                            title="Editar Status"
                                                         >
                                                         </button>
                                                         <button
@@ -1386,7 +1382,6 @@ function AdminDashboardContent() {
                         <div className="bg-white w-full max-w-4xl rounded-[50px] overflow-hidden shadow-2xl relative animate-in zoom-in-95 duration-500 overflow-y-auto max-h-[90vh]">
                             <button
                                 onClick={() => setSelectedProperty(null)}
-                                aria-label="Fechar visualização"
                                 className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-white/20 backdrop-blur-xl text-[#1B263B] hover:bg-red-500 hover:text-white transition-all flex items-center justify-center z-10 shadow-xl border border-white/40"
                             >
                                 <X className="h-6 w-6" />
@@ -2622,7 +2617,7 @@ function LocationsConfigSection() {
                                 {city.neighborhoods.map((neb: string, nebIdx: number) => (
                                     <div key={nebIdx} className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border border-slate-100">
                                         {neb}
-                                        <button onClick={() => removeNeighborhood(cityIdx, nebIdx)} aria-label={`Remover ${neb}`} className="text-slate-300 hover:text-red-500"><X className="h-3 w-3" /></button>
+                                        <button onClick={() => removeNeighborhood(cityIdx, nebIdx)} className="text-slate-300 hover:text-red-500"><X className="h-3 w-3" /></button>
                                     </div>
                                 ))}
                                 <button 
@@ -3064,7 +3059,7 @@ function FeaturesConfigSection() {
                                     Organização técnica do inventário
                                 </p>
                             </div>
-                            <button onClick={() => setIsModalOpen(false)} aria-label="Fechar modal" className="h-10 w-10 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center hover:text-red-500">
+                            <button onClick={() => setIsModalOpen(false)} className="h-10 w-10 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center hover:text-red-500">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
@@ -3334,7 +3329,7 @@ function EditUserModal({ user, onClose, onUpdate }: { user: any, onClose: () => 
                         <h3 className="text-xl font-black text-primary-900 tracking-tighter uppercase">Editar Usuário</h3>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{user.email}</p>
                     </div>
-                    <button onClick={onClose} aria-label="Fechar edição de usuário" className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 text-slate-400 hover:text-red-500 transition-all">
+                    <button onClick={onClose} className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 text-slate-400 hover:text-red-500 transition-all">
                         <X className="h-5 w-5" />
                     </button>
                 </div>
@@ -3992,7 +3987,7 @@ function NewsPostModal({ post, onClose, onUpdate }: { post: any, onClose: () => 
                         <h3 className="text-3xl font-black text-[#1B263B] tracking-tighter uppercase">{post ? 'Editar Postagem' : 'Nova Postagem'}</h3>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Crie conteúdo relevante para seu público</p>
                     </div>
-                    <button onClick={onClose} aria-label="Fechar postagem" className="h-12 w-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 hover:text-red-500 transition-all">
+                    <button onClick={onClose} className="h-12 w-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 hover:text-red-500 transition-all">
                         <X className="h-6 w-6" />
                     </button>
                 </div>
@@ -4294,7 +4289,7 @@ function SpecsConfigSection() {
                                     Configure como a informação será exibida
                                 </p>
                             </div>
-                            <button onClick={() => setIsModalOpen(false)} aria-label="Fechar modal" className="h-10 w-10 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center hover:text-red-500">
+                            <button onClick={() => setIsModalOpen(false)} className="h-10 w-10 rounded-xl bg-slate-50 text-slate-300 flex items-center justify-center hover:text-red-500">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>

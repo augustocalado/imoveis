@@ -1,7 +1,6 @@
 
 import * as React from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import { MapPin, CheckCircle2, Star, ArrowRight, Building2, TrendingUp, Waves, ShoppingBag } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -86,7 +85,7 @@ export default async function NeighborhoodPage({ params }: { params: Promise<{ s
             {/* Hero Section */}
             <section className="relative pt-40 pb-20 bg-primary-900 overflow-hidden">
                 <div className="absolute inset-0 opacity-30">
-                    <Image src={content.heroImg} fill className="object-cover" alt={content.name} priority sizes="100vw" />
+                    <img src={content.heroImg} className="w-full h-full object-cover" alt={content.name} />
                     <div className="absolute inset-0 bg-gradient-to-b from-primary-900 via-primary-900/40 to-white" />
                 </div>
                 

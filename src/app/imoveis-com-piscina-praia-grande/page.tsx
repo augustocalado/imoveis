@@ -1,7 +1,6 @@
 
 import * as React from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CatalogClient from '@/components/CatalogClient';
@@ -22,7 +21,7 @@ export default function PiscinaPage() {
             <Navbar />
             <section className="pt-40 pb-20 bg-[#1B263B] overflow-hidden relative">
                  <div className="absolute inset-0 opacity-20">
-                    <Image src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=1920" fill className="object-cover" alt="Piscina" priority sizes="100vw" />
+                    <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=1920" className="w-full h-full object-cover" alt="Piscina" />
                 </div>
                 <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
                     <div className="inline-flex items-center gap-2 bg-accent/20 border border-white/10 text-white px-6 py-2 rounded-full font-bold text-[10px] uppercase tracking-widest mb-6">

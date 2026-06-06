@@ -57,7 +57,7 @@ export default function NotificationBell() {
                             <h4 className="text-xl font-black text-gray-900 tracking-tighter">Notificações</h4>
                             <p className="text-[12px] font-black text-primary-600 uppercase tracking-widest mt-0.5">Alertas do Sistema</p>
                         </div>
-                        <button onClick={() => setIsOpen(false)} aria-label="Fechar notificações" className="p-2 hover:bg-gray-100 rounded-2xl transition-colors">
+                        <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-gray-100 rounded-2xl transition-colors">
                             <X className="h-4 w-4 text-gray-400" />
                         </button>
                     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { Mail, MapPin, Phone, Instagram, Facebook, ArrowRight, Loader2, CheckCircle2, Youtube, Linkedin } from 'lucide-react';
@@ -107,7 +106,7 @@ export default function Footer() {
                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
                     <p className="text-[11px] font-bold text-white/50 uppercase tracking-[0.4em]">© 2026 KÁTIA E FLÁVIO IMÓVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
                     <div className="flex gap-4">
-                        <Image src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" width={32} height={32} className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" loading="lazy" />
+                        <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" width={32} height={32} className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" loading="lazy" />
                     </div>
                 </div>
             </div>

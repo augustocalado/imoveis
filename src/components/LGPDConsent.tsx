@@ -63,7 +63,6 @@ export default function LGPDConsent() {
                         </button>
                         <button 
                             onClick={handleAccept}
-                            aria-label="Fechar aviso de privacidade"
                             className="h-9 w-9 md:h-10 md:w-10 min-w-[36px] md:min-w-[40px] rounded-xl bg-slate-50 text-slate-400 hover:text-red-500 transition-all flex items-center justify-center md:hidden"
                         >
                             <X className="h-4 w-4 md:h-5 md:w-5" />

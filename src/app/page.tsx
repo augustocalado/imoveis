@@ -1,7 +1,7 @@
 import HomeClient from '@/components/HomeClient';
 import { supabaseServer } from '@/lib/supabase-server';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
     return Promise.race([

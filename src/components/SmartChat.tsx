@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { MessageSquare, MessageCircle, X, Send, ShieldCheck, ArrowRight, User, Phone, MapPin, Search, Home as HomeIcon } from 'lucide-react';
@@ -217,7 +216,7 @@ export default function SmartChat() {
                     <div className="flex items-center gap-3 relative z-10">
                         <div className="relative">
                             <div className="w-12 h-12 bg-white rounded-full overflow-hidden border-2 border-accent">
-                                <Image src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150" alt="Catarina" width={48} height={48} className="w-full h-full object-cover" loading="lazy" />
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150" alt="Catarina" width={48} height={48} className="w-full h-full object-cover" loading="lazy" />
                             </div>
                             <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#1B263B]" />
                         </div>
@@ -231,12 +230,12 @@ export default function SmartChat() {
                     <div className="flex items-center gap-2 relative z-10">
                         <button 
                             onClick={() => handleUserAction('Quero falar no WhatsApp agora!', 'go_whatsapp')}
-                            aria-label="Chamar no WhatsApp"
                             className="bg-[#25D366] text-white p-1.5 rounded-lg hover:scale-110 transition-transform shadow-lg"
+                            title="Chamar no WhatsApp"
                         >
                             <MessageCircle className="h-4 w-4 fill-current" />
                         </button>
-                        <button onClick={() => setIsOpen(false)} aria-label="Fechar chat" className="h-8 w-8 hover:bg-white/10 rounded-full flex items-center justify-center transition-colors">
+                        <button onClick={() => setIsOpen(false)} className="h-8 w-8 hover:bg-white/10 rounded-full flex items-center justify-center transition-colors">
                             <X className="h-5 w-5" />
                         </button>
                     </div>
@@ -291,7 +290,6 @@ export default function SmartChat() {
                         <button 
                             type="submit" 
                             disabled={!inputValue.trim()}
-                            aria-label="Enviar mensagem"
                             className="absolute right-2 h-10 w-10 bg-[#1B263B] text-white rounded-lg flex items-center justify-center hover:bg-accent disabled:opacity-50 transition-colors shadow-md"
                         >
                             <Send className="h-4 w-4 translate-x-px translate-y-px" />
@@ -310,7 +308,6 @@ export default function SmartChat() {
                 onClick={() => setIsOpen(!isOpen)}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
-                aria-label={isOpen ? "Fechar atendimento" : "Abrir atendimento"}
                 className={clsx(
                     "h-16 w-16 rounded-full shadow-[0_15px_30px_-5px_rgba(37,211,102,0.5)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 relative group z-50 overflow-hidden",
                     isOpen ? "bg-[#1B263B] text-white" : "bg-[#25D366] text-white"
