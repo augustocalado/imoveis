@@ -273,7 +273,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                                         <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                                         <input 
                                             type="text" 
-                                            placeholder="Buscar na carteira..."
+                                            placeholder="Buscar por nome ou código do imóvel..."
                                             value={searchProp}
                                             onChange={(e) => setSearchProp(e.target.value)}
                                             className="w-full bg-slate-50 border border-slate-100 pl-12 pr-4 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-[#10b981]/10 transition-all"
