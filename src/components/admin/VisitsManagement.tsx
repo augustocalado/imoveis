@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { 
     Plus, Search, Building2, Calendar, X, Download, Bed, Bath, Maximize2, Loader2, CheckCircle2, MapPin
@@ -29,6 +29,14 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
     const [searchClient, setSearchClient] = useState('');
     const [searchProp, setSearchProp] = useState('');
     const [showClientResults, setShowClientResults] = useState(true);
+    const [selectedPropsData, setSelectedPropsData] = useState<Record<string, any>>({});
+    const [searchPropResults, setSearchPropResults] = useState<any[]>([]);
+    const [isSearchingProp, setIsSearchingProp] = useState(false);
+    const propSearchTimer = useRef<NodeJS.Timeout | null>(null);
+
+    const allPropertiesMap: Record<string, any> = { ...selectedPropsData };
+    properties.forEach(p => { allPropertiesMap[p.id] = p; });
+    searchPropResults.forEach(p => { allPropertiesMap[p.id] = p; });
 
     const allContacts = [
         ...leads.map(l => ({ 
@@ -47,12 +55,36 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
         ? allContacts.filter(c => c.name?.toLowerCase().includes(searchClient.toLowerCase()))
         : [];
 
-    const filteredProps = searchProp.length > 0
-        ? properties.filter(p => 
-            p.title?.toLowerCase().includes(searchProp.toLowerCase()) || 
-            p.reference_id?.toLowerCase().includes(searchProp.toLowerCase())
-        )
-        : [];
+    useEffect(() => {
+        if (propSearchTimer.current) clearTimeout(propSearchTimer.current);
+
+        if (searchProp.length < 1) {
+            setSearchPropResults([]);
+            return;
+        }
+
+        propSearchTimer.current = setTimeout(async () => {
+            setIsSearchingProp(true);
+            try {
+                const s = searchProp.trim();
+                const { data } = await supabase
+                    .from('properties')
+                    .select('*')
+                    .or(`title.ilike.%${s}%,reference_id.ilike.%${s}%`)
+                    .limit(20);
+                setSearchPropResults(data || []);
+            } catch (err) {
+                console.error('Erro ao buscar imóveis:', err);
+                setSearchPropResults([]);
+            } finally {
+                setIsSearchingProp(false);
+            }
+        }, 300);
+
+        return () => {
+            if (propSearchTimer.current) clearTimeout(propSearchTimer.current);
+        };
+    }, [searchProp]);
 
     const handleCreateVisit = async () => {
         if (!clientName || !visitDate || !visitTime || selectedPropIds.length === 0) {
@@ -102,7 +134,17 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                     <p className="text-slate-400 font-bold text-[12px] uppercase tracking-[0.4em]">Organize atendimentos e gere roteiros profissionais</p>
                 </div>
                 <button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setClientName('');
+                        setClientPhone('');
+                        setVisitDate('');
+                        setVisitTime('');
+                        setSelectedPropIds([]);
+                        setSelectedPropsData({});
+                        setSearchClient('');
+                        setSearchProp('');
+                        setIsModalOpen(true);
+                    }}
                     className="bg-[#1B263B] text-white px-10 py-5 rounded-3xl text-[12px] font-black uppercase tracking-widest shadow-2xl hover:bg-[#10b981] transition-all flex items-center gap-3"
                 >
                     <Plus className="h-5 w-5" /> Novo Agendamento
@@ -179,7 +221,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
             {isModalOpen && (
                 <div className="fixed inset-0 bg-[#1B263B]/80 backdrop-blur-md z-[200] flex items-center justify-center p-6 animate-in fade-in duration-300 overflow-y-auto">
                     <div className="bg-white w-full max-w-4xl rounded-[50px] shadow-2xl p-12 relative animate-in zoom-in-95 duration-500">
-                        <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-red-500 transition-all flex items-center justify-center border border-slate-100">
+                        <button onClick={() => { setIsModalOpen(false); setSearchPropResults([]); }} className="absolute top-8 right-8 h-12 w-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-red-500 transition-all flex items-center justify-center border border-slate-100">
                             <X className="h-6 w-6" />
                         </button>
 
@@ -279,16 +321,22 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                                             className="w-full bg-slate-50 border border-slate-100 pl-12 pr-4 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-4 focus:ring-[#10b981]/10 transition-all"
                                         />
                                     </div>
-                                    {filteredProps.length > 0 && (
+                                    {isSearchingProp && (
+                                        <div className="absolute top-full left-0 right-0 bg-white border border-slate-100 shadow-2xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-20 p-2 flex items-center justify-center py-6">
+                                            <Loader2 className="h-5 w-5 animate-spin text-slate-300" />
+                                        </div>
+                                    )}
+                                    {!isSearchingProp && searchPropResults.length > 0 && (
                                         <div className="absolute top-full left-0 right-0 bg-white border border-slate-100 shadow-2xl rounded-2xl mt-2 max-h-48 overflow-y-auto z-20 p-2 space-y-1">
-                                            {filteredProps.map((p) => (
+                                            {searchPropResults.map((p) => (
                                                 <button 
                                                     key={p.id}
                                                     type="button"
                                                     onMouseDown={(e) => {
-                                                        e.preventDefault(); // Prevent input blur before selection
+                                                        e.preventDefault();
                                                         if (!selectedPropIds.includes(p.id)) {
                                                             setSelectedPropIds([...selectedPropIds, p.id]);
+                                                            setSelectedPropsData(prev => ({ ...prev, [p.id]: p }));
                                                         }
                                                         setSearchProp('');
                                                     }}
@@ -312,7 +360,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                                         <p className="text-[10px] font-bold text-slate-300 uppercase text-center mt-12">Nenhum imóvel adicionado</p>
                                     ) : (
                                         selectedPropIds.map(id => {
-                                            const p = properties.find(prop => prop.id === id);
+                                            const p = selectedPropsData[id] || properties.find(prop => prop.id === id);
                                             return (
                                                 <div key={id} className="bg-white p-3 rounded-2xl flex items-center justify-between border border-slate-100 shadow-sm">
                                                     <div className="flex items-center gap-3">
@@ -348,6 +396,7 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
                 <VisitItineraryPDF 
                     visit={selectedVisitForPrint}
                     properties={properties}
+                    allPropertiesMap={allPropertiesMap}
                     corretor={currentUserProfile}
                     onClose={() => setSelectedVisitForPrint(null)}
                 />
@@ -391,8 +440,8 @@ export default function VisitsManagement({ properties, leads, chatLeads, visits,
     );
 }
 
-function VisitItineraryPDF({ visit, properties, corretor, onClose }: { visit: any, properties: any[], corretor: any, onClose: () => void }) {
-    const selectedProperties = visit.property_ids.map((id: string) => properties.find(p => p.id === id)).filter(Boolean);
+function VisitItineraryPDF({ visit, properties, allPropertiesMap, corretor, onClose }: { visit: any, properties: any[], allPropertiesMap?: Record<string, any>, corretor: any, onClose: () => void }) {
+    const selectedProperties = visit.property_ids.map((id: string) => allPropertiesMap?.[id] || properties.find(p => p.id === id)).filter(Boolean);
 
     const handlePrint = () => {
         window.print();
