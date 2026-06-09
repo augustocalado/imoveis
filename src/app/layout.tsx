@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 import Navbar from "@/components/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
 
-const SmartChat = dynamic(() => import("@/components/SmartChat"));
+const FloatingWhatsApp = dynamic(() => import("@/components/FloatingWhatsApp"));
 const LGPDConsent = dynamic(() => import("@/components/LGPDConsent"));
 
 export default function RootLayout({
@@ -79,7 +79,7 @@ export default function RootLayout({
                 <div className="flex flex-col min-h-screen">
                     {children}
                 </div>
-                <SmartChat />
+                <FloatingWhatsApp />
                 <LGPDConsent />
             </body>
         </html>
