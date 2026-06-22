@@ -145,6 +145,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
                 >
                     <option value="" className={isLight ? "bg-white text-slate-400" : "bg-primary-900"}>Tipo do Imóvel</option>
                     <option value="Apartamento" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Apartamento</option>
+                    <option value="Cobertura" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Cobertura</option>
                     <option value="Casa" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Casa</option>
                     <option value="Casa de Condomínio" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Casa de Condomínio</option>
                     <option value="Sobrado" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Sobrado</option>

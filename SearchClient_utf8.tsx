@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -254,6 +254,7 @@ function SearchResults() {
                                 <option value="" className="bg-[#1B263B]">Todos os Tipos</option>
                                 <option value="Casa" className="bg-[#1B263B]">Casa</option>
                                 <option value="Apartamento" className="bg-[#1B263B]">Apartamento</option>
+                                <option value="Cobertura" className="bg-[#1B263B]">Cobertura</option>
                                 <option value="Kitnet" className="bg-[#1B263B]">Kitnet</option>
                                 <option value="Terreno" className="bg-[#1B263B]">Terreno</option>
                                 <option value="Comercial" className="bg-[#1B263B]">Comercial</option>

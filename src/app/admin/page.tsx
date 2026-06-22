@@ -727,6 +727,7 @@ function AdminDashboardContent() {
                                                 >
                                                     <option value="">Todas as Categorias</option>
                                                     <option value="Apartamento">Apartamento</option>
+                                                    <option value="Cobertura">Cobertura</option>
                                                     <option value="Casa">Casa</option>
                                                     <option value="Casa de Condomínio">Casa de Condomínio</option>
                                                     <option value="Sobrado">Sobrado</option>

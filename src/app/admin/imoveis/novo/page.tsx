@@ -847,6 +847,7 @@ export default function NovoImovel() {
                                             >
                                                 <option value="">Selecione a Categoria</option>
                                                 <option value="Apartamento">Apartamento</option>
+                                                <option value="Cobertura">Cobertura</option>
                                                 <option value="Casa">Casa</option>
                                                 <option value="Casa de Condomínio">Casa de Condomínio</option>
                                                 <option value="Sobrado">Sobrado</option>
@@ -866,6 +867,7 @@ export default function NovoImovel() {
                                             >
                                                 <option value="">Selecione o Subtipo</option>
                                                 <option value="isolada">Isolada</option>
+                                                <option value="geminada">Geminada</option>
                                                 <option value="condominio_fechado">Condomínio Fechado</option>
                                                 <option value="loteamento_fechado">Loteamento Fechado</option>
                                                 <option value="esquina">Esquina</option>
