@@ -22,6 +22,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
             const { data } = await supabase
                 .from('properties')
                 .select('neighborhood')
+                .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                 .not('neighborhood', 'is', null);
             const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
             setNeighborhoods(unique.sort());

@@ -23,7 +23,7 @@ export default async function Home() {
             15000
         ),
         withTimeout(supabaseServer.from('blog_posts').select('*').order('created_at', { ascending: false }).limit(3), 8000),
-        withTimeout(supabaseServer.from('properties').select('neighborhood').not('neighborhood', 'is', null), 10000),
+        withTimeout(supabaseServer.from('properties').select('neighborhood').in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']).not('neighborhood', 'is', null), 10000),
         withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'home_hq').maybeSingle(), 8000),
         withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'site_contact').maybeSingle(), 8000),
         withTimeout(supabaseServer.from('site_settings').select('value').eq('key', 'property_specs').maybeSingle(), 8000),

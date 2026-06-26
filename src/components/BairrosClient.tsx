@@ -36,7 +36,7 @@ export default function BairrosClient() {
             setCities(currentCities);
 
             // 2. Fetch Property Counts
-            const { data } = await supabase.from('properties').select('neighborhood, city');
+            const { data } = await supabase.from('properties').select('neighborhood, city').in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
             if (data) {
                 const newMap: Record<string, { count: number, originalName: string }> = {};
                 const extras: Record<string, string[]> = {};

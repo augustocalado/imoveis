@@ -40,6 +40,7 @@ export default function AdminSearchBar() {
                     .from('properties')
                     .select('id, title, reference_id, neighborhood, city')
                     .or(`title.ilike.%${searchTerm}%,reference_id.ilike.%${searchTerm}%,neighborhood.ilike.%${searchTerm}%`)
+                    .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                     .order('created_at', { ascending: false })
                     .limit(8);
 

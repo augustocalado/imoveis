@@ -136,11 +136,13 @@ function AdminDashboardContent() {
 
             if (search) {
                 const s = search.trim();
-                query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%,rooms::text.ilike.%${s}%`);
+                query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%,rooms::text.ilike.%${s}%`)
+                             .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
             }
 
             if (f.ref) {
-                query = query.ilike('reference_id', `%${f.ref.trim()}%`);
+                query = query.ilike('reference_id', `%${f.ref.trim()}%`)
+                             .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
             }
 
             if (f.neighborhoods && f.neighborhoods.length > 0) {
