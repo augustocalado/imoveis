@@ -195,11 +195,30 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
                 >
                     <option value="" className={isLight ? "bg-white text-slate-400" : "bg-primary-900"}>Até valor</option>
                     <option value="100000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 100 Mil</option>
+                    <option value="200000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 200 Mil</option>
                     <option value="300000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 300 Mil</option>
+                    <option value="400000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 400 Mil</option>
                     <option value="500000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 500 Mil</option>
-                    <option value="750000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 750 Mil</option>
+                    <option value="600000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 600 Mil</option>
+                    <option value="700000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 700 Mil</option>
+                    <option value="800000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 800 Mil</option>
+                    <option value="900000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 900 Mil</option>
                     <option value="1000000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1 Milhão</option>
+                    <option value="1100000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,1 Milhão</option>
+                    <option value="1200000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,2 Milhão</option>
+                    <option value="1300000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,3 Milhão</option>
+                    <option value="1400000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,4 Milhão</option>
+                    <option value="1500000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,5 Milhão</option>
+                    <option value="1600000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,6 Milhão</option>
+                    <option value="1700000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,7 Milhão</option>
+                    <option value="1800000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,8 Milhão</option>
+                    <option value="1900000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 1,9 Milhão</option>
                     <option value="2000000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 2 Milhões</option>
+                    <option value="2500000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 2,5 Milhões</option>
+                    <option value="3000000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 3 Milhões</option>
+                    <option value="4000000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 4 Milhões</option>
+                    <option value="5000000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 5 Milhões</option>
+                    <option value="10000000" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Até R$ 10 Milhões</option>
                 </select>
                 <ChevronDown className={clsx("absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none", isLight ? "text-slate-400" : "text-white/20")} aria-hidden="true" />
             </div>
