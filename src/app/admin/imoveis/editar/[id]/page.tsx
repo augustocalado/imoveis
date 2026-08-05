@@ -780,8 +780,10 @@ export default function EditarImovel() {
                                                 onChange={e => setFormData({ ...formData, status: e.target.value })}
                                             >
                                                 <option value="disponivel">Disponível</option>
-                                                <option value="vendido">Vendido</option>
                                                 <option value="pausado">Pausado</option>
+                                                <option value="desabilitado">Desabilitado</option>
+                                                <option value="inativo">Inativo</option>
+                                                <option value="vendido">Vendido</option>
                                             </select>
                                         </div>
 

@@ -278,6 +278,7 @@ function AdminDashboardContent() {
     const menuItems = [
         { id: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
         { id: 'imoveis', label: 'Gestão de Imóveis', icon: Building2 },
+        { id: 'desabilitados', label: 'Imóveis Desabilitados', icon: Power, isLink: true, href: '/admin/imoveis/desabilitados' },
         { id: 'blog', label: 'Blog e Conteúdo', icon: Newspaper, roles: ['admin'] },
         { id: 'crm', label: 'CRM de Clientes', icon: Users },
         { id: 'financeiro', label: 'Financeiro', icon: DollarSign },
@@ -398,24 +399,36 @@ function AdminDashboardContent() {
                     <nav className="space-y-1">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 ml-4">Menu Principal</p>
                         {dynamicMenuItems.map((item) => (
-                            <button
-                                key={item.id}
-                                onClick={() => {
-                                    setCurrentTab(item.id as Tab);
-                                    setIsSidebarOpen(false);
-                                    router.push(`/admin?tab=${item.id}`, { scroll: false });
-                                }}
+                            (item as any).isLink ? (
+                                <Link
+                                    key={item.id}
+                                    href={(item as any).href}
+                                    onClick={() => setIsSidebarOpen(false)}
+                                    className="w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 group hover:bg-amber-500/10 text-amber-600 font-bold"
+                                >
+                                    <item.icon className="h-5 w-5 text-amber-500 group-hover:scale-110 transition-transform" />
+                                    <span className="text-sm font-bold">{item.label}</span>
+                                </Link>
+                            ) : (
+                                <button
+                                    key={item.id}
+                                    onClick={() => {
+                                        setCurrentTab(item.id as Tab);
+                                        setIsSidebarOpen(false);
+                                        router.push(`/admin?tab=${item.id}`, { scroll: false });
+                                    }}
 
-                                className={clsx(
-                                    "w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 group",
-                                    currentTab === item.id
-                                        ? "bg-emerald-50 text-emerald-700 font-bold"
-                                        : "hover:bg-slate-50 text-slate-500 hover:text-slate-800"
-                                )}
-                            >
-                                <item.icon className={clsx("h-5 w-5", currentTab === item.id ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600")} />
-                                <span className={clsx("text-sm", currentTab === item.id ? "font-bold" : "font-medium")}>{item.label}</span>
-                            </button>
+                                    className={clsx(
+                                        "w-full flex items-center gap-4 p-3 rounded-xl transition-all duration-300 group",
+                                        currentTab === item.id
+                                            ? "bg-emerald-50 text-emerald-700 font-bold"
+                                            : "hover:bg-slate-50 text-slate-500 hover:text-slate-800"
+                                    )}
+                                >
+                                    <item.icon className={clsx("h-5 w-5", currentTab === item.id ? "text-emerald-600" : "text-slate-400 group-hover:text-slate-600")} />
+                                    <span className={clsx("text-sm", currentTab === item.id ? "font-bold" : "font-medium")}>{item.label}</span>
+                                </button>
+                            )
                         ))}
                     </nav>
                 </div>
@@ -632,8 +645,13 @@ function AdminDashboardContent() {
                     {currentTab === 'imoveis' && (
                         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
                             {/* Header do Tab de Imóveis */}
-                            <div className="flex justify-end pb-6 border-b border-slate-100 mb-8">
-                                <Link href="/admin/imoveis/novo" className="w-full md:w-auto">
+                            <div className="flex flex-col sm:flex-row justify-end items-center gap-3 pb-6 border-b border-slate-100 mb-8">
+                                <Link href="/admin/imoveis/desabilitados" className="w-full sm:w-auto">
+                                    <button className="w-full bg-amber-500/10 text-amber-600 border border-amber-500/30 px-6 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-amber-500 hover:text-white hover:scale-105 transition-all flex items-center justify-center gap-2">
+                                        <Power className="h-4 w-4" /> Imóveis Desabilitados
+                                    </button>
+                                </Link>
+                                <Link href="/admin/imoveis/novo" className="w-full sm:w-auto">
                                     <button className="w-full bg-[#1B263B] text-white px-8 py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-[#1B263B]/20 hover:bg-[#10b981] hover:scale-105 transition-all flex items-center justify-center gap-3">
                                         <Plus className="h-4 w-4" /> Cadastrar Imóvel
                                     </button>

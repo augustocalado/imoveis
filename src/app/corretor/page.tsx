@@ -9,7 +9,7 @@ import {
     LogOut, Home, Search, MessageSquare, ChevronRight,
     TrendingUp, User, ArrowUpRight, Filter, List, Calendar,
     FileText, Handshake, Mail, CheckCircle2, XCircle, Info, Menu, X, Upload, Sparkles, Copy, Instagram,
-    Facebook, Bed, Bath, Maximize2, Download
+    Facebook, Bed, Bath, Maximize2, Download, Power
 } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -569,12 +569,20 @@ export default function CorretorDashboard() {
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />
                                     </div>
-                                    <Link href="/admin/imoveis/novo">
-                                        <button className="bg-[#1B263B] text-white px-10 py-4 rounded-3xl text-[12px] font-black uppercase tracking-widest shadow-2xl hover:bg-[#10b981] transition-all flex items-center gap-3">
-                                            <Plus className="h-5 w-5" />
-                                            Novo Imóvel
-                                        </button>
-                                    </Link>
+                                    <div className="flex flex-wrap items-center gap-3">
+                                         <Link href="/admin/imoveis/desabilitados">
+                                             <button className="bg-amber-500/10 text-amber-600 border border-amber-500/30 px-6 py-4 rounded-3xl text-[12px] font-black uppercase tracking-widest hover:bg-amber-500 hover:text-white transition-all flex items-center gap-2">
+                                                 <Power className="h-4 w-4" />
+                                                 Desabilitados
+                                             </button>
+                                         </Link>
+                                         <Link href="/admin/imoveis/novo">
+                                             <button className="bg-[#1B263B] text-white px-10 py-4 rounded-3xl text-[12px] font-black uppercase tracking-widest shadow-2xl hover:bg-[#10b981] transition-all flex items-center gap-3">
+                                                 <Plus className="h-5 w-5" />
+                                                 Novo Imóvel
+                                             </button>
+                                         </Link>
+                                     </div>
                                 </div>
                             </div>
 
