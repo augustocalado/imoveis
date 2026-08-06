@@ -11,6 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import GlobalSearch from './GlobalSearch';
 import PropertyCard from '@/components/PropertyCard';
+import { getRawNeighborhoodVariants } from '@/utils/neighborhood';
 
 function CatalogResults() {
     const searchParams = useSearchParams();
@@ -53,7 +54,8 @@ function CatalogResults() {
         } else {
             if (neighborhood) {
                 const list = neighborhood.split(',');
-                query = query.in('neighborhood', list);
+                const allVariants = getRawNeighborhoodVariants(list);
+                query = query.in('neighborhood', allVariants);
             }
 
             if (maxPrice) {

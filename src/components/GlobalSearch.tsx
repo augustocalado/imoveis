@@ -6,6 +6,7 @@ import { Search, MapPin, DollarSign, ChevronDown, Check, Home, Bed } from 'lucid
 
 import { useRouter, usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { normalizeNeighborhoodList } from '@/utils/neighborhood';
 
 export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: () => void, theme?: 'dark' | 'light' }) {
     const router = useRouter();
@@ -24,8 +25,8 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
                 .select('neighborhood')
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                 .not('neighborhood', 'is', null);
-            const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
-            setNeighborhoods(unique.sort());
+            const { unique } = normalizeNeighborhoodList(data?.map((p: any) => p.neighborhood) || []);
+            setNeighborhoods(unique);
         };
         fetchNeighborhoods();
     }, []);

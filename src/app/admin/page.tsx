@@ -24,6 +24,7 @@ import SystemToolsSection from '@/components/admin/SystemToolsSection';
 import Toast, { ToastType } from '@/components/Toast';
 import VisitsManagement from '@/components/admin/VisitsManagement';
 import AdminSearchBar from '@/components/admin/AdminSearchBar';
+import { normalizeNeighborhoodList, getRawNeighborhoodVariants } from '@/utils/neighborhood';
 
 type Tab = 'overview' | 'imoveis' | 'blog' | 'crm' | 'financeiro' | 'agenda' | 'documentos' | 'parceiros' | 'config' | 'marketing' | 'integracao' | 'smart-leads' | 'perfil';
 type ConfigTab = 'visual' | 'contatos' | 'home' | 'sobre' | 'master' | 'sede' | 'bairros' | 'chat_ai' | 'features' | 'specs';
@@ -85,6 +86,7 @@ function AdminDashboardContent() {
     const [chatLeads, setChatLeads] = useState<any[]>([]);
     const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
     const [neighborhoods, setNeighborhoods] = useState<string[]>([]);
+    const [rawNeighborhoodsMap, setRawNeighborhoodsMap] = useState<Record<string, string[]>>({});
     const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
     const [filterCategory, setFilterCategory] = useState('');
     const [filterMaxPrice, setFilterMaxPrice] = useState('');
@@ -103,8 +105,9 @@ function AdminDashboardContent() {
                 .from('properties')
                 .select('neighborhood')
                 .not('neighborhood', 'is', null);
-            const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
-            setNeighborhoods(unique.sort());
+            const { unique, mapToRaw } = normalizeNeighborhoodList(data?.map((p: any) => p.neighborhood) || []);
+            setNeighborhoods(unique);
+            setRawNeighborhoodsMap(mapToRaw);
         };
         fetchNeighborhoods();
     }, []);
@@ -145,7 +148,8 @@ function AdminDashboardContent() {
             }
 
             if (f.neighborhoods && f.neighborhoods.length > 0) {
-                query = query.in('neighborhood', f.neighborhoods);
+                const variants = getRawNeighborhoodVariants(f.neighborhoods, rawNeighborhoodsMap);
+                query = query.in('neighborhood', variants);
             }
 
             if (f.category) {

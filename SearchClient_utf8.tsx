@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { normalizeNeighborhoodList, getRawNeighborhoodVariants } from '@/utils/neighborhood';
 
 function SearchResults() {
     const searchParams = useSearchParams();
@@ -17,6 +18,7 @@ function SearchResults() {
     const [properties, setProperties] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [neighborhoods, setNeighborhoods] = useState<string[]>([]);
+    const [rawNeighborhoodsMap, setRawNeighborhoodsMap] = useState<Record<string, string[]>>({});
     const [isBairroOpen, setIsBairroOpen] = useState(false);
 
     // Initial state from URL
@@ -35,8 +37,9 @@ function SearchResults() {
                 .select('neighborhood')
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                 .not('neighborhood', 'is', null);
-            const unique = Array.from(new Set(data?.map((p: any) => p.neighborhood))) as string[];
-            setNeighborhoods(unique.sort());
+            const { unique, mapToRaw } = normalizeNeighborhoodList(data?.map((p: any) => p.neighborhood) || []);
+            setNeighborhoods(unique);
+            setRawNeighborhoodsMap(mapToRaw);
         };
         fetchNeighborhoods();
     }, []);
@@ -47,32 +50,26 @@ function SearchResults() {
         let query = supabase
             .from('properties')
             .select('*, profiles!corretor_id(full_name)')
-            .in('status', ['disponivel', 'dispon├¡vel', 'Disponivel', 'Dispon├¡vel', 'DISPONIVEL', 'DISPON├ìVEL']);
+            .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
 
         // Clean up reference input
         const cleanRef = reference.trim().toUpperCase();
 
         if (cleanRef) {
-            // When searching by reference, we often want to find that specific property
-            // We'll search in reference_id, and also title/description for flexibility
-            // We search for the literal string AND the string without 'KF' if they included it, 
-            // or with 'KF' if they didn't.
             const searchTerms = [
                 `reference_id.ilike.%${cleanRef}%`,
                 `title.ilike.%${cleanRef}%`
             ];
             
-            // If it's a number, also try with KF prefix
             if (/^\d+$/.test(cleanRef)) {
                 searchTerms.push(`reference_id.ilike.%KF%${cleanRef}%`);
             }
 
             query = query.or(searchTerms.join(','));
         } else {
-            // Only apply other filters if NO reference is provided
-            // This makes the reference search work as an "ID lookup" which is what users expect
             if (selectedBairros.length > 0) {
-                query = query.in('neighborhood', selectedBairros);
+                const variants = getRawNeighborhoodVariants(selectedBairros, rawNeighborhoodsMap);
+                query = query.in('neighborhood', variants);
             }
             if (type) query = query.eq('type', type);
             if (maxPrice) query = query.lte('price', parseFloat(maxPrice));
