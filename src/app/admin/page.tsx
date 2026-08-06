@@ -130,19 +130,18 @@ function AdminDashboardContent() {
             let query = supabase
                 .from('properties')
                 .select('*, profiles!corretor_id(full_name)')
+                .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                 .order('created_at', { ascending: false });
 
             const f = filters || { neighborhoods: selectedNeighborhoods, category: filterCategory, maxPrice: filterMaxPrice, ref: filterRef, rooms: filterRooms };
 
             if (search) {
                 const s = search.trim();
-                query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%,rooms::text.ilike.%${s}%`)
-                             .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
+                query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%,rooms::text.ilike.%${s}%`);
             }
 
             if (f.ref) {
-                query = query.ilike('reference_id', `%${f.ref.trim()}%`)
-                             .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
+                query = query.ilike('reference_id', `%${f.ref.trim()}%`);
             }
 
             if (f.neighborhoods && f.neighborhoods.length > 0) {
@@ -195,7 +194,7 @@ function AdminDashboardContent() {
                 const { data: revenueData } = await supabase.from('financial_records').select('amount').eq('status', 'paid');
                 const monthlyRevenue = revenueData?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
 
-                const { count: activeProps } = await supabase.from('properties').select('*', { count: 'exact', head: true }).neq('status', 'Vendido');
+                const { count: activeProps } = await supabase.from('properties').select('*', { count: 'exact', head: true }).in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL']);
 
                 setStats({
                     totalProperties: propsCount || 0,
