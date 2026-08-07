@@ -14,9 +14,22 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
     const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
     const [price, setPrice] = useState('');
     const [reference, setReference] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState<string[]>([]);
     const [rooms, setRooms] = useState('');
     const [isBairroOpen, setIsBairroOpen] = useState(false);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+    const categoriesList = [
+        'Apartamento',
+        'Cobertura',
+        'Casa',
+        'Casa de Condomínio',
+        'Sobrado',
+        'Sobrado de Condomínio',
+        'Kitnet',
+        'Terreno',
+        'Comercial'
+    ];
 
     useEffect(() => {
         const fetchNeighborhoods = async () => {
@@ -39,7 +52,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
         if (selectedNeighborhoods.length > 0) params.set('neighborhood', selectedNeighborhoods.join(','));
         if (price) params.set('maxPrice', price);
         if (reference) params.set('ref', reference);
-        if (category) params.set('cat', category);
+        if (category.length > 0) params.set('cat', category.join(','));
         if (rooms) params.set('rooms', rooms);
         
         const targetPath = pathname === '/catalogo' ? '/catalogo' : '/imoveis';
@@ -50,6 +63,12 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
     const toggleNeighborhood = (n: string) => {
         setSelectedNeighborhoods(prev =>
             prev.includes(n) ? prev.filter(item => item !== n) : [...prev, n]
+        );
+    };
+
+    const toggleCategory = (cat: string) => {
+        setCategory(prev =>
+            prev.includes(cat) ? prev.filter(item => item !== cat) : [...prev, cat]
         );
     };
 
@@ -134,29 +153,59 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             <div className="flex-1 w-full relative">
                 <Home className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
-                <select
-                    value={category}
-                    aria-label="Tipo do Imóvel"
-                    onChange={(e) => setCategory(e.target.value)}
+                <button
+                    type="button"
+                    aria-label={`Selecionar tipos de imóvel. ${category.length === 0 ? 'Nenhum selecionado' : `${category.length} selecionados`}`}
+                    aria-expanded={isCategoryOpen}
+                    onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                     className={clsx(
-                        "w-full p-4 pl-12 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all appearance-none cursor-pointer",
-                        isLight ? "bg-slate-50 border border-slate-200 text-slate-900" : "bg-white/5 border border-white/10 text-white",
-                        !category && isLight && "text-slate-400",
-                        !category && !isLight && "text-white/40"
+                        "w-full p-4 pl-12 pr-10 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all text-left flex items-center justify-between cursor-pointer",
+                        isLight ? "bg-slate-50 border border-slate-200 text-slate-900" : "bg-white/5 border border-white/10 text-white"
                     )}
                 >
-                    <option value="" className={isLight ? "bg-white text-slate-400" : "bg-primary-900"}>Tipo do Imóvel</option>
-                    <option value="Apartamento" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Apartamento</option>
-                    <option value="Cobertura" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Cobertura</option>
-                    <option value="Casa" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Casa</option>
-                    <option value="Casa de Condomínio" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Casa de Condomínio</option>
-                    <option value="Sobrado" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Sobrado</option>
-                    <option value="Sobrado de Condomínio" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Sobrado de Condomínio</option>
-                    <option value="Kitnet" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Kitnet</option>
-                    <option value="Terreno" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Terreno</option>
-                    <option value="Comercial" className={isLight ? "bg-white text-slate-900" : "bg-primary-900"}>Comercial</option>
-                </select>
-                <ChevronDown className={clsx("absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none", isLight ? "text-slate-400" : "text-white/20")} aria-hidden="true" />
+                    <span className={clsx("truncate", category.length === 0 && isLight && "text-slate-400", category.length === 0 && !isLight && "text-white/40")}>
+                        {category.length === 0 ? 'Tipo do Imóvel' : `${category.length} tipo(s) selecionado(s)`}
+                    </span>
+                    <ChevronDown className={clsx("h-4 w-4 transition-transform", isCategoryOpen && "rotate-180", isLight ? "text-slate-400" : "text-white/40")} aria-hidden="true" />
+                </button>
+
+                {isCategoryOpen && (
+                    <>
+                        <div className="fixed inset-0 z-[100]" onClick={() => setIsCategoryOpen(false)} />
+                        <div className={clsx(
+                            "absolute top-full left-0 right-0 mt-3 border rounded-2xl shadow-2xl z-[110] max-h-64 overflow-y-auto p-4 space-y-2 custom-scrollbar animate-in fade-in slide-in-from-top-2",
+                            isLight ? "bg-white border-slate-100" : "bg-primary-900 border-white/10"
+                        )} role="group" aria-label="Lista de Tipos de Imóvel">
+                            {categoriesList.map((cat) => (
+                                <label key={cat} className={clsx(
+                                    "flex items-center gap-3 p-3 rounded-xl cursor-pointer group transition-all",
+                                    isLight ? "hover:bg-slate-50 text-slate-900" : "hover:bg-white/5 text-white"
+                                )}>
+                                    <div className={clsx(
+                                        "h-5 w-5 rounded-md border-2 flex items-center justify-center transition-all",
+                                        category.includes(cat) 
+                                            ? "bg-accent border-accent" 
+                                            : (isLight ? "border-slate-200 group-hover:border-slate-300" : "border-white/10 group-hover:border-white/30")
+                                    )}>
+                                        {category.includes(cat) && <Check className="h-3 w-3 text-white" aria-hidden="true" />}
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="sr-only"
+                                        checked={category.includes(cat)}
+                                        onChange={() => toggleCategory(cat)}
+                                    />
+                                    <span className={clsx(
+                                        "text-sm font-bold tracking-wide", 
+                                        category.includes(cat) 
+                                            ? (isLight ? "text-slate-900" : "text-white") 
+                                            : (isLight ? "text-slate-500" : "text-white/40")
+                                    )}>{cat}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
 
             <div className="flex-1 w-full relative">

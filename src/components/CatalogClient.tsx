@@ -63,7 +63,13 @@ function CatalogResults() {
             }
 
             if (cat) {
-                query = query.ilike('category', `%${cat}%`);
+                const catList = cat.split(',');
+                if (catList.length === 1) {
+                    query = query.ilike('category', `%${catList[0]}%`);
+                } else if (catList.length > 1) {
+                    const catConditions = catList.map(c => `category.ilike.%${c}%`).join(',');
+                    query = query.or(catConditions);
+                }
             }
 
             if (rooms) {
