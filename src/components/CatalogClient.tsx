@@ -73,11 +73,23 @@ function CatalogResults() {
             }
 
             if (rooms) {
-                const minRooms = parseInt(rooms);
-                if (minRooms >= 4) {
-                    query = query.gte('rooms', minRooms);
-                } else {
-                    query = query.eq('rooms', minRooms);
+                const roomList = rooms.split(',').map(r => parseInt(r));
+                const has4Plus = roomList.includes(4);
+                const exactRooms = roomList.filter(r => r < 4);
+
+                if (has4Plus && exactRooms.length > 0) {
+                    // Mix: exact values + 4+
+                    const conditions = [
+                        ...exactRooms.map(r => `rooms.eq.${r}`),
+                        'rooms.gte.4'
+                    ].join(',');
+                    query = query.or(conditions);
+                } else if (has4Plus) {
+                    query = query.gte('rooms', 4);
+                } else if (exactRooms.length === 1) {
+                    query = query.eq('rooms', exactRooms[0]);
+                } else if (exactRooms.length > 1) {
+                    query = query.in('rooms', exactRooms);
                 }
             }
         }
