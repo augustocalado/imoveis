@@ -106,7 +106,7 @@ export default function Footer() {
                 <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
                     <p className="text-[11px] font-bold text-white/50 uppercase tracking-[0.4em]">© 2026 KÁTIA E FLÁVIO IMÓVEIS - LUXURY REAL ESTATE. TODOS OS DIREITOS RESERVADOS.</p>
                     <div className="flex gap-4">
-                        <img src="https://logodownload.org/wp-content/uploads/2015/05/creci-logo.png" width={32} height={32} className="h-8 opacity-20 grayscale brightness-200" alt="CRECI" loading="lazy" />
+                        <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] border border-white/10 rounded-lg px-3 py-1.5">CRECI</span>
                     </div>
                 </div>
             </div>

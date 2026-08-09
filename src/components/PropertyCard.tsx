@@ -61,6 +61,10 @@ interface PropertyCardProps {
 export default function PropertyCard({ prop, index, onVideoClick, specs: initialSpecs }: PropertyCardProps) {
     const [specs, setSpecs] = useState<any[]>(initialSpecs || []);
 
+    const propertyImages = prop.images && prop.images.length > 0 ? prop.images : [];
+    const [imgIndex, setImgIndex] = useState(0);
+    const [imgFailed, setImgFailed] = useState(false);
+
     const placeholderImages = [
         '1564013799919-ab600027ffc6',
         '1570129477492-45c003edd2be',
@@ -100,9 +104,16 @@ export default function PropertyCard({ prop, index, onVideoClick, specs: initial
         <article className="group flex flex-col bg-white rounded-[40px] overflow-hidden p-2 shadow-xl hover:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] transition-all duration-700 border border-slate-100 relative h-full">
             <Link href={`/${prop.slug}`} className="relative h-64 rounded-[32px] overflow-hidden mb-4 block group-hover:shadow-2xl transition-all duration-700">
                 <Image
-                    src={(prop.images && prop.images.length > 0 ? prop.images[0] : null) || `https://images.unsplash.com/photo-${placeholderImages[index % 5]}?auto=format&fit=crop&q=80&w=800`}
+                    src={(!imgFailed && propertyImages[imgIndex]) || `https://images.unsplash.com/photo-${placeholderImages[index % 5]}?auto=format&fit=crop&q=80&w=800`}
                     alt={prop.title}
                     fill
+                    onError={() => {
+                        if (imgIndex + 1 < propertyImages.length) {
+                            setImgIndex(imgIndex + 1);
+                        } else {
+                            setImgFailed(true);
+                        }
+                    }}
                     className="object-cover transition-transform duration-1000 group-hover:scale-110"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
