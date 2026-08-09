@@ -3,6 +3,8 @@ const nextConfig = {
     reactStrictMode: true,
     trailingSlash: false,
     images: {
+        loader: 'custom',
+        loaderFile: './src/lib/image-loader.ts',
         remotePatterns: [
             { protocol: 'https', hostname: 'images.unsplash.com' },
             { protocol: 'https', hostname: 'res.cloudinary.com' },
