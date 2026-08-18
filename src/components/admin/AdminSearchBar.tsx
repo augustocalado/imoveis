@@ -71,7 +71,7 @@ export default function AdminSearchBar() {
                 isOpen && results.length > 0 ? "rounded-t-2xl" : "rounded-2xl"
             )}>
                 <Search className={clsx(
-                    "absolute left-4 h-4 w-4 transition-colors duration-300",
+                    "absolute left-4 h-4 w-4 transition-colors duration-300 pointer-events-none",
                     isSearching ? "text-[#10b981]" : "text-slate-300 group-focus-within:text-[#10b981]"
                 )} />
                 <input

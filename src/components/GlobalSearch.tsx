@@ -130,7 +130,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             {/* Referência */}
             <div className="flex-1 w-full relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <input
                     type="text"
                     placeholder="Ref. do Imóvel"
@@ -146,7 +146,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             {/* Bairros */}
             <div className="flex-1 w-full relative">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
                     aria-expanded={isBairroOpen}
@@ -172,7 +172,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             {/* Tipo do Imóvel */}
             <div className="flex-1 w-full relative">
-                <Home className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
+                <Home className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
                     aria-expanded={isCategoryOpen}
@@ -198,7 +198,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             {/* Dormitórios */}
             <div className="flex-1 w-full relative">
-                <Bed className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
+                <Bed className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
                     aria-expanded={isRoomsOpen}
@@ -224,7 +224,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             {/* Faixa de Preço */}
             <div className="flex-1 w-full relative">
-                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent z-20" aria-hidden="true" />
+                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
                     aria-expanded={isPriceOpen}
