@@ -289,7 +289,7 @@ export default function NovoImovel() {
                     .from('properties')
                     .select('*')
                     .eq('corretor_id', userId)
-                    .eq('status', 'draft')
+                    .eq('status', 'rascunho')
                     .order('updated_at', { ascending: false })
                     .limit(1)
                     .maybeSingle();
@@ -343,7 +343,7 @@ export default function NovoImovel() {
                 const draftData: any = {
                     ...formData,
                     corretor_id: userId,
-                    status: 'draft',
+                    status: 'rascunho',
                     price: parseCurrency(formData.price),
                     condo_fee: parseCurrency(formData.condo_fee) || 0,
                     iptu: parseCurrency(formData.iptu) || 0,

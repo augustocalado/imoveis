@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Search, MapPin, DollarSign, ChevronDown, Check, Home, Bed } from 'lucide-react';
+import { Search, MapPin, DollarSign, ChevronDown, Check, Home, Bed, Hash } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { normalizeNeighborhoodList } from '@/utils/neighborhood';
@@ -124,20 +124,21 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
     return (
         <form onSubmit={handleSearch} className={clsx(
-            'flex flex-col md:flex-row items-center gap-4 p-2 rounded-[30px] w-full max-w-4xl mx-auto relative z-[100]',
+            'flex flex-col xl:flex-row items-center gap-4 p-2 rounded-[30px] w-full max-w-6xl mx-auto relative z-[100]',
             isLight ? 'bg-transparent' : 'bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl'
         )} role="search">
 
             {/* Referência */}
-            <div className="flex-1 w-full relative">
+            <div className="flex-1 w-full relative min-w-[140px] z-10">
+                <Hash className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <input
                     type="text"
-                    placeholder="Código do Imóvel"
+                    placeholder="Código"
                     aria-label="Código do Imóvel"
                     value={reference}
                     onChange={(e) => setReference(e.target.value)}
                     className={clsx(
-                        'w-full p-4 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all',
+                        'w-full p-4 pl-12 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all cursor-text',
                         isLight ? 'bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400' : 'bg-white/5 border border-white/10 text-white placeholder:text-white/40'
                     )}
                 />
