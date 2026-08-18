@@ -124,12 +124,12 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
     return (
         <form onSubmit={handleSearch} className={clsx(
-            'flex flex-col xl:flex-row items-center gap-4 p-2 rounded-[30px] w-full max-w-6xl mx-auto relative z-[100]',
+            'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 items-center gap-4 p-2 rounded-3xl lg:rounded-[40px] w-full mx-auto relative z-[100]',
             isLight ? 'bg-transparent' : 'bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl'
         )} role="search">
 
             {/* Referência */}
-            <div className="flex-1 w-full relative min-w-[140px] z-10">
+            <div className="w-full relative z-10">
                 <Hash className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <input
                     type="text"
@@ -145,7 +145,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
             </div>
 
             {/* Bairros */}
-            <div className="flex-1 w-full relative">
+            <div className="w-full relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
@@ -171,7 +171,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
             </div>
 
             {/* Tipo do Imóvel */}
-            <div className="flex-1 w-full relative">
+            <div className="w-full relative">
                 <Home className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
@@ -197,7 +197,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
             </div>
 
             {/* Dormitórios */}
-            <div className="flex-1 w-full relative">
+            <div className="w-full relative">
                 <Bed className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
@@ -223,7 +223,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
             </div>
 
             {/* Faixa de Preço */}
-            <div className="flex-1 w-full relative">
+            <div className="w-full relative">
                 <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <button
                     type="button"
