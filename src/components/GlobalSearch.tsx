@@ -90,7 +90,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
     const isLight = theme === 'light';
 
     const dropdownBase = clsx(
-        'absolute top-full left-0 right-0 mt-3 border rounded-2xl shadow-2xl z-[110] max-h-64 overflow-y-auto p-4 space-y-2 custom-scrollbar',
+        'absolute top-full left-0 right-0 mt-3 border rounded-2xl shadow-2xl z-[110] p-4 space-y-2',
         isLight ? 'bg-white border-slate-100' : 'bg-primary-900 border-white/10'
     );
 
