@@ -130,15 +130,14 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
 
             {/* Referência */}
             <div className="flex-1 w-full relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" aria-hidden="true" />
                 <input
                     type="text"
-                    placeholder="Ref. do Imóvel"
-                    aria-label="Referência do Imóvel"
+                    placeholder="Código do Imóvel"
+                    aria-label="Código do Imóvel"
                     value={reference}
                     onChange={(e) => setReference(e.target.value)}
                     className={clsx(
-                        'w-full p-4 pl-12 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all',
+                        'w-full p-4 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-accent transition-all',
                         isLight ? 'bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400' : 'bg-white/5 border border-white/10 text-white placeholder:text-white/40'
                     )}
                 />
