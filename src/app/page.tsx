@@ -18,7 +18,7 @@ export default async function Home() {
             supabaseServer.from('properties')
                 .select('*, profiles!corretor_id(full_name)')
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível'])
-                .eq('is_featured', true)
+                // .eq('is_featured', true)
                 .limit(100),
             15000
         ),
