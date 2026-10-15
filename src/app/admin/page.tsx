@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
+import { optimizeImage } from '@/lib/imageOptimizer';
 import {
     Users, Building2, BarChart3, Settings, ShieldCheck, Mail, Loader2, PieChart,
     TrendingUp, Search, LogOut, Home, Check, X, Bell, LayoutDashboard, Flag,
@@ -2293,26 +2294,39 @@ function HomeConfigSection() {
                                     if (!file) return;
 
                                     setIsSaving(true);
-                                    const fileExt = file.name.split('.').pop();
-                                    const fileName = `hero_${Math.random()}.${fileExt}`;
-                                    const filePath = `hero/${fileName}`;
+                                    try {
+                                        const { blob, extension, mimeType } = await optimizeImage(file, {
+                                            maxWidth: 1920,
+                                            maxHeight: 1080,
+                                            quality: 0.8,
+                                        });
 
-                                    const { error: uploadError } = await supabase.storage
-                                        .from('properties') // Usando o bucket que provavelmente já existe para imóveis
-                                        .upload(filePath, file);
+                                        const fileName = `hero_${Date.now()}.${extension}`;
+                                        const filePath = `hero/${fileName}`;
 
-                                    if (uploadError) {
-                                        fireToast('Erro no upload: ' + uploadError.message, 'error');
+                                        const { error: uploadError } = await supabase.storage
+                                            .from('properties')
+                                            .upload(filePath, blob, {
+                                                contentType: mimeType,
+                                                cacheControl: '31536000',
+                                            });
+
+                                        if (uploadError) {
+                                            fireToast('Erro no upload: ' + uploadError.message, 'error');
+                                            setIsSaving(false);
+                                            return;
+                                        }
+
+                                        const { data: { publicUrl } } = supabase.storage
+                                            .from('properties')
+                                            .getPublicUrl(filePath);
+
+                                        setSettings({ ...settings, image_url: publicUrl });
+                                    } catch (err: any) {
+                                        fireToast('Erro no processamento da imagem: ' + err.message, 'error');
+                                    } finally {
                                         setIsSaving(false);
-                                        return;
                                     }
-
-                                    const { data: { publicUrl } } = supabase.storage
-                                        .from('properties')
-                                        .getPublicUrl(filePath);
-
-                                    setSettings({ ...settings, image_url: publicUrl });
-                                    setIsSaving(false);
                                 }}
                                 className="hidden"
                                 id="hero-upload"
@@ -2804,12 +2818,20 @@ function ProfileSection({ profile, setProfile }: { profile: any; setProfile: (p:
 
         setUploading(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const filePath = `avatars/${profile.id}-${Math.random()}.${fileExt}`;
+            const { blob, extension, mimeType } = await optimizeImage(file, {
+                maxWidth: 400,
+                maxHeight: 400,
+                quality: 0.85,
+            });
+
+            const filePath = `avatars/${profile.id}-${Date.now()}.${extension}`;
 
             const { error: uploadError } = await supabase.storage
                 .from(STORAGE_BUCKET)
-                .upload(filePath, file);
+                .upload(filePath, blob, {
+                    contentType: mimeType,
+                    cacheControl: '31536000',
+                });
 
             if (uploadError) throw uploadError;
 
@@ -2822,6 +2844,7 @@ function ProfileSection({ profile, setProfile }: { profile: any; setProfile: (p:
             alert('Erro no upload: ' + err.message);
         } finally {
             setUploading(false);
+            e.target.value = '';
         }
     };
 
@@ -3161,13 +3184,21 @@ function PartnersSection() {
 
         setIsSaving(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `partner_${Math.random()}.${fileExt}`;
+            const { blob, extension, mimeType } = await optimizeImage(file, {
+                maxWidth: 600,
+                maxHeight: 300,
+                quality: 0.85,
+            });
+
+            const fileName = `partner_${Date.now()}.${extension}`;
             const filePath = `partners/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from(STORAGE_BUCKET)
-                .upload(filePath, file);
+                .upload(filePath, blob, {
+                    contentType: mimeType,
+                    cacheControl: '31536000',
+                });
 
             if (uploadError) throw uploadError;
 
@@ -3180,6 +3211,7 @@ function PartnersSection() {
             alert('Erro no upload: ' + err.message);
         } finally {
             setIsSaving(false);
+            e.target.value = '';
         }
     };
 

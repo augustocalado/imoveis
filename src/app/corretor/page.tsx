@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
+import { optimizeImage } from '@/lib/imageOptimizer';
 import Navbar from '@/components/Navbar';
 import { 
     LayoutDashboard, Building2, Users as UsersIcon, Bell,
@@ -183,14 +184,23 @@ export default function CorretorDashboard() {
 
         setIsUploadingAvatar(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${currentUserProfile.id}-${Math.random()}.${fileExt}`;
+            // Otimização automática para avatar: max 400x400 em WebP (~20-40KB)
+            const { blob, extension, mimeType } = await optimizeImage(file, {
+                maxWidth: 400,
+                maxHeight: 400,
+                quality: 0.85,
+            });
+
+            const fileName = `${currentUserProfile.id}-${Date.now()}.${extension}`;
             const filePath = `avatars/${fileName}`;
 
             // We use the existing 'properties' bucket for simplicity, organized in an 'avatars' folder
             const { error: uploadError } = await supabase.storage
                 .from(STORAGE_BUCKET)
-                .upload(filePath, file);
+                .upload(filePath, blob, {
+                    contentType: mimeType,
+                    cacheControl: '31536000',
+                });
 
             if (uploadError) throw uploadError;
 
@@ -212,6 +222,7 @@ export default function CorretorDashboard() {
             showToast(`Erro ao carregar imagem no bucket ${STORAGE_BUCKET}: ` + err.message + '. Certifique-se de que o bucket existe e é público.', 'error');
         } finally {
             setIsUploadingAvatar(false);
+            e.target.value = '';
         }
     };
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
+import { optimizeImage } from '@/lib/imageOptimizer';
 import { useRouter } from 'next/navigation';
 import { UserPlus, User, Mail, Lock, Loader2, House, Briefcase, UserCircle, ShieldCheck, Camera, ImageIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -43,23 +44,34 @@ export default function RegisterPage() {
             if (!data.user) throw new Error('Falha na criação do usuário.');
 
             if (photo) {
-                const fileExt = photo.name.split('.').pop();
-                const filePath = `avatars/${data.user.id}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-                const { error: uploadError } = await supabase.storage
-                    .from(STORAGE_BUCKET)
-                    .upload(filePath, photo);
-
-                if (!uploadError) {
-                    const { data: publicData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
-                    const avatarUrl = publicData.publicUrl;
-
-                    await supabase.auth.updateUser({
-                        data: { avatar_url: avatarUrl }
+                try {
+                    const { blob, extension, mimeType } = await optimizeImage(photo, {
+                        maxWidth: 400,
+                        maxHeight: 400,
+                        quality: 0.85,
                     });
+                    const filePath = `avatars/${data.user.id}-${Date.now()}.${extension}`;
 
-                    // Update profile row
-                    await supabase.from('profiles').update({ avatar_url: avatarUrl }).eq('id', data.user.id);
+                    const { error: uploadError } = await supabase.storage
+                        .from(STORAGE_BUCKET)
+                        .upload(filePath, blob, {
+                            contentType: mimeType,
+                            cacheControl: '31536000',
+                        });
+
+                    if (!uploadError) {
+                        const { data: publicData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
+                        const avatarUrl = publicData.publicUrl;
+
+                        await supabase.auth.updateUser({
+                            data: { avatar_url: avatarUrl }
+                        });
+
+                        // Update profile row
+                        await supabase.from('profiles').update({ avatar_url: avatarUrl }).eq('id', data.user.id);
+                    }
+                } catch (optErr) {
+                    console.error('Erro ao otimizar foto de perfil:', optErr);
                 }
             }
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
+import { optimizeImage } from '@/lib/imageOptimizer';
 import {
     Building2, MapPin, DollarSign, Home, Maximize,
     BedDouble, Bath, Car, ArrowLeft, Loader2,
@@ -978,62 +979,44 @@ export default function NovoImovel() {
                                                         if (files.length === 0) return;
 
                                                         setIsLoading(true);
-                                                        const uploadedUrls = [];
-
-                                                        const watermarkImg = new Image();
-                                                        watermarkImg.src = '/logo.png';
-                                                        await new Promise((resolve) => {
-                                                            watermarkImg.onload = resolve;
-                                                            watermarkImg.onerror = resolve;
-                                                        });
+                                                        const uploadedUrls: string[] = [];
 
                                                         for (const file of files) {
                                                             try {
-                                                                const imgUrl = URL.createObjectURL(file);
-                                                                const img = new Image();
-                                                                img.src = imgUrl;
-                                                                await new Promise((resolve, reject) => {
-                                                                    img.onload = resolve;
-                                                                    img.onerror = reject;
+                                                                // Otimização 100% automática: redimensiona para max 1600px, aplica marca d'água e converte para WebP (~100KB)
+                                                                const { blob, extension, mimeType } = await optimizeImage(file, {
+                                                                    maxWidth: 1600,
+                                                                    maxHeight: 1600,
+                                                                    quality: 0.8,
+                                                                    watermarkUrl: '/logo.png',
+                                                                    watermarkScale: 0.35,
+                                                                    watermarkOpacity: 0.4
                                                                 });
-                                                                URL.revokeObjectURL(imgUrl);
 
-                                                                const canvas = document.createElement('canvas');
-                                                                canvas.width = img.width;
-                                                                canvas.height = img.height;
-                                                                const ctx = canvas.getContext('2d');
+                                                                const fileName = `prop_${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
+                                                                const filePath = `properties/${fileName}`;
+                                                                const { error: uploadError } = await supabase.storage
+                                                                    .from(STORAGE_BUCKET)
+                                                                    .upload(filePath, blob, {
+                                                                        contentType: mimeType,
+                                                                        cacheControl: '31536000',
+                                                                    });
 
-                                                                if (ctx) {
-                                                                    ctx.drawImage(img, 0, 0);
-                                                                    if (watermarkImg.width > 0) {
-                                                                        const wmWidth = img.width * 0.4;
-                                                                        const wmHeight = (watermarkImg.height / watermarkImg.width) * wmWidth;
-                                                                        const wmX = (img.width - wmWidth) / 2;
-                                                                        const wmY = (img.height - wmHeight) / 2;
-                                                                        ctx.globalAlpha = 0.4;
-                                                                        ctx.drawImage(watermarkImg, wmX, wmY, wmWidth, wmHeight);
-                                                                        ctx.globalAlpha = 1.0;
-                                                                    }
-                                                                    const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
-                                                                    if (blob) {
-                                                                        const fileName = `prop_${Math.random()}.jpg`;
-                                                                        const filePath = `properties/${fileName}`;
-                                                                        const { error: uploadError } = await supabase.storage.from(STORAGE_BUCKET).upload(filePath, blob);
-                                                                        if (!uploadError) {
-                                                                            const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
-                                                                            uploadedUrls.push(data.publicUrl);
-                                                                        } else {
-                                                                            showToast('Erro ao enviar: ' + uploadError.message, 'error');
-                                                                        }
-                                                                    }
+                                                                if (!uploadError) {
+                                                                    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
+                                                                    uploadedUrls.push(data.publicUrl);
+                                                                } else {
+                                                                    showToast('Erro ao enviar: ' + uploadError.message, 'error');
                                                                 }
-                                                            } catch (err) {
+                                                            } catch (err: any) {
                                                                 console.error('Erro processando imagem', err);
+                                                                showToast('Erro ao otimizar imagem: ' + (err.message || 'Falha no processamento'), 'error');
                                                             }
                                                         }
 
                                                         setFormData({ ...formData, images: [...formData.images, ...uploadedUrls] });
                                                         setIsLoading(false);
+                                                        e.target.value = '';
                                                     }}
                                                     className="hidden"
                                                     id="property-upload"
