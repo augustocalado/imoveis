@@ -1,13 +1,16 @@
 import { Metadata, ResolvingMetadata } from 'next';
+import { cache } from 'react';
 import { supabaseServer } from '@/lib/supabase-server';
 import PropertyDetailsClient from '@/components/PropertyDetailsClient';
 import { notFound, redirect } from 'next/navigation';
+
+export const revalidate = 300;
 
 interface Props {
     params: Promise<{ slug: string }>;
 }
 
-async function getProperty(slug: string) {
+const getProperty = cache(async (slug: string) => {
     const { data: prop } = await supabaseServer
         .from('properties')
         .select('*, corretor:profiles!corretor_id(*)')
@@ -15,7 +18,7 @@ async function getProperty(slug: string) {
         .single();
     
     return prop;
-}
+});
 
 export async function generateMetadata(
     { params }: Props,

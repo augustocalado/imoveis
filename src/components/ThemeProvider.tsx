@@ -19,36 +19,6 @@ export default function ThemeProvider() {
         };
 
         fetchStyles();
-
-        // Listen for changes
-        const themeChannel = supabase
-            .channel('theme-changes')
-            .on('postgres_changes', { 
-                event: 'UPDATE', 
-                schema: 'public', 
-                table: 'site_settings',
-                filter: 'key=eq.site_theme' 
-            }, (payload) => {
-                if (payload.new && (payload.new as any).value) applyTheme((payload.new as any).value);
-            })
-            .subscribe();
-
-        const faviconChannel = supabase
-            .channel('favicon-changes')
-            .on('postgres_changes', { 
-                event: 'UPDATE', 
-                schema: 'public', 
-                table: 'site_settings',
-                filter: 'key=eq.site_favicon' 
-            }, (payload) => {
-                if (payload.new && (payload.new as any).value) applyFavicon((payload.new as any).value);
-            })
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(themeChannel);
-            supabase.removeChannel(faviconChannel);
-        };
     }, []);
 
     const applyFavicon = (url: string) => {

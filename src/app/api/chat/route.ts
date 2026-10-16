@@ -7,11 +7,19 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
+let cachedInventory: string | null = null;
+let lastInventoryFetch = 0;
+
 async function getInventory() {
+    const now = Date.now();
+    if (cachedInventory && (now - lastInventoryFetch) < 300000) { // 5 minutos de cache
+        return cachedInventory;
+    }
+
     try {
         const { data: props, error } = await supabase
             .from('properties')
-            .select('*')
+            .select('id, title, category, property_type, type, neighborhood, city, location, price, bedrooms, description, slug, created_at')
             .order('created_at', { ascending: false })
             .limit(50);
             
@@ -46,11 +54,14 @@ async function getInventory() {
 
                 return `- Ref ${ref}: [${tipo}] ${p.title} em ${local}. Preço: ${preco}${detalhes}${desc}. Link: https://www.katiaeflavioimoveis.com.br/imovel/${urlCode}`;
             }).join('\n    ');
+            cachedInventory = inventoryText;
+            lastInventoryFetch = now;
+            return inventoryText;
         }
     } catch (e) {
         console.error("Erro fatal ao carregar inventário:", e);
     }
-    return 'Nenhum imóvel disponível no momento.';
+    return cachedInventory || 'Nenhum imóvel disponível no momento.';
 }
 
 export async function POST(req: Request) {

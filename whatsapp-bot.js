@@ -13,33 +13,42 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // O OpenRouter já roda com fetch nativo
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
+let cachedInventoryWhatsApp = null;
+let lastInventoryFetchWhatsApp = 0;
+
 // 2. FUNÇÃO: IA com FALLBACK AUTOMÁTICO
 async function getAIResponse(userMessage, name, history) {
     // 2.1 Buscar DB: Imóveis
-    // Limitar a trazer imóveis disponíveis, os campos mais úteis (titulo, preco, localizacao, quartos se tiver)
     let inventoryString = 'Nenhum imóvel listado no banco no momento.';
-    try {
-        const { data: props, error: propsError } = await supabase
-            .from('properties')
-            .select('*')
-            .order('created_at', { ascending: false })
-            .limit(100); // Traz banco muito maior para garantir que ela ache a Referência
-            
-        if (propsError) throw new Error(propsError.message);
-            
-        if (props && props.length > 0) {
-            inventoryString = props.map(p => {
-                const tipo = p.category || p.property_type || p.type || 'Imóvel';
-                const local = p.neighborhood || p.city || p.location || 'Bairro a consultar';
-                const preco = p.price ? `R$${p.price}` : 'Sob Consulta';
-                const detalhes = p.bedrooms ? ` | Quartos: ${p.bedrooms}` : '';
-                const desc = p.description ? ` | Desc: ${p.description.substring(0,120).replace(/\n/g, ' ')}...` : '';
-                const urlCode = p.slug || p.id;
-                return `- Ref ${p.id.substring(0,6).toUpperCase()}: [${tipo}] ${p.title} em ${local}. Preço: ${preco}${detalhes}${desc}. Link: https://katiaeflavioimoveis.com.br/imovel/${urlCode}`;
-            }).join('\n    ');
+    const now = Date.now();
+    if (cachedInventoryWhatsApp && (now - lastInventoryFetchWhatsApp) < 300000) {
+        inventoryString = cachedInventoryWhatsApp;
+    } else {
+        try {
+            const { data: props, error: propsError } = await supabase
+                .from('properties')
+                .select('id, title, category, property_type, type, neighborhood, city, location, price, bedrooms, description, slug, created_at')
+                .order('created_at', { ascending: false })
+                .limit(100);
+                
+            if (propsError) throw new Error(propsError.message);
+                
+            if (props && props.length > 0) {
+                inventoryString = props.map(p => {
+                    const tipo = p.category || p.property_type || p.type || 'Imóvel';
+                    const local = p.neighborhood || p.city || p.location || 'Bairro a consultar';
+                    const preco = p.price ? `R$${p.price}` : 'Sob Consulta';
+                    const detalhes = p.bedrooms ? ` | Quartos: ${p.bedrooms}` : '';
+                    const desc = p.description ? ` | Desc: ${p.description.substring(0,120).replace(/\n/g, ' ')}...` : '';
+                    const urlCode = p.slug || p.id;
+                    return `- Ref ${p.id.substring(0,6).toUpperCase()}: [${tipo}] ${p.title} em ${local}. Preço: ${preco}${detalhes}${desc}. Link: https://katiaeflavioimoveis.com.br/imovel/${urlCode}`;
+                }).join('\n    ');
+                cachedInventoryWhatsApp = inventoryString;
+                lastInventoryFetchWhatsApp = now;
+            }
+        } catch (e) {
+            console.error("Erro puxando imóveis.", e.message);
         }
-    } catch (e) {
-        console.error("Erro puxando imóveis.", e.message);
     }
 
     // 2.2 Buscar DB: Agendamentos ocupados (dos próximos 30 dias)

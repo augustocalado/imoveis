@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -10,8 +10,12 @@ export default function NotificationBell() {
     const [hasNew, setHasNew] = useState(false);
 
     useEffect(() => {
-        // Initial fetch
-        const fetchNotifications = async () => {
+        let channel: any = null;
+
+        const init = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.user) return;
+
             const { data } = await supabase
                 .from('notifications')
                 .select('*')
@@ -19,22 +23,21 @@ export default function NotificationBell() {
                 .limit(5);
 
             setNotifications(data || []);
+
+            // Subscribe to new notifications (Real-time) apenas para autenticados
+            channel = supabase
+                .channel('public:notifications')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
+                    setNotifications(prev => [payload.new, ...prev].slice(0, 5));
+                    setHasNew(true);
+                })
+                .subscribe();
         };
 
-        fetchNotifications();
-
-        // Subscribe to new notifications (Real-time)
-        const channel = supabase
-            .channel('public:notifications')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
-                setNotifications(prev => [payload.new, ...prev].slice(0, 5));
-                setHasNew(true);
-                // Play subtle sound or toast if needed (visual alert)
-            })
-            .subscribe();
+        init();
 
         return () => {
-            supabase.removeChannel(channel);
+            if (channel) supabase.removeChannel(channel);
         };
     }, []);
 

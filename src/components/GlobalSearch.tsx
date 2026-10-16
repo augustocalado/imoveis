@@ -51,7 +51,14 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
         { value: '10000000',label: 'Até R$ 10 Milhões' },
     ];
 
+let cachedNeighborhoods: string[] | null = null;
+
     useEffect(() => {
+        if (cachedNeighborhoods && cachedNeighborhoods.length > 0) {
+            setNeighborhoods(cachedNeighborhoods);
+            return;
+        }
+
         const fetchNeighborhoods = async () => {
             const { data } = await supabase
                 .from('properties')
@@ -59,6 +66,7 @@ export default function GlobalSearch({ onClose, theme = 'dark' }: { onClose?: ()
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                 .not('neighborhood', 'is', null);
             const { unique } = normalizeNeighborhoodList(data?.map((p: any) => p.neighborhood) || []);
+            cachedNeighborhoods = unique;
             setNeighborhoods(unique);
         };
         fetchNeighborhoods();

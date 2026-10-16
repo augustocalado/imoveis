@@ -1,6 +1,8 @@
 import { supabaseServer } from '@/lib/supabase-server';
 import { permanentRedirect } from 'next/navigation';
 
+export const revalidate = 86400;
+
 interface Props {
     params: Promise<{ slug: string }>;
 }

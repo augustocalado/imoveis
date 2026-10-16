@@ -17,15 +17,16 @@ function CatalogResults() {
     const searchParams = useSearchParams();
     const [properties, setProperties] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(false);
     const [filter, setFilter] = useState<'todos' | 'venda' | 'aluguel'>('todos');
     const [isVideoOpen, setIsVideoOpen] = useState(false);
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
     const [specs, setSpecs] = useState<any[]>([]);
 
-    const fetchProperties = async () => {
-        setIsLoading(true);
-        
-        // Get filters from URL
+    const PAGE_SIZE = 36;
+
+    const buildQuery = () => {
         const neighborhood = searchParams.get('neighborhood');
         const maxPrice = searchParams.get('maxPrice');
         const ref = searchParams.get('ref');
@@ -77,7 +78,6 @@ function CatalogResults() {
                 const exactRooms = roomList.filter(r => r < 4);
 
                 if (has4Plus && exactRooms.length > 0) {
-                    // Mix: exact values + 4+
                     const conditions = [
                         ...exactRooms.map(r => `rooms.eq.${r}`),
                         'rooms.gte.4'
@@ -93,10 +93,18 @@ function CatalogResults() {
             }
         }
 
-        const { data, error } = await query.order('created_at', { ascending: false });
+        return query.order('created_at', { ascending: false });
+    };
+
+    const fetchProperties = async () => {
+        setIsLoading(true);
+
+        const { data, error } = await buildQuery().range(0, PAGE_SIZE - 1);
         if (error) console.error("Search Error:", error);
-        
-        setProperties(data || []);
+
+        const list = data || [];
+        setProperties(list);
+        setHasMore(list.length === PAGE_SIZE);
         setIsLoading(false);
 
         // Fetch specs once per search
@@ -109,6 +117,24 @@ function CatalogResults() {
             { id: 'bathrooms', label: 'Banheiros', field: 'bathrooms', icon: 'Bath' },
             { id: 'parking', label: 'Vagas', field: 'parking_spaces', icon: 'Car' }
         ]);
+    };
+
+    const loadMore = async () => {
+        if (isLoadingMore || !hasMore) return;
+        setIsLoadingMore(true);
+
+        const from = properties.length;
+        const to = from + PAGE_SIZE - 1;
+
+        const { data, error } = await buildQuery().range(from, to);
+        if (error) {
+            console.error("Load More Error:", error);
+        } else {
+            const nextBatch = data || [];
+            setProperties(prev => [...prev, ...nextBatch]);
+            setHasMore(nextBatch.length === PAGE_SIZE);
+        }
+        setIsLoadingMore(false);
     };
 
     useEffect(() => {
@@ -214,6 +240,25 @@ function CatalogResults() {
                                 }} 
                             />
                         ))}
+                    </div>
+                )}
+
+                {hasMore && !isLoading && (
+                    <div className="mt-16 text-center">
+                        <button
+                            onClick={loadMore}
+                            disabled={isLoadingMore}
+                            className="bg-primary-900 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.25em] hover:bg-accent transition-all shadow-xl shadow-primary-900/10 active:scale-95 disabled:opacity-50 inline-flex items-center gap-3"
+                        >
+                            {isLoadingMore ? (
+                                <>
+                                    <Loader2 className="h-4 w-4 animate-spin text-accent" />
+                                    <span>Carregando Mais...</span>
+                                </>
+                            ) : (
+                                <span>Carregar Mais Imóveis</span>
+                            )}
+                        </button>
                     </div>
                 )}
             </section>

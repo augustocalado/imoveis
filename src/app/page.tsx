@@ -1,7 +1,7 @@
 import HomeClient from '@/components/HomeClient';
 import { supabaseServer } from '@/lib/supabase-server';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
     return Promise.race([
@@ -19,7 +19,7 @@ export default async function Home() {
                 .select('*, profiles!corretor_id(full_name)')
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível'])
                 // .eq('is_featured', true)
-                .limit(100),
+                .limit(24),
             15000
         ),
         withTimeout(supabaseServer.from('blog_posts').select('*').order('created_at', { ascending: false }).limit(3), 8000),

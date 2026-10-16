@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
     let upstreamRes;
     try {
-        upstreamRes = await fetch(src, { cache: 'no-store', signal: AbortSignal.timeout(15000) });
+        upstreamRes = await fetch(src, { next: { revalidate: 604800 }, signal: AbortSignal.timeout(15000) });
     } catch {
         return new NextResponse('Upstream error', { status: 502 });
     }

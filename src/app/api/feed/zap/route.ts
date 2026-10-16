@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase-server';
 
+export const revalidate = 3600;
+
 export async function GET() {
     try {
         // Fetch all available properties
