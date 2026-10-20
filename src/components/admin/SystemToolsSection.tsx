@@ -52,11 +52,11 @@ export default function SystemToolsSection() {
   const [statsError, setStatsError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
-  const fetchStorageStats = async () => {
+  const fetchStorageStats = async (fresh: boolean = false) => {
     setLoadingStats(true);
     setStatsError(null);
     try {
-      const res = await fetch('/api/admin/storage-stats');
+      const res = await fetch(`/api/admin/storage-stats${fresh ? '?fresh=true' : ''}`);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setStorageStats(data);
@@ -70,7 +70,7 @@ export default function SystemToolsSection() {
   };
 
   useEffect(() => {
-    fetchStorageStats();
+    fetchStorageStats(false);
   }, []);
 
   const resetTable = async (table: string, name: string) => {
@@ -140,12 +140,12 @@ export default function SystemToolsSection() {
                 </span>
               )}
               <button
-                onClick={fetchStorageStats}
+                onClick={() => fetchStorageStats(true)}
                 disabled={loadingStats}
                 className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 text-white font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 disabled:opacity-50"
               >
                 <RefreshCw className={`h-4 w-4 ${loadingStats ? 'animate-spin text-cyan-400' : ''}`} />
-                {loadingStats ? 'Calculando...' : 'Atualizar Dados'}
+                {loadingStats ? 'Calculando (100% real)...' : 'Atualizar Dados'}
               </button>
             </div>
           </div>
@@ -163,8 +163,12 @@ export default function SystemToolsSection() {
             {/* CARD 1: SUPABASE STORAGE */}
             <div className="bg-white/5 border border-white/10 p-8 rounded-[40px] relative overflow-hidden flex flex-col justify-between">
               <div className="absolute top-0 right-0 p-8">
-                <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-[10px] font-black text-emerald-400 uppercase tracking-widest">
-                  Plano Gratuito
+                <span className={`px-3 py-1 border rounded-full text-[10px] font-black uppercase tracking-widest ${
+                  (storageStats?.supabase.usagePercent || 0) > 100 
+                    ? 'bg-red-500/20 border-red-500/40 text-red-400'
+                    : 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+                }`}>
+                  {(storageStats?.supabase.usagePercent || 0) > 100 ? 'Limite Excedido' : 'Plano Gratuito'}
                 </span>
               </div>
 
@@ -188,14 +192,20 @@ export default function SystemToolsSection() {
                     <span className="text-3xl font-black text-white tracking-tight">
                       {loadingStats ? '...' : (storageStats?.supabase.totalFiles ?? 0)}
                     </span>
-                    <span className="text-[11px] text-white/50 block mt-1">arquivos salvos</span>
+                    <span className="text-[11px] text-white/50 block mt-1">arquivos reais no Supabase</span>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
                     <span className="text-[10px] font-black text-white/40 uppercase tracking-wider block mb-1">
                       Espaço Ocupado
                     </span>
-                    <span className="text-3xl font-black text-emerald-400 tracking-tight">
+                    <span className={`text-3xl font-black tracking-tight ${
+                      (storageStats?.supabase.usagePercent || 0) > 100 
+                        ? 'text-red-400' 
+                        : (storageStats?.supabase.usagePercent || 0) > 80 
+                          ? 'text-amber-400' 
+                          : 'text-emerald-400'
+                    }`}>
                       {loadingStats ? '...' : (storageStats?.supabase.totalSizeFormatted ?? '0 B')}
                     </span>
                     <span className="text-[11px] text-white/50 block mt-1">de 1 GB gratuito</span>
@@ -207,8 +217,8 @@ export default function SystemToolsSection() {
                   <div className="flex justify-between items-center text-xs font-bold">
                     <span className="text-white/70">Uso da Cota Gratuita (1 GB):</span>
                     <span className={`font-black ${
-                      (storageStats?.supabase.usagePercent || 0) > 80 ? 'text-red-400' : 
-                      (storageStats?.supabase.usagePercent || 0) > 50 ? 'text-amber-400' : 'text-emerald-400'
+                      (storageStats?.supabase.usagePercent || 0) > 100 ? 'text-red-400' :
+                      (storageStats?.supabase.usagePercent || 0) > 80 ? 'text-amber-400' : 'text-emerald-400'
                     }`}>
                       {storageStats?.supabase.usagePercent ?? 0}% utilizado
                     </span>
@@ -246,8 +256,8 @@ export default function SystemToolsSection() {
               </div>
 
               {/* Dica para não pagar */}
-              <div className="mt-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-200 leading-relaxed">
-                💡 <strong>Dica de Economia:</strong> Para nunca pagar mensalidade no Supabase, mantenha o uso abaixo de <strong>1 GB</strong>. Os imóveis novos já sobem direto para o R2!
+              <div className="mt-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-200 leading-relaxed">
+                💡 <strong>Dica de Economia:</strong> O limite gratuito do Supabase é de <strong>1 GB</strong>. Como você já tem mais de 3.6 GB antigos, as <strong>novas fotos agora vão direto para o Cloudflare R2 (10 GB grátis)</strong>, e ao excluir imóveis antigos/vendidos o espaço no Supabase vai sendo liberado!
               </div>
             </div>
 
