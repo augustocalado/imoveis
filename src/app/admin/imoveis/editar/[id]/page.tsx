@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
 import { optimizeImage } from '@/lib/imageOptimizer';
+import { uploadFileToR2 } from '@/lib/upload';
 import {
     Building2, MapPin, DollarSign, Home, Maximize,
     BedDouble, Bath, Car, ArrowLeft, Loader2,
@@ -990,20 +991,8 @@ export default function EditarImovel() {
                                                                 });
 
                                                                 const fileName = `prop_${Date.now()}_${Math.random().toString(36).substring(7)}.${extension}`;
-                                                                const filePath = `properties/${fileName}`;
-                                                                const { error: uploadError } = await supabase.storage
-                                                                    .from(STORAGE_BUCKET)
-                                                                    .upload(filePath, blob, {
-                                                                        contentType: mimeType,
-                                                                        cacheControl: '31536000',
-                                                                    });
-
-                                                                if (!uploadError) {
-                                                                    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
-                                                                    uploadedUrls.push(data.publicUrl);
-                                                                } else {
-                                                                    showToast('Erro ao enviar: ' + uploadError.message, 'error');
-                                                                }
+                                                                const publicUrl = await uploadFileToR2(blob, 'properties', fileName);
+                                                                uploadedUrls.push(publicUrl);
                                                             } catch (err: any) {
                                                                 console.error('Erro processando imagem', err);
                                                                 showToast('Erro ao otimizar imagem: ' + (err.message || 'Falha no processamento'), 'error');

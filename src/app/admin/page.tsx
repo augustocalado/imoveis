@@ -2,6 +2,8 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
+import { uploadFileToR2 } from '@/lib/upload';
+import { deleteObjectFromR2, R2_PUBLIC_URL } from '@/lib/r2';
 import { optimizeImage } from '@/lib/imageOptimizer';
 import {
     Users, Building2, BarChart3, Settings, ShieldCheck, Mail, Loader2, PieChart,
@@ -309,17 +311,55 @@ function AdminDashboardContent() {
     const newChatLeadsCount = chatLeads.filter(l => l.status === 'Novo' || l.status === 'Pendente').length;
 
     const handleDeleteProperty = async (id: string) => {
-        if (!confirm('Tem certeza que deseja excluir este imóvel permanentemente? Esta ação não pode ser desfeita.')) return;
+        if (!confirm('Tem certeza que deseja excluir este imóvel permanentemente? As imagens também serão apagadas. Esta ação não pode ser desfeita.')) return;
 
         setIsDeleting(id);
-        const { error } = await supabase.from('properties').delete().eq('id', id);
+        try {
+            // 1. Buscar imagens do imóvel
+            const { data: prop } = await supabase
+                .from('properties')
+                .select('images, cover_image')
+                .eq('id', id)
+                .single();
 
-        if (error) {
-            fireToast('Erro ao excluir imóvel: ' + error.message, 'error');
-        } else {
-            setProperties(properties.filter(p => p.id !== id));
+            // 2. Apagar imagens do storage
+            if (prop) {
+                const allUrls: string[] = [
+                    ...(Array.isArray(prop.images) ? prop.images : []),
+                    ...(prop.cover_image ? [prop.cover_image] : []),
+                ].filter(Boolean);
+
+                for (const url of allUrls) {
+                    try {
+                        if (url.includes('r2.dev') || url.includes('r2.cloudflarestorage.com')) {
+                            const baseUrl = R2_PUBLIC_URL.endsWith('/') ? R2_PUBLIC_URL.slice(0, -1) : R2_PUBLIC_URL;
+                            const key = url.replace(baseUrl + '/', '');
+                            await deleteObjectFromR2(key);
+                        } else if (url.includes('supabase.co/storage')) {
+                            const match = url.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/);
+                            if (match) {
+                                await supabase.storage.from(match[1]).remove([match[2]]);
+                            }
+                        }
+                    } catch (imgErr) {
+                        console.warn('Erro ao apagar imagem:', url, imgErr);
+                    }
+                }
+            }
+
+            // 3. Deletar o imóvel do banco
+            const { error } = await supabase.from('properties').delete().eq('id', id);
+            if (error) {
+                fireToast('Erro ao excluir imóvel: ' + error.message, 'error');
+            } else {
+                setProperties(properties.filter(p => p.id !== id));
+                fireToast('Imóvel e imagens excluídos com sucesso!', 'success');
+            }
+        } catch (err: any) {
+            fireToast('Erro ao excluir: ' + (err.message || 'Erro desconhecido'), 'error');
+        } finally {
+            setIsDeleting(null);
         }
-        setIsDeleting(null);
     };
 
     if (isLoading) {
@@ -2827,20 +2867,8 @@ function ProfileSection({ profile, setProfile }: { profile: any; setProfile: (p:
                 quality: 0.85,
             });
 
-            const filePath = `avatars/${profile.id}-${Date.now()}.${extension}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from(STORAGE_BUCKET)
-                .upload(filePath, blob, {
-                    contentType: mimeType,
-                    cacheControl: '31536000',
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl } } = supabase.storage
-                .from(STORAGE_BUCKET)
-                .getPublicUrl(filePath);
+            // Upload para Cloudflare R2
+            const publicUrl = await uploadFileToR2(blob, 'avatars');
 
             setFormData(prev => ({ ...prev, avatar_url: publicUrl }));
         } catch (err: any) {
@@ -3193,21 +3221,8 @@ function PartnersSection() {
                 quality: 0.85,
             });
 
-            const fileName = `partner_${Date.now()}.${extension}`;
-            const filePath = `partners/${fileName}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from(STORAGE_BUCKET)
-                .upload(filePath, blob, {
-                    contentType: mimeType,
-                    cacheControl: '31536000',
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl } } = supabase.storage
-                .from(STORAGE_BUCKET)
-                .getPublicUrl(filePath);
+            // Upload para Cloudflare R2
+            const publicUrl = await uploadFileToR2(blob, 'partners');
 
             setNewLogoUrl(publicUrl);
         } catch (err: any) {

@@ -16,6 +16,7 @@ const nextConfig = {
             { protocol: 'https', hostname: 's2-g1.glbimg.com' },
             { protocol: 'https', hostname: 'i.s3.glbimg.com' },
             { protocol: 'https', hostname: 's2-valor-investe.glbimg.com' },
+            { protocol: 'https', hostname: 'pub-542b228b1ebb449cacc05a8382e11115.r2.dev' },
         ],
     },
 

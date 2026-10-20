@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
+import { uploadFileToR2 } from '@/lib/upload';
 import { optimizeImage } from '@/lib/imageOptimizer';
 import Navbar from '@/components/Navbar';
 import { 
@@ -191,35 +192,21 @@ export default function CorretorDashboard() {
                 quality: 0.85,
             });
 
-            const fileName = `${currentUserProfile.id}-${Date.now()}.${extension}`;
-            const filePath = `avatars/${fileName}`;
-
-            // We use the existing 'properties' bucket for simplicity, organized in an 'avatars' folder
-            const { error: uploadError } = await supabase.storage
-                .from(STORAGE_BUCKET)
-                .upload(filePath, blob, {
-                    contentType: mimeType,
-                    cacheControl: '31536000',
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data } = supabase.storage
-                .from(STORAGE_BUCKET)
-                .getPublicUrl(filePath);
+            // Upload para Cloudflare R2
+            const publicUrl = await uploadFileToR2(blob, 'avatars');
 
             const { error: updateError } = await supabase
                 .from('profiles')
-                .update({ avatar_url: data.publicUrl })
+                .update({ avatar_url: publicUrl })
                 .eq('id', currentUserProfile.id);
 
             if (updateError) throw updateError;
 
-            setCurrentUserProfile({ ...currentUserProfile, avatar_url: data.publicUrl });
+            setCurrentUserProfile({ ...currentUserProfile, avatar_url: publicUrl });
             showToast('Foto de perfil atualizada!', 'success');
         } catch (err: any) {
-            console.error(`Erro no upload de avatar [${STORAGE_BUCKET}]:`, err);
-            showToast(`Erro ao carregar imagem no bucket ${STORAGE_BUCKET}: ` + err.message + '. Certifique-se de que o bucket existe e é público.', 'error');
+            console.error('Erro no upload de avatar para R2:', err);
+            showToast('Erro ao carregar imagem: ' + err.message, 'error');
         } finally {
             setIsUploadingAvatar(false);
             e.target.value = '';

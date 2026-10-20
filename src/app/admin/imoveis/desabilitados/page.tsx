@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { deleteObjectFromR2, R2_PUBLIC_URL } from '@/lib/r2';
 import {
     Building2, MapPin, DollarSign, Home, Maximize,
     BedDouble, Bath, Car, ArrowLeft, Loader2,
@@ -123,6 +124,41 @@ export default function ImoveisDesabilitadosPage() {
     const handleDeleteProperty = async (id: string) => {
         setIsActionLoading(id);
         try {
+            // 1. Buscar as imagens do imóvel antes de deletar
+            const { data: prop } = await supabase
+                .from('properties')
+                .select('images, cover_image')
+                .eq('id', id)
+                .single();
+
+            // 2. Apagar imagens do storage
+            if (prop) {
+                const allUrls: string[] = [
+                    ...(Array.isArray(prop.images) ? prop.images : []),
+                    ...(prop.cover_image ? [prop.cover_image] : []),
+                ].filter(Boolean);
+
+                for (const url of allUrls) {
+                    try {
+                        if (url.includes('r2.dev') || url.includes('r2.cloudflarestorage.com')) {
+                            // Apaga do Cloudflare R2
+                            const baseUrl = R2_PUBLIC_URL.endsWith('/') ? R2_PUBLIC_URL.slice(0, -1) : R2_PUBLIC_URL;
+                            const key = url.replace(baseUrl + '/', '');
+                            await deleteObjectFromR2(key);
+                        } else if (url.includes('supabase.co/storage')) {
+                            // Apaga do Supabase Storage
+                            const match = url.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)$/);
+                            if (match) {
+                                await supabase.storage.from(match[1]).remove([match[2]]);
+                            }
+                        }
+                    } catch (imgErr) {
+                        console.warn('Erro ao apagar imagem:', url, imgErr);
+                    }
+                }
+            }
+
+            // 3. Deletar o imóvel do banco
             const { error } = await supabase
                 .from('properties')
                 .delete()
@@ -130,7 +166,7 @@ export default function ImoveisDesabilitadosPage() {
 
             if (error) throw error;
 
-            showToast('Imóvel excluído permanentemente com sucesso!', 'success');
+            showToast('Imóvel e imagens excluídos permanentemente!', 'success');
             setProperties(prev => prev.filter(p => p.id !== id));
             setDeleteConfirmId(null);
         } catch (error: any) {

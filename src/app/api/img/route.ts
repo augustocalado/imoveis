@@ -11,6 +11,8 @@ const ALLOWED_HOSTS = new Set([
     's2-g1.glbimg.com',
     'i.s3.glbimg.com',
     's2-valor-investe.glbimg.com',
+    // Cloudflare R2 Storage
+    'pub-542b228b1ebb449cacc05a8382e11115.r2.dev',
 ]);
 
 export async function GET(req: NextRequest) {
