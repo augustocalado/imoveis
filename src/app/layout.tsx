@@ -65,6 +65,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 
 const FloatingWhatsApp = dynamic(() => import("@/components/FloatingWhatsApp"));
 const LGPDConsent = dynamic(() => import("@/components/LGPDConsent"));
+const InitialSearchModal = dynamic(() => import("@/components/InitialSearchModal"));
 
 export default function RootLayout({
     children,
@@ -81,6 +82,7 @@ export default function RootLayout({
                 </div>
                 <FloatingWhatsApp />
                 <LGPDConsent />
+                <InitialSearchModal />
             </body>
         </html>
     );
