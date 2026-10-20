@@ -22,7 +22,7 @@ const DEFAULT_CONFIG: PopupSearchConfig = {
 const AVAILABLE_PAGES = [
     { path: '/', label: 'Página Inicial (Home)' },
     { path: '/catalogo', label: 'Catálogo de Compras (/catalogo)' },
-    { path: '/imoveis', label: 'Todos os Imóveis / Aluguel (/imoveis)' },
+    { path: '/imoveis', label: 'Todos os Imóveis (/imoveis)' },
     { path: '/lancamentos', label: 'Lançamentos (/lancamentos)' },
     { path: '/bairros', label: 'Guia de Bairros (/bairros)' },
     { path: '/sobre-nos', label: 'Sobre Nós (/sobre-nos)' },

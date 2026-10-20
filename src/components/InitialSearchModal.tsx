@@ -39,7 +39,6 @@ export default function InitialSearchModal() {
     const [isLoaded, setIsLoaded] = useState(false);
 
     // Form state
-    const [purpose, setPurpose] = useState<'comprar' | 'alugar'>('comprar');
     const [reference, setReference] = useState('');
     const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
     const [category, setCategory] = useState<string[]>([]);
@@ -210,9 +209,6 @@ export default function InitialSearchModal() {
         e.preventDefault();
         const params = new URLSearchParams();
 
-        if (purpose === 'alugar') {
-            params.set('type', 'aluguel');
-        }
         if (selectedNeighborhoods.length > 0) {
             params.set('neighborhood', selectedNeighborhoods.join(','));
         }
@@ -229,7 +225,7 @@ export default function InitialSearchModal() {
             params.set('rooms', rooms.join(','));
         }
 
-        const targetPath = purpose === 'alugar' ? '/imoveis' : (pathname === '/catalogo' ? '/catalogo' : '/imoveis');
+        const targetPath = pathname === '/catalogo' ? '/catalogo' : '/imoveis';
         const queryStr = params.toString();
         router.push(queryStr ? `${targetPath}?${queryStr}` : targetPath);
         setIsOpen(false);
@@ -276,36 +272,6 @@ export default function InitialSearchModal() {
                         <p className="text-slate-500 text-sm sm:text-base font-medium mt-2 leading-relaxed">
                             {config.subtitle || 'Preencha os campos abaixo para encontrarmos a melhor oportunidade para você.'}
                         </p>
-                    </div>
-
-                    {/* Purpose Tabs (Comprar / Alugar) */}
-                    <div className="flex justify-center mb-8">
-                        <div className="inline-flex p-1.5 bg-slate-100 rounded-2xl border border-slate-200 gap-2">
-                            <button
-                                type="button"
-                                onClick={() => setPurpose('comprar')}
-                                className={clsx(
-                                    'px-6 sm:px-8 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all',
-                                    purpose === 'comprar'
-                                        ? 'bg-primary-900 text-white shadow-lg'
-                                        : 'text-slate-600 hover:text-primary-900'
-                                )}
-                            >
-                                Comprar
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setPurpose('alugar')}
-                                className={clsx(
-                                    'px-6 sm:px-8 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all',
-                                    purpose === 'alugar'
-                                        ? 'bg-primary-900 text-white shadow-lg'
-                                        : 'text-slate-600 hover:text-primary-900'
-                                )}
-                            >
-                                Alugar
-                            </button>
-                        </div>
                     </div>
 
                     {/* Search Form */}
