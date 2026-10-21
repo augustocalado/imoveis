@@ -27,9 +27,21 @@ interface GlobalSearchProps {
     onClose?: () => void;
     theme?: 'dark' | 'light';
     variant?: 'card' | 'bar';
+    onFilterChange?: (filters: {
+        ref?: string;
+        neighborhoods?: string[];
+        category?: string[];
+        rooms?: string[];
+        maxPrice?: string;
+        parking?: string[];
+        elevator?: 'todos' | 'sim' | 'nao';
+        furnished?: 'todos' | 'sim' | 'semi' | 'nao';
+        seaView?: string[];
+    }) => void;
+    onResetFilters?: () => void;
 }
 
-export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' }: GlobalSearchProps) {
+export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar', onFilterChange, onResetFilters }: GlobalSearchProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -148,13 +160,30 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        const maxPrice = selectedPrices.length > 0 ? Math.max(...selectedPrices.map(Number)).toString() : '';
+
+        if (onFilterChange) {
+            onFilterChange({
+                ref: reference,
+                neighborhoods: selectedNeighborhoods,
+                category,
+                rooms,
+                maxPrice,
+                parking,
+                elevator,
+                furnished,
+                seaView
+            });
+            if (onClose) onClose();
+            return;
+        }
+
         const params = new URLSearchParams();
         if (reference) params.set('ref', reference);
         if (selectedNeighborhoods.length > 0) params.set('neighborhood', selectedNeighborhoods.join(','));
         if (category.length > 0) params.set('cat', category.join(','));
         if (rooms.length > 0) params.set('rooms', rooms.join(','));
-        if (selectedPrices.length > 0) {
-            const maxPrice = Math.max(...selectedPrices.map(Number)).toString();
+        if (maxPrice) {
             params.set('maxPrice', maxPrice);
         }
         if (parking.length > 0) params.set('parking', parking.join(','));
@@ -166,6 +195,44 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
         router.push(`${targetPath}?${params.toString()}`);
         if (onClose) onClose();
     };
+
+    const handleClearFilters = () => {
+        setReference('');
+        setSelectedNeighborhoods([]);
+        setCategory([]);
+        setRooms([]);
+        setSelectedPrices([]);
+        setParking([]);
+        setElevator('todos');
+        setFurnished('todos');
+        setSeaView([]);
+        if (onFilterChange) {
+            onFilterChange({
+                ref: '',
+                neighborhoods: [],
+                category: [],
+                rooms: [],
+                maxPrice: '',
+                parking: [],
+                elevator: 'todos',
+                furnished: 'todos',
+                seaView: []
+            });
+        }
+        if (onResetFilters) onResetFilters();
+    };
+
+    const hasAnyFilter = Boolean(
+        reference ||
+        selectedNeighborhoods.length > 0 ||
+        category.length > 0 ||
+        rooms.length > 0 ||
+        selectedPrices.length > 0 ||
+        parking.length > 0 ||
+        elevator !== 'todos' ||
+        furnished !== 'todos' ||
+        seaView.length > 0
+    );
 
     const toggle = (setter: React.Dispatch<React.SetStateAction<string[]>>, value: string) => {
         setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
@@ -834,6 +901,23 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                         </>
                     )}
                 </div>
+
+                {/* Botão Limpar Filtros quando houver filtros ativos */}
+                {hasAnyFilter && (
+                    <button
+                        type="button"
+                        onClick={handleClearFilters}
+                        className={clsx(
+                            "px-4 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all flex items-center gap-1.5 cursor-pointer border select-none",
+                            isLight 
+                                ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100" 
+                                : "bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/20"
+                        )}
+                    >
+                        <X className="h-3.5 w-3.5" />
+                        <span>Limpar</span>
+                    </button>
+                )}
             </div>
         </form>
     );

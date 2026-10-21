@@ -28,6 +28,7 @@ import PopupConfigSection from '@/components/admin/PopupConfigSection';
 import Toast, { ToastType } from '@/components/Toast';
 import VisitsManagement from '@/components/admin/VisitsManagement';
 import AdminSearchBar from '@/components/admin/AdminSearchBar';
+import GlobalSearch from '@/components/GlobalSearch';
 import { normalizeNeighborhoodList, getRawNeighborhoodVariants } from '@/utils/neighborhood';
 
 type Tab = 'overview' | 'imoveis' | 'blog' | 'crm' | 'financeiro' | 'agenda' | 'documentos' | 'parceiros' | 'config' | 'marketing' | 'integracao' | 'smart-leads' | 'perfil';
@@ -132,7 +133,9 @@ function AdminDashboardContent() {
         setToast({ message, type });
     };
 
-    const fetchProperties = async (search?: string, filters?: { neighborhoods?: string[], category?: string, maxPrice?: string, ref?: string, rooms?: string }) => {
+    const [adminFilters, setAdminFilters] = useState<any>({});
+
+    const fetchProperties = async (search?: string, filters?: any) => {
         try {
             let query = supabase
                 .from('properties')
@@ -140,41 +143,107 @@ function AdminDashboardContent() {
                 .in('status', ['disponivel', 'disponível', 'Disponivel', 'Disponível', 'DISPONIVEL', 'DISPONÍVEL'])
                 .order('created_at', { ascending: false });
 
-            const f = filters || { neighborhoods: selectedNeighborhoods, category: filterCategory, maxPrice: filterMaxPrice, ref: filterRef, rooms: filterRooms };
+            const f = filters !== undefined ? filters : adminFilters;
 
             if (search) {
                 const s = search.trim();
                 query = query.or(`title.ilike.%${s}%,reference_id.ilike.%${s}%,neighborhood.ilike.%${s}%,category.ilike.%${s}%,city.ilike.%${s}%,address.ilike.%${s}%,type.ilike.%${s}%,rooms::text.ilike.%${s}%`);
             }
 
-            if (f.ref) {
-                query = query.ilike('reference_id', `%${f.ref.trim()}%`);
-            }
-
-            if (f.neighborhoods && f.neighborhoods.length > 0) {
-                const variants = getRawNeighborhoodVariants(f.neighborhoods, rawNeighborhoodsMap);
-                query = query.in('neighborhood', variants);
-            }
-
-            if (f.category) {
-                query = query.eq('category', f.category);
-            }
-
-            if (f.maxPrice) {
-                query = query.lte('price', parseFloat(f.maxPrice));
-            }
-
-            if (f.rooms) {
-                const minRooms = parseInt(f.rooms);
-                if (minRooms >= 4) {
-                    query = query.gte('rooms', minRooms);
-                } else {
-                    query = query.eq('rooms', minRooms);
+            if (f?.ref) {
+                const cleanRef = f.ref.trim().toUpperCase();
+                const searchTerms = [
+                    `reference_id.ilike.%${cleanRef}%`,
+                    `title.ilike.%${cleanRef}%`
+                ];
+                if (/^\d+$/.test(cleanRef)) {
+                    searchTerms.push(`reference_id.ilike.%KF%${cleanRef}%`);
                 }
-            }
+                query = query.or(searchTerms.join(','));
+            } else if (f) {
+                if (f.neighborhoods && f.neighborhoods.length > 0) {
+                    const variants = getRawNeighborhoodVariants(f.neighborhoods, rawNeighborhoodsMap);
+                    query = query.in('neighborhood', variants);
+                }
 
-            if (!search && !f.ref && (!f.neighborhoods || f.neighborhoods.length === 0) && !f.category && !f.maxPrice && !f.rooms) {
-                query = query.limit(50);
+                if (f.category) {
+                    if (Array.isArray(f.category) && f.category.length > 0) {
+                        if (f.category.length === 1) query = query.eq('category', f.category[0]);
+                        else query = query.in('category', f.category);
+                    } else if (typeof f.category === 'string' && f.category) {
+                        query = query.eq('category', f.category);
+                    }
+                }
+
+                if (f.maxPrice) {
+                    query = query.lte('price', parseFloat(f.maxPrice));
+                }
+
+                if (f.rooms) {
+                    const roomList = Array.isArray(f.rooms) ? f.rooms.map((r: any) => parseInt(r)) : [parseInt(f.rooms)];
+                    const has4Plus = roomList.includes(4);
+                    const exactRooms = roomList.filter((r: any) => r < 4);
+
+                    if (has4Plus && exactRooms.length > 0) {
+                        const conditions = [...exactRooms.map((r: any) => `rooms.eq.${r}`), 'rooms.gte.4'].join(',');
+                        query = query.or(conditions);
+                    } else if (has4Plus) {
+                        query = query.gte('rooms', 4);
+                    } else if (exactRooms.length === 1) {
+                        query = query.eq('rooms', exactRooms[0]);
+                    } else if (exactRooms.length > 1) {
+                        query = query.in('rooms', exactRooms);
+                    }
+                }
+
+                if (f.parking && f.parking.length > 0) {
+                    const pList = f.parking.map((p: any) => parseInt(p));
+                    const has5Plus = pList.includes(5);
+                    const exactP = pList.filter((p: any) => p < 5);
+
+                    if (has5Plus && exactP.length > 0) {
+                        const conditions = [...exactP.map((p: any) => `parking_spaces.eq.${p}`), 'parking_spaces.gte.5'].join(',');
+                        query = query.or(conditions);
+                    } else if (has5Plus) {
+                        query = query.gte('parking_spaces', 5);
+                    } else if (exactP.length === 1) {
+                        query = query.eq('parking_spaces', exactP[0]);
+                    } else if (exactP.length > 1) {
+                        query = query.in('parking_spaces', exactP);
+                    }
+                }
+
+                if (f.elevator === 'sim' || f.elevator === 'true') {
+                    query = query.or('features.cs.{"Elevador"},features.cs.{"Elevador Social"},features.cs.{"Elevador de Serviço"}');
+                } else if (f.elevator === 'nao' || f.elevator === 'false') {
+                    query = query.not('features', 'cs', '{"Elevador"}')
+                                 .not('features', 'cs', '{"Elevador Social"}')
+                                 .not('features', 'cs', '{"Elevador de Serviço"}');
+                }
+
+                if (f.furnished === 'sim') {
+                    query = query.or('features.cs.{"Mobiliado"},features.cs.{"Semi-Mobiliado"},features.cs.{"Móveis Planejados"},title.ilike.%mobiliado%,description.ilike.%mobiliado%');
+                } else if (f.furnished === 'semi') {
+                    query = query.or('features.cs.{"Semi-Mobiliado"},features.cs.{"Móveis Planejados"},title.ilike.%semi mobiliado%,title.ilike.%semi-mobiliado%,description.ilike.%semi mobiliado%');
+                } else if (f.furnished === 'nao') {
+                    query = query.not('features', 'cs', '{"Mobiliado"}');
+                }
+
+                if (f.seaView && f.seaView.length > 0) {
+                    const conditions: string[] = [];
+                    if (f.seaView.includes('beira_mar')) {
+                        conditions.push('features.cs.{"Frente mar"}', 'title.ilike.%beira mar%', 'title.ilike.%frente mar%', 'description.ilike.%beira mar%', 'description.ilike.%frente mar%');
+                    }
+                    if (f.seaView.includes('lateral_mar')) {
+                        conditions.push('title.ilike.%lateral mar%', 'title.ilike.%lateral ao mar%', 'description.ilike.%lateral mar%', 'description.ilike.%lateral ao mar%');
+                    }
+                    if (f.seaView.includes('vista_mar')) {
+                        conditions.push('features.cs.{"Vista para o mar"}', 'features.cs.{"Vista total para o mar"}', 'title.ilike.%vista mar%', 'title.ilike.%vista para o mar%', 'description.ilike.%vista para o mar%');
+                    }
+                    if (conditions.length > 0) {
+                        query = query.or(conditions.join(','));
+                    }
+                }
             }
 
             const { data } = await query;
@@ -703,150 +772,32 @@ function AdminDashboardContent() {
                                 </Link>
                             </div>
 
-                            {/* Filtros */}
-                            <div className="mb-8">
-                                {(selectedNeighborhoods.length > 0 || filterCategory || filterMaxPrice || filterRef || filterRooms) && (
-                                    <button
-                                        onClick={() => {
-                                            setSelectedNeighborhoods([]);
-                                            setFilterCategory('');
-                                            setFilterMaxPrice('');
-                                            setFilterRef('');
-                                            setFilterRooms('');
-                                        }}
-                                        className="text-[11px] font-black text-red-400 uppercase tracking-[0.2em] hover:text-red-500 transition-colors mb-4 block"
-                                    >
-                                        Limpar filtros
-                                    </button>
-                                )}
-                                <div className="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm mb-8 space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-                                        {/* Referência */}
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Referência</label>
-                                            <div className="relative">
-                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Ref. do Imóvel"
-                                                    value={filterRef}
-                                                    onChange={(e) => setFilterRef(e.target.value)}
-                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-4 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all placeholder:text-slate-300"
-                                                />
-                                            </div>
+                            {/* Novo Sistema de Busca e Filtros de Imóveis */}
+                            <div className="mb-10">
+                                <div className="bg-white p-6 rounded-[36px] border border-slate-100 shadow-sm space-y-4">
+                                    <div className="flex items-center justify-between px-2">
+                                        <div className="flex items-center gap-2.5">
+                                            <span className="h-2.5 w-2.5 rounded-full bg-[#10b981] animate-pulse" />
+                                            <span className="text-[11px] font-black uppercase tracking-widest text-[#1B263B]">
+                                                Filtro Rápido e Avançado de Imóveis
+                                            </span>
                                         </div>
-
-                                        {/* Bairro */}
-                                        <div className="space-y-2 relative">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Bairro</label>
-                                            <div className="relative">
-                                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsBairroOpen(!isBairroOpen)}
-                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all text-left flex items-center justify-between"
-                                                >
-                                                    <span className={clsx("truncate", selectedNeighborhoods.length === 0 && "text-slate-400")}>
-                                                        {selectedNeighborhoods.length === 0 ? 'Todos os Bairros' : `${selectedNeighborhoods.length} selecionados`}
-                                                    </span>
-                                                    <ChevronDown className={clsx("h-4 w-4 text-slate-400 transition-transform", isBairroOpen && "rotate-180")} />
-                                                </button>
-                                                {isBairroOpen && (
-                                                    <>
-                                                        <div className="fixed inset-0 z-40" onClick={() => setIsBairroOpen(false)} />
-                                                        <div className="absolute top-full left-0 right-0 mt-2 border border-slate-100 bg-white rounded-2xl shadow-2xl z-50 max-h-56 overflow-y-auto p-3 space-y-1">
-                                                            {neighborhoods.map((n) => (
-                                                                <label key={n} className="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer hover:bg-slate-50 transition-all">
-                                                                    <div className={clsx(
-                                                                        "h-5 w-5 rounded-md border-2 flex items-center justify-center transition-all flex-shrink-0",
-                                                                        selectedNeighborhoods.includes(n) ? "bg-[#10b981] border-[#10b981]" : "border-slate-200"
-                                                                    )}>
-                                                                        {selectedNeighborhoods.includes(n) && <Check className="h-3 w-3 text-white" />}
-                                                                    </div>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        className="sr-only"
-                                                                        checked={selectedNeighborhoods.includes(n)}
-                                                                        onChange={() => setSelectedNeighborhoods(prev =>
-                                                                            prev.includes(n) ? prev.filter(item => item !== n) : [...prev, n]
-                                                                        )}
-                                                                    />
-                                                                    <span className="text-xs font-bold uppercase tracking-widest text-slate-600">{n}</span>
-                                                                </label>
-                                                            ))}
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Categoria */}
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Categoria</label>
-                                            <div className="relative">
-                                                <Home className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
-                                                <select
-                                                    value={filterCategory}
-                                                    onChange={(e) => setFilterCategory(e.target.value)}
-                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all appearance-none cursor-pointer text-slate-900"
-                                                >
-                                                    <option value="">Todas as Categorias</option>
-                                                    <option value="Apartamento">Apartamento</option>
-                                                    <option value="Cobertura">Cobertura</option>
-                                                    <option value="Casa">Casa</option>
-                                                    <option value="Casa de Condomínio">Casa de Condomínio</option>
-                                                    <option value="Sobrado">Sobrado</option>
-                                                    <option value="Sobrado de Condomínio">Sobrado de Condomínio</option>
-                                                    <option value="Kitnet">Kitnet</option>
-                                                    <option value="Terreno">Terreno</option>
-                                                    <option value="Comercial">Comercial</option>
-                                                </select>
-                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-                                            </div>
-                                        </div>
-
-                                        {/* Preço Máximo */}
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Até o valor</label>
-                                            <div className="relative">
-                                                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
-                                                <select
-                                                    value={filterMaxPrice}
-                                                    onChange={(e) => setFilterMaxPrice(e.target.value)}
-                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all appearance-none cursor-pointer text-slate-900"
-                                                >
-                                                    <option value="">Sem limite</option>
-                                                    <option value="100000">Até R$ 100 Mil</option>
-                                                    <option value="300000">Até R$ 300 Mil</option>
-                                                    <option value="500000">Até R$ 500 Mil</option>
-                                                    <option value="750000">Até R$ 750 Mil</option>
-                                                    <option value="1000000">Até R$ 1 Milhão</option>
-                                                    <option value="2000000">Até R$ 2 Milhões</option>
-                                                </select>
-                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-                                            </div>
-                                        </div>
-
-                                        {/* Dormitórios */}
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Dormitórios</label>
-                                            <div className="relative">
-                                                <Bed className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 z-10" />
-                                                <select
-                                                    value={filterRooms}
-                                                    onChange={(e) => setFilterRooms(e.target.value)}
-                                                    className="w-full bg-slate-50 border border-slate-100 pl-12 pr-10 py-4 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all appearance-none cursor-pointer text-slate-900"
-                                                >
-                                                    <option value="">Qualquer</option>
-                                                    <option value="1">1 Dormitório</option>
-                                                    <option value="2">2 Dormitórios</option>
-                                                    <option value="3">3 Dormitórios</option>
-                                                    <option value="4">4+ Dormitórios</option>
-                                                </select>
-                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-                                            </div>
-                                        </div>
+                                        <span className="text-xs font-bold text-slate-400">
+                                            {properties.length} imóveis encontrados
+                                        </span>
                                     </div>
+                                    <GlobalSearch 
+                                        theme="light" 
+                                        variant="bar" 
+                                        onFilterChange={(newFilters) => {
+                                            setAdminFilters(newFilters);
+                                            fetchProperties(searchTerm, newFilters);
+                                        }}
+                                        onResetFilters={() => {
+                                            setAdminFilters({});
+                                            fetchProperties(searchTerm, {});
+                                        }}
+                                    />
                                 </div>
                             </div>
 
