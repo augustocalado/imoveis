@@ -238,9 +238,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                             </p>
                         </div>
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/15 border border-accent/25 px-2.5 py-1 rounded-full">
-                        Filtro Completo
-                    </span>
+
                 </div>
 
                 {/* Grid de Campos (2 colunas em telas médias/desktop, 1 coluna em celular pequeno) */}
