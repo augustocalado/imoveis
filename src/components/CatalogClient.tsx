@@ -32,6 +32,10 @@ function CatalogResults() {
         const ref = searchParams.get('ref');
         const cat = searchParams.get('cat');
         const rooms = searchParams.get('rooms');
+        const parking = searchParams.get('parking');
+        const elevator = searchParams.get('elevator');
+        const furnished = searchParams.get('furnished');
+        const seaView = searchParams.get('sea_view');
 
         let query = supabase
             .from('properties')
@@ -89,6 +93,53 @@ function CatalogResults() {
                     query = query.eq('rooms', exactRooms[0]);
                 } else if (exactRooms.length > 1) {
                     query = query.in('rooms', exactRooms);
+                }
+            }
+
+            if (parking) {
+                const pList = parking.split(',').map(p => parseInt(p));
+                const has5Plus = pList.includes(5);
+                const exactP = pList.filter(p => p < 5);
+
+                if (has5Plus && exactP.length > 0) {
+                    const conditions = [
+                        ...exactP.map(p => `parking_spaces.eq.${p}`),
+                        'parking_spaces.gte.5'
+                    ].join(',');
+                    query = query.or(conditions);
+                } else if (has5Plus) {
+                    query = query.gte('parking_spaces', 5);
+                } else if (exactP.length === 1) {
+                    query = query.eq('parking_spaces', exactP[0]);
+                } else if (exactP.length > 1) {
+                    query = query.in('parking_spaces', exactP);
+                }
+            }
+
+            if (elevator === 'true' || elevator === 'sim') {
+                query = query.or('features.cs.{"Elevador"},features.cs.{"Elevador Social"},features.cs.{"Elevador de Serviço"},title.ilike.%elevador%,description.ilike.%elevador%');
+            }
+
+            if (furnished === 'sim') {
+                query = query.or('features.cs.{"Mobiliado"},features.cs.{"Semi-Mobiliado"},features.cs.{"Móveis Planejados"},title.ilike.%mobiliado%,description.ilike.%mobiliado%');
+            } else if (furnished === 'nao') {
+                query = query.not('features', 'cs', '{"Mobiliado"}');
+            }
+
+            if (seaView) {
+                const list = seaView.split(',');
+                const conditions: string[] = [];
+                if (list.includes('beira_mar')) {
+                    conditions.push('features.cs.{"Frente mar"}', 'title.ilike.%beira mar%', 'title.ilike.%frente mar%', 'description.ilike.%beira mar%', 'description.ilike.%frente mar%');
+                }
+                if (list.includes('lateral_mar')) {
+                    conditions.push('title.ilike.%lateral mar%', 'title.ilike.%lateral ao mar%', 'description.ilike.%lateral mar%', 'description.ilike.%lateral ao mar%');
+                }
+                if (list.includes('vista_mar')) {
+                    conditions.push('features.cs.{"Vista para o mar"}', 'features.cs.{"Vista total para o mar"}', 'title.ilike.%vista mar%', 'title.ilike.%vista para o mar%', 'description.ilike.%vista para o mar%');
+                }
+                if (conditions.length > 0) {
+                    query = query.or(conditions.join(','));
                 }
             }
         }

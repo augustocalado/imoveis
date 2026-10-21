@@ -76,63 +76,59 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                     <div className="absolute inset-0 bg-black/20" />
                 </div>
                 
-                <div className="max-w-7xl mx-auto px-4 w-full relative z-10">
-                    <div className="flex flex-col items-center text-center space-y-10 animate-in fade-in slide-in-from-bottom-12 duration-1000">
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-2.5 rounded-full font-bold text-[12px] tracking-[0.2em] shadow-2xl uppercase">
-                            <ShieldCheck className="h-4 w-4 text-accent" /> A melhor imobiliária de Praia Grande
-                        </div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full relative z-10 py-12 md:py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center animate-in fade-in slide-in-from-bottom-12 duration-1000">
                         
-                        <div className="space-y-6 max-w-5xl">
-                            <h1 
-                                className="font-black text-white leading-[0.95] tracking-tighter drop-shadow-2xl transition-all duration-700 text-[2.2rem] md:text-[3rem] lg:text-[4.5rem]"
-                            >
-                                {(heroSettings.title || 'Kátia e Flávio Imóveis').split('\n').map((line: string, i: number, arr: string[]) => (
-                                    <span key={i}>
-                                        {line}
-                                        {i < arr.length - 1 && <br className="hidden md:block" />}
-                                    </span>
-                                ))}
-                            </h1>
-                            <p className="text-white/80 text-xl md:text-2xl font-medium max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-                                {heroSettings.subtitle || ''}
-                            </p>
-
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row items-center gap-6 w-full max-w-4xl justify-center">
-                            <Link 
-                                href="/catalogo" 
-                                className="w-full md:w-auto bg-accent text-white px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-accent/20 group uppercase"
-                            >
-                                <Search className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                                Comprar
-                            </Link>
-
-                            <Link 
-                                href="/imoveis?type=aluguel" 
-                                className="w-full md:w-auto bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:bg-white/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 group uppercase"
-                            >
-                                <MapPin className="h-5 w-5 group-hover:bounce transition-transform" />
-                                Alugar
-                            </Link>
-
-                            <a 
-                                href="https://wa.me/5513997826694" 
-                                target="_blank"
-                                rel="noreferrer"
-                                className="w-full md:w-auto bg-[#25d366] text-white px-10 py-6 rounded-[24px] font-bold text-sm tracking-[0.2em] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-green-500/20 group uppercase"
-                            >
-                                <MessageCircle className="h-6 w-6 fill-current group-hover:rotate-12 transition-transform" />
-                                Atendimento WhatsApp
-                            </a>
-                        </div>
-
-                        {/* Global Search */}
-                        <div className="w-full max-w-5xl mt-2 relative z-50">
-                            <div className="bg-white/5 backdrop-blur-2xl p-4 border border-white/10 rounded-[40px] shadow-2xl">
-                                <GlobalSearch />
+                        {/* LADO ESQUERDO: Retângulo de Busca */}
+                        <div className="w-full lg:col-span-5 order-2 lg:order-1 relative z-40">
+                            <div className="bg-[#151D2A]/90 backdrop-blur-2xl p-6 sm:p-7 border border-white/20 rounded-[36px] shadow-2xl shadow-black/60">
+                                <GlobalSearch variant="card" />
                             </div>
                         </div>
+
+                        {/* LADO DIREITO: Textos do Banner e Ações */}
+                        <div className="w-full lg:col-span-7 order-1 lg:order-2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 lg:space-y-8">
+                            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2.5 rounded-full font-bold text-[11px] sm:text-[12px] tracking-[0.2em] shadow-2xl uppercase">
+                                <ShieldCheck className="h-4 w-4 text-accent" /> A melhor imobiliária de Praia Grande
+                            </div>
+                            
+                            <div className="space-y-4 max-w-2xl">
+                                <h1 
+                                    className="font-black text-white leading-[1] tracking-tighter drop-shadow-2xl transition-all duration-700 text-[2.2rem] sm:text-[3rem] lg:text-[4rem] xl:text-[4.5rem]"
+                                >
+                                    {(heroSettings.title || 'Kátia e Flávio Imóveis').split('\n').map((line: string, i: number, arr: string[]) => (
+                                        <span key={i}>
+                                            {line}
+                                            {i < arr.length - 1 && <br className="hidden sm:block" />}
+                                        </span>
+                                    ))}
+                                </h1>
+                                <p className="text-white/80 text-lg sm:text-xl lg:text-2xl font-medium leading-relaxed drop-shadow-lg">
+                                    {heroSettings.subtitle || ''}
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center lg:justify-start pt-2">
+                                <Link 
+                                    href="/catalogo" 
+                                    className="w-full sm:w-auto bg-accent text-white px-8 py-5 rounded-[22px] font-bold text-xs sm:text-sm tracking-[0.2em] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-accent/25 group uppercase"
+                                >
+                                    <Search className="w-4.5 h-4.5 group-hover:rotate-12 transition-transform" />
+                                    Comprar Imóvel
+                                </Link>
+
+                                <a 
+                                    href="https://wa.me/5513997826694" 
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="w-full sm:w-auto bg-[#25d366] text-white px-8 py-5 rounded-[22px] font-bold text-xs sm:text-sm tracking-[0.2em] hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-2xl shadow-green-500/25 group uppercase"
+                                >
+                                    <MessageCircle className="h-5 w-5 fill-current group-hover:rotate-12 transition-transform" />
+                                    Atendimento WhatsApp
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 
