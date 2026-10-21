@@ -194,53 +194,71 @@ function CatalogResults() {
 
     return (
         <main className="min-h-screen bg-slate-50">
-            {/* Hero Minimalist */}
-            <div className="bg-[#1B263B] text-white pt-40 pb-32 relative overflow-hidden">
+            {/* Hero Section com o Card de Busca no lado esquerdo */}
+            <div className="bg-[#1B263B] text-white pt-36 sm:pt-40 pb-20 sm:pb-24 relative overflow-hidden">
+                {/* Background glow effects */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2" />
-                <div className="max-w-7xl mx-auto px-6 relative z-10">
-                    <nav className="flex items-center gap-2 text-[10px] font-bold tracking-[0.3em] text-white/40 mb-8 uppercase">
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary-800/40 rounded-full blur-[130px] translate-y-1/2 -translate-x-1/2" />
+                
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                    <nav className="flex items-center gap-2 text-[10px] font-bold tracking-[0.3em] text-white/50 mb-8 uppercase">
                         <Link href="/" className="hover:text-accent transition-colors">Home</Link>
                         <span>/</span>
-                        <span className="text-accent">Nosso Catálogo</span>
+                        <span className="text-accent">Catálogo de Imóveis</span>
                     </nav>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-end">
-                        <div className="space-y-6">
-                            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] animate-in fade-in slide-in-from-bottom-8 duration-1000">
-                                {searchParams.toString() ? 'Resultados da' : 'Portfólio de'} <br /> 
-                                <span className="text-accent underline decoration-white/10">{searchParams.toString() ? 'Busca' : 'Imóveis'}</span>
-                            </h1>
-                            <p className="text-white/60 text-lg md:text-xl font-medium max-w-xl leading-relaxed">
-                                {searchParams.toString() 
-                                    ? 'Encontramos as melhores opções com base nos seus critérios de seleção.' 
-                                    : 'Curadoria exclusiva das melhores oportunidades na Praia Grande. Onde o luxo encontra o seu novo endereço.'}
-                            </p>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                        {/* LADO ESQUERDO: Retângulo Card de Busca */}
+                        <div className="w-full lg:col-span-5 order-2 lg:order-1 relative z-20">
+                            <div className="bg-[#151D2A]/95 backdrop-blur-2xl p-6 sm:p-7 border border-white/20 rounded-[36px] shadow-2xl shadow-black/60">
+                                <Suspense fallback={null}>
+                                    <GlobalSearch variant="card" />
+                                </Suspense>
+                            </div>
                         </div>
-                        
-                        <div className="flex flex-wrap gap-4 lg:justify-end">
-                            {['todos', 'venda', 'aluguel'].map((t) => (
-                                <button
-                                    key={t}
-                                    onClick={() => setFilter(t as any)}
-                                    className={clsx(
-                                        "px-8 py-4 rounded-2xl font-black text-[12px] uppercase tracking-[0.2em] transition-all border",
-                                        filter === t 
-                                            ? "bg-accent border-accent text-white shadow-2xl shadow-accent/20 scale-105" 
-                                            : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white"
-                                    )}
-                                >
-                                    {t === 'todos' ? 'Ver Tudo' : t === 'venda' ? 'Comprar' : 'Alugar'}
-                                </button>
-                            ))}
+
+                        {/* LADO DIREITO: Título, Descrição e Filtros Rápidos */}
+                        <div className="w-full lg:col-span-7 order-1 lg:order-2 space-y-6 lg:space-y-8 lg:pt-4">
+                            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2.5 rounded-full font-bold text-[11px] sm:text-[12px] tracking-[0.2em] shadow-xl uppercase">
+                                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                                Curadoria Exclusiva na Praia Grande
+                            </div>
+
+                            <div className="space-y-4">
+                                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.05] animate-in fade-in duration-700">
+                                    {searchParams.toString() ? 'Resultados da ' : 'Portfólio de '}
+                                    <br className="hidden sm:inline" />
+                                    <span className="text-accent underline decoration-white/20">
+                                        {searchParams.toString() ? 'Busca' : 'Imóveis'}
+                                    </span>
+                                </h1>
+                                <p className="text-white/70 text-base sm:text-lg lg:text-xl font-medium max-w-xl leading-relaxed">
+                                    {searchParams.toString() 
+                                        ? 'Encontramos as melhores oportunidades alinhadas com as suas preferências.' 
+                                        : 'Descubra os melhores imóveis selecionados a dedo em Praia Grande. Onde o conforto e sofisticação encontram o seu novo endereço.'}
+                                </p>
+                            </div>
+
+                            {/* Botões de Filtro Rápido */}
+                            <div className="flex flex-wrap gap-3 pt-2">
+                                {['todos', 'venda', 'aluguel'].map((t) => (
+                                    <button
+                                        key={t}
+                                        type="button"
+                                        onClick={() => setFilter(t as any)}
+                                        className={clsx(
+                                            "px-7 py-3.5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-all border",
+                                            filter === t 
+                                                ? "bg-accent border-accent text-white shadow-xl shadow-accent/25 scale-105" 
+                                                : "bg-white/10 border-white/15 text-white/80 hover:bg-white/20 hover:text-white"
+                                        )}
+                                    >
+                                        {t === 'todos' ? 'Ver Tudo' : t === 'venda' ? 'Comprar' : 'Alugar'}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            {/* Quick Search */}
-            <div className="max-w-4xl mx-auto -mt-10 px-6 relative z-20">
-                <div className="bg-white p-4 rounded-[40px] shadow-2xl border border-slate-100">
-                    <GlobalSearch theme="light" />
                 </div>
             </div>
 

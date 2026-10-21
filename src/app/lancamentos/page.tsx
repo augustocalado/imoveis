@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import GlobalSearch from '@/components/GlobalSearch';
 import { MapPin, ArrowRight, Home, Loader2, Maximize2, Bed, Bath, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
@@ -31,25 +32,54 @@ export default function LancamentosPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-slate-50">
             <Navbar />
 
-            <main className="pt-32 pb-40">
-                <div className="max-w-7xl mx-auto px-6">
-                    <nav className="flex items-center gap-2 text-[10px] font-bold tracking-[0.3em] text-slate-300 mb-8 uppercase">
+            {/* Hero Section com o Card de Busca no lado esquerdo */}
+            <div className="bg-[#1B263B] text-white pt-36 sm:pt-40 pb-20 sm:pb-24 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary-800/40 rounded-full blur-[130px] translate-y-1/2 -translate-x-1/2" />
+                
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                    <nav className="flex items-center gap-2 text-[10px] font-bold tracking-[0.3em] text-white/50 mb-8 uppercase">
                         <Link href="/" className="hover:text-accent transition-colors">Home</Link>
                         <span>/</span>
                         <span className="text-accent">Lançamentos Exclusivos</span>
                     </nav>
 
-                    <header className="max-w-4xl space-y-6 mb-24">
-                        <h1 className="text-6xl md:text-8xl font-black text-[#1B263B] tracking-tighter leading-[0.9]">
-                            Futuro e <br /> <span className="text-accent">Exclusividade</span>
-                        </h1>
-                        <p className="text-slate-400 font-bold text-sm md:text-lg max-w-2xl tracking-wide uppercase">
-                            Antecipe-se às tendências com as melhores oportunidades em empreendimentos na planta e obras avançadas na Praia Grande.
-                        </p>
-                    </header>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                        {/* LADO ESQUERDO: Retângulo Card de Busca */}
+                        <div className="w-full lg:col-span-5 order-2 lg:order-1 relative z-20">
+                            <div className="bg-[#151D2A]/95 backdrop-blur-2xl p-6 sm:p-7 border border-white/20 rounded-[36px] shadow-2xl shadow-black/60">
+                                <Suspense fallback={null}>
+                                    <GlobalSearch variant="card" />
+                                </Suspense>
+                            </div>
+                        </div>
+
+                        {/* LADO DIREITO: Título e Descrição */}
+                        <div className="w-full lg:col-span-7 order-1 lg:order-2 space-y-6 lg:space-y-8 lg:pt-4">
+                            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-5 py-2.5 rounded-full font-bold text-[11px] sm:text-[12px] tracking-[0.2em] shadow-xl uppercase">
+                                <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                                Empreendimentos na Planta e Obras Avançadas
+                            </div>
+
+                            <div className="space-y-4">
+                                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-[1.05]">
+                                    Futuro &amp; <br className="hidden sm:inline" />
+                                    <span className="text-accent underline decoration-white/20">Exclusividade</span>
+                                </h1>
+                                <p className="text-white/70 text-base sm:text-lg lg:text-xl font-medium max-w-xl leading-relaxed">
+                                    Antecipe-se às tendências com as melhores oportunidades em empreendimentos na planta e obras avançadas na Praia Grande.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <main className="py-20">
+                <div className="max-w-7xl mx-auto px-6">
 
                     {isLoading ? (
                         <div className="flex flex-col items-center justify-center py-40 gap-8">
