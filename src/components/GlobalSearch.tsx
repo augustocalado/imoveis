@@ -41,7 +41,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
     const [category, setCategory] = useState<string[]>([]);
     const [rooms, setRooms] = useState<string[]>([]);
     const [parking, setParking] = useState<string[]>([]);
-    const [elevator, setElevator] = useState<boolean>(false);
+    const [elevator, setElevator] = useState<'todos' | 'sim' | 'nao'>('todos');
     const [furnished, setFurnished] = useState<'todos' | 'sim' | 'semi' | 'nao'>('todos');
     const [seaView, setSeaView] = useState<string[]>([]);
 
@@ -53,6 +53,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
     const [isParkingOpen, setIsParkingOpen] = useState(false);
     const [isSeaViewOpen, setIsSeaViewOpen] = useState(false);
     const [isFurnishedOpen, setIsFurnishedOpen] = useState(false);
+    const [isElevatorOpen, setIsElevatorOpen] = useState(false);
     const [showMoreFilters, setShowMoreFilters] = useState(false);
 
     const categoriesList = [
@@ -135,7 +136,8 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
         if (parkParam) setParking(parkParam.split(','));
 
         const elevParam = searchParams.get('elevator');
-        if (elevParam === 'sim' || elevParam === 'true') setElevator(true);
+        if (elevParam === 'sim' || elevParam === 'true') setElevator('sim');
+        else if (elevParam === 'nao' || elevParam === 'false') setElevator('nao');
 
         const furnParam = searchParams.get('furnished');
         if (furnParam === 'sim' || furnParam === 'semi' || furnParam === 'nao') setFurnished(furnParam as any);
@@ -156,7 +158,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
             params.set('maxPrice', maxPrice);
         }
         if (parking.length > 0) params.set('parking', parking.join(','));
-        if (elevator) params.set('elevator', 'sim');
+        if (elevator === 'sim' || elevator === 'nao') params.set('elevator', elevator);
         if (furnished === 'sim' || furnished === 'semi' || furnished === 'nao') params.set('furnished', furnished);
         if (seaView.length > 0) params.set('sea_view', seaView.join(','));
 
@@ -177,6 +179,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
         setIsParkingOpen(false);
         setIsSeaViewOpen(false);
         setIsFurnishedOpen(false);
+        setIsElevatorOpen(false);
     };
 
     const isLight = theme === 'light';
@@ -463,31 +466,50 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
 
                 </div>
 
-                {/* Filtro Elevador (Botão Toggle estilizado) */}
-                <div className="pt-1">
-                    <label 
-                        onClick={() => setElevator(!elevator)}
-                        className={clsx(
-                            "flex items-center justify-between p-3 rounded-2xl border cursor-pointer transition-all select-none",
-                            elevator 
-                                ? "bg-accent/20 border-accent text-white shadow-lg shadow-accent/10" 
-                                : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white"
-                        )}
+                {/* Filtro Elevador (Dropdown estilizado) */}
+                <div className="relative">
+                    <ArrowUpDown className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-accent pointer-events-none" />
+                    <button
+                        type="button"
+                        onClick={() => { closeAllDropdowns(); setIsElevatorOpen(!isElevatorOpen); }}
+                        className={btnBase}
                     >
-                        <div className="flex items-center gap-2.5">
-                            <ArrowUpDown className={clsx("h-4 w-4", elevator ? "text-accent" : "text-white/40")} />
-                            <span className="text-xs sm:text-sm font-bold">Com Elevador</span>
-                        </div>
-                        <div className={clsx(
-                            "h-5 w-9 rounded-full transition-colors relative flex items-center px-0.5",
-                            elevator ? "bg-accent" : "bg-white/20"
-                        )}>
-                            <div className={clsx(
-                                "h-4 w-4 rounded-full bg-white transition-transform duration-200 shadow-md",
-                                elevator ? "translate-x-4" : "translate-x-0"
-                            )} />
-                        </div>
-                    </label>
+                        <span className={clsx('truncate', elevator === 'todos' && 'text-white/40')}>
+                            {elevator === 'sim' ? 'Com Elevador' : elevator === 'nao' ? 'Sem Elevador' : 'Elevador?'}
+                        </span>
+                        <ChevronDown className={clsx('h-4 w-4 transition-transform flex-shrink-0 text-white/40', isElevatorOpen && 'rotate-180')} />
+                    </button>
+                    {isElevatorOpen && (
+                        <>
+                            <div className="fixed inset-0 z-[110]" onClick={() => setIsElevatorOpen(false)} />
+                            <div className={dropdownBase}>
+                                <button
+                                    type="button"
+                                    onClick={() => { setElevator('todos'); setIsElevatorOpen(false); }}
+                                    className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', elevator === 'todos' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
+                                >
+                                    <span>Tanto faz (Todos)</span>
+                                    {elevator === 'todos' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setElevator('nao'); setIsElevatorOpen(false); }}
+                                    className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', elevator === 'nao' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
+                                >
+                                    <span>Sem Elevador</span>
+                                    {elevator === 'nao' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setElevator('sim'); setIsElevatorOpen(false); }}
+                                    className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', elevator === 'sim' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
+                                >
+                                    <span>Com Elevador</span>
+                                    {elevator === 'sim' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Botão de Busca */}
@@ -762,23 +784,56 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                     )}
                 </div>
 
-                {/* Elevador (Pill Toggle) */}
-                <button
-                    type="button"
-                    onClick={() => setElevator(!elevator)}
-                    className={clsx(
-                        "px-4 py-3 rounded-2xl font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer border select-none",
-                        elevator 
-                            ? "bg-accent text-white border-accent shadow-md shadow-accent/20"
-                            : isLight 
-                                ? "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100" 
-                                : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white"
+                {/* Elevador Dropdown */}
+                <div className="relative min-w-[140px] flex-1 sm:flex-initial">
+                    <button
+                        type="button"
+                        onClick={() => { closeAllDropdowns(); setIsElevatorOpen(!isElevatorOpen); }}
+                        className={clsx(
+                            btnBase,
+                            elevator !== 'todos' && (isLight ? 'border-accent bg-accent/5' : 'border-accent/40 bg-accent/10')
+                        )}
+                    >
+                        <div className="flex items-center gap-2 truncate">
+                            <ArrowUpDown className="h-4 w-4 text-accent" />
+                            <span className={clsx('truncate', elevator === 'todos' && (isLight ? 'text-slate-500' : 'text-white/50'))}>
+                                {elevator === 'sim' ? 'Com Elevador' : elevator === 'nao' ? 'Sem Elevador' : 'Elevador?'}
+                            </span>
+                        </div>
+                        <ChevronDown className={clsx('h-4 w-4 transition-transform flex-shrink-0', isElevatorOpen && 'rotate-180')} />
+                    </button>
+                    {isElevatorOpen && (
+                        <>
+                            <div className="fixed inset-0 z-[110]" onClick={() => setIsElevatorOpen(false)} />
+                            <div className={dropdownBase}>
+                                <button
+                                    type="button"
+                                    onClick={() => { setElevator('todos'); setIsElevatorOpen(false); }}
+                                    className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', elevator === 'todos' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
+                                >
+                                    <span>Tanto faz (Todos)</span>
+                                    {elevator === 'todos' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setElevator('nao'); setIsElevatorOpen(false); }}
+                                    className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', elevator === 'nao' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
+                                >
+                                    <span>Sem Elevador</span>
+                                    {elevator === 'nao' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setElevator('sim'); setIsElevatorOpen(false); }}
+                                    className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', elevator === 'sim' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
+                                >
+                                    <span>Com Elevador</span>
+                                    {elevator === 'sim' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                            </div>
+                        </>
                     )}
-                >
-                    <ArrowUpDown className="h-4 w-4" />
-                    <span>Elevador</span>
-                    {elevator && <Check className="h-3.5 w-3.5 ml-1" />}
-                </button>
+                </div>
             </div>
         </form>
     );

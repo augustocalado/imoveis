@@ -117,7 +117,11 @@ function CatalogResults() {
             }
 
             if (elevator === 'true' || elevator === 'sim') {
-                query = query.or('features.cs.{"Elevador"},features.cs.{"Elevador Social"},features.cs.{"Elevador de Serviço"},title.ilike.%elevador%,description.ilike.%elevador%');
+                query = query.or('features.cs.{"Elevador"},features.cs.{"Elevador Social"},features.cs.{"Elevador de Serviço"}');
+            } else if (elevator === 'false' || elevator === 'nao') {
+                query = query.not('features', 'cs', '{"Elevador"}')
+                             .not('features', 'cs', '{"Elevador Social"}')
+                             .not('features', 'cs', '{"Elevador de Serviço"}');
             }
 
             if (furnished === 'sim') {
