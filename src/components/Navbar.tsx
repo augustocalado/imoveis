@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { House, LayoutDashboard, LogOut, Phone, User, MessageCircle, Mail, Instagram, Facebook, Menu, Search, X, Youtube, Linkedin, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import NotificationBell from './NotificationBell';
 import GlobalSearch from './GlobalSearch';
@@ -261,7 +261,9 @@ export default function Navbar() {
                     )}
                 >
                     <div className="max-w-7xl mx-auto px-4">
-                        <GlobalSearch onClose={() => setIsSearchOpen(false)} />
+                        <Suspense fallback={null}>
+                            <GlobalSearch onClose={() => setIsSearchOpen(false)} />
+                        </Suspense>
                     </div>
                 </div>
 

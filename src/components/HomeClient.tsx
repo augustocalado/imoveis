@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, MapPin, Loader2, MessageCircle, Navigation, ChevronLeft, ChevronRight, CheckCircle2, MessageSquare, Star, ArrowRight, ArrowUpRight, X, ShieldCheck } from 'lucide-react';
@@ -82,7 +82,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                         {/* LADO ESQUERDO: Retângulo de Busca */}
                         <div className="w-full lg:col-span-5 order-2 lg:order-1 relative z-40">
                             <div className="bg-[#151D2A]/90 backdrop-blur-2xl p-6 sm:p-7 border border-white/20 rounded-[36px] shadow-2xl shadow-black/60">
-                                <GlobalSearch variant="card" />
+                                <Suspense fallback={null}>
+                                    <GlobalSearch variant="card" />
+                                </Suspense>
                             </div>
                         </div>
 
