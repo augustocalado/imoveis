@@ -5,6 +5,7 @@ import { TrendingUp, Coins, BarChart3, ArrowUpRight, CheckCircle2, Building, Shi
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import SearchBanner from '@/components/SearchBanner';
 
 export const metadata: Metadata = {
     title: 'Investimento Imobiliário em Praia Grande | Rentabilidade e Mercado',
@@ -173,6 +174,8 @@ export default function InvestimentoPilar() {
                     </div>
                 </div>
             </section>
+
+            <SearchBanner />
 
             <Footer />
         </main>

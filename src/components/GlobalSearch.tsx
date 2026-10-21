@@ -42,7 +42,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
     const [rooms, setRooms] = useState<string[]>([]);
     const [parking, setParking] = useState<string[]>([]);
     const [elevator, setElevator] = useState<boolean>(false);
-    const [furnished, setFurnished] = useState<'todos' | 'sim' | 'nao'>('todos');
+    const [furnished, setFurnished] = useState<'todos' | 'sim' | 'semi' | 'nao'>('todos');
     const [seaView, setSeaView] = useState<string[]>([]);
 
     // Dropdown states
@@ -138,7 +138,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
         if (elevParam === 'sim' || elevParam === 'true') setElevator(true);
 
         const furnParam = searchParams.get('furnished');
-        if (furnParam === 'sim' || furnParam === 'nao') setFurnished(furnParam);
+        if (furnParam === 'sim' || furnParam === 'semi' || furnParam === 'nao') setFurnished(furnParam as any);
 
         const seaParam = searchParams.get('sea_view');
         if (seaParam) setSeaView(seaParam.split(','));
@@ -157,7 +157,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
         }
         if (parking.length > 0) params.set('parking', parking.join(','));
         if (elevator) params.set('elevator', 'sim');
-        if (furnished === 'sim' || furnished === 'nao') params.set('furnished', furnished);
+        if (furnished === 'sim' || furnished === 'semi' || furnished === 'nao') params.set('furnished', furnished);
         if (seaView.length > 0) params.set('sea_view', seaView.join(','));
 
         const targetPath = pathname === '/catalogo' ? '/catalogo' : '/imoveis';
@@ -416,7 +416,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                             className={btnBase}
                         >
                             <span className={clsx('truncate', furnished === 'todos' && 'text-white/40')}>
-                                {furnished === 'sim' ? 'Mobiliado: Sim' : furnished === 'nao' ? 'Mobiliado: Não' : 'Mobiliado?'}
+                                {furnished === 'sim' ? 'Mobiliado: Sim' : furnished === 'semi' ? 'Semi Mobiliado' : furnished === 'nao' ? 'Mobiliado: Não' : 'Mobiliado?'}
                             </span>
                             <ChevronDown className={clsx('h-4 w-4 transition-transform flex-shrink-0 text-white/40', isFurnishedOpen && 'rotate-180')} />
                         </button>
@@ -434,19 +434,27 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => { setFurnished('sim'); setIsFurnishedOpen(false); }}
-                                        className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'sim' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
-                                    >
-                                        <span>Sim, Mobiliado</span>
-                                        {furnished === 'sim' && <Check className="h-4 w-4 text-accent" />}
-                                    </button>
-                                    <button
-                                        type="button"
                                         onClick={() => { setFurnished('nao'); setIsFurnishedOpen(false); }}
                                         className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'nao' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
                                     >
                                         <span>Sem Mobília</span>
                                         {furnished === 'nao' && <Check className="h-4 w-4 text-accent" />}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setFurnished('semi'); setIsFurnishedOpen(false); }}
+                                        className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'semi' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
+                                    >
+                                        <span>Semi Mobiliado</span>
+                                        {furnished === 'semi' && <Check className="h-4 w-4 text-accent" />}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setFurnished('sim'); setIsFurnishedOpen(false); }}
+                                        className={clsx('w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'sim' ? 'bg-white/10 text-white font-bold' : 'text-white/60 hover:bg-white/5')}
+                                    >
+                                        <span>Mobiliado</span>
+                                        {furnished === 'sim' && <Check className="h-4 w-4 text-accent" />}
                                     </button>
                                 </div>
                             </>
@@ -708,7 +716,7 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                         <div className="flex items-center gap-2 truncate">
                             <Armchair className="h-4 w-4 text-accent" />
                             <span className={clsx('truncate', furnished === 'todos' && (isLight ? 'text-slate-500' : 'text-white/50'))}>
-                                {furnished === 'sim' ? 'Mobiliado' : furnished === 'nao' ? 'Sem Mobília' : 'Mobiliado?'}
+                                {furnished === 'sim' ? 'Mobiliado' : furnished === 'semi' ? 'Semi Mob.' : furnished === 'nao' ? 'Sem Mobília' : 'Mobiliado?'}
                             </span>
                         </div>
                         <ChevronDown className={clsx('h-4 w-4 transition-transform flex-shrink-0', isFurnishedOpen && 'rotate-180')} />
@@ -727,19 +735,27 @@ export default function GlobalSearch({ onClose, theme = 'dark', variant = 'bar' 
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => { setFurnished('sim'); setIsFurnishedOpen(false); }}
-                                    className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'sim' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
-                                >
-                                    <span>Mobiliado</span>
-                                    {furnished === 'sim' && <Check className="h-4 w-4 text-accent" />}
-                                </button>
-                                <button
-                                    type="button"
                                     onClick={() => { setFurnished('nao'); setIsFurnishedOpen(false); }}
                                     className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'nao' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
                                 >
                                     <span>Sem Mobília</span>
                                     {furnished === 'nao' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setFurnished('semi'); setIsFurnishedOpen(false); }}
+                                    className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'semi' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
+                                >
+                                    <span>Semi Mobiliado</span>
+                                    {furnished === 'semi' && <Check className="h-4 w-4 text-accent" />}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setFurnished('sim'); setIsFurnishedOpen(false); }}
+                                    className={clsx('w-full text-left p-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center justify-between', furnished === 'sim' ? (isLight ? 'bg-slate-100 font-bold' : 'bg-white/10 text-white font-bold') : (isLight ? 'text-slate-600 hover:bg-slate-50' : 'text-white/60 hover:bg-white/5'))}
+                                >
+                                    <span>Mobiliado</span>
+                                    {furnished === 'sim' && <Check className="h-4 w-4 text-accent" />}
                                 </button>
                             </div>
                         </>
