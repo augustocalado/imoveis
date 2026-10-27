@@ -1319,12 +1319,26 @@ export default function EditarImovel() {
                                             />
                                         </div>
 
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 ml-2">
+                                                <Maximize2 className="h-3.5 w-3.5 text-slate-400" />
+                                                <label className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Área Total (m²)</label>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Ex: 120"
+                                                className="w-full bg-slate-50 border border-slate-100 p-5 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-[#10b981]/20 transition-all"
+                                                value={formData.area_total}
+                                                onChange={e => setFormData({ ...formData, area_total: e.target.value })}
+                                            />
+                                        </div>
+
                                         {specs.map((spec) => {
                                             const IconComp = ICON_MAP[spec.icon] || Info;
                                             const isNumeric = ['rooms', 'bathrooms', 'parking_spaces', 'area', 'area_total', 'suites'].includes(spec.field);
                                             
                                             // Pula suítes e campos que movemos para a seção 1 para evitar duplicidade
-                                            if (['suites', 'rooms', 'bathrooms', 'parking_spaces', 'area'].includes(spec.field)) return null;
+                                            if (['suites', 'rooms', 'bathrooms', 'parking_spaces', 'area', 'area_total'].includes(spec.field)) return null;
 
                                             return (
                                                 <div key={spec.id} className="space-y-4">
