@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Anek_Latin } from "next/font/google";
 import dynamic from "next/dynamic";
 import "./globals.css";
@@ -66,6 +66,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 const FloatingWhatsApp = dynamic(() => import("@/components/FloatingWhatsApp"));
 const LGPDConsent = dynamic(() => import("@/components/LGPDConsent"));
 const InitialSearchModal = dynamic(() => import("@/components/InitialSearchModal"));
+const GoogleAdsPixel = dynamic(() => import("@/components/GoogleAdsPixel"));
 
 export default function RootLayout({
     children,
@@ -83,6 +84,7 @@ export default function RootLayout({
                 <FloatingWhatsApp />
                 <LGPDConsent />
                 <InitialSearchModal />
+                <GoogleAdsPixel />
             </body>
         </html>
     );

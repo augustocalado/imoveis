@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, Suspense } from 'react';
 import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
@@ -25,6 +25,7 @@ import SmartLeadsSection from '@/components/admin/SmartLeadsSection';
 import ChatAIConfigSection from '@/components/admin/ChatAIConfigSection';
 import SystemToolsSection from '@/components/admin/SystemToolsSection';
 import PopupConfigSection from '@/components/admin/PopupConfigSection';
+import PixelConfigSection from '@/components/admin/PixelConfigSection';
 import Toast, { ToastType } from '@/components/Toast';
 import VisitsManagement from '@/components/admin/VisitsManagement';
 import AdminSearchBar from '@/components/admin/AdminSearchBar';
@@ -32,7 +33,7 @@ import GlobalSearch from '@/components/GlobalSearch';
 import { normalizeNeighborhoodList, getRawNeighborhoodVariants } from '@/utils/neighborhood';
 
 type Tab = 'overview' | 'imoveis' | 'blog' | 'crm' | 'financeiro' | 'agenda' | 'documentos' | 'parceiros' | 'config' | 'marketing' | 'integracao' | 'smart-leads' | 'perfil';
-type ConfigTab = 'visual' | 'contatos' | 'home' | 'sobre' | 'master' | 'sede' | 'bairros' | 'chat_ai' | 'features' | 'specs' | 'popup';
+type ConfigTab = 'visual' | 'contatos' | 'home' | 'sobre' | 'master' | 'sede' | 'bairros' | 'chat_ai' | 'features' | 'specs' | 'popup' | 'pixels';
 
 const ICON_MAP: Record<string, any> = {
     Bed, Bath, Maximize2, Car, Star, Navigation, MapPin, Zap, Info, Check, X, Building2, Home, Search, LayoutDashboard, Flag, Globe, Phone, Mail, MessageSquare, Plus, Edit2, Trash2, ChevronRight, ArrowUpRight, Filter, List, Calendar, DollarSign, FileText, Download, UserPlus, Handshake, Briefcase, TrendingDown, TrendingUp, MoreHorizontal, User, Palette, Camera, CheckCircle2, ShieldCheck, PieChart, BarChart3, Rocket, Image: ImageIcon, Share2, Save, Layout, Newspaper, Link2, Upload, Menu, XCircle, Instagram, Facebook,
@@ -974,7 +975,8 @@ function AdminDashboardContent() {
                                     { id: 'master', label: 'Gestão de Acesso', icon: ShieldCheck },
                                     { id: 'sede', label: 'Sede e Mapas', icon: MapPin },
                                     { id: 'bairros', label: 'Cidades e Bairros', icon: MapPin },
-                                    { id: 'popup', label: 'Popup de Busca', icon: Search }
+                                    { id: 'popup', label: 'Popup de Busca', icon: Search },
+                                    { id: 'pixels', label: 'Pixel & Remarketing', icon: Target }
                                 ].map(st => (
                                     <button
                                         key={st.id}
@@ -993,6 +995,7 @@ function AdminDashboardContent() {
                             <div className="mt-8">
                                 {configTab === 'visual' && <ThemeConfigSection />}
                                 {configTab === 'popup' && <PopupConfigSection />}
+                                {configTab === 'pixels' && <PixelConfigSection />}
                                 {configTab === 'home' && (
                                     <div className="space-y-12">
                                         <HomeConfigSection />

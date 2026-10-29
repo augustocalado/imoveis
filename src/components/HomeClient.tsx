@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Search, MapPin, Loader2, MessageCircle, Navigation, ChevronLeft, ChevronRight, CheckCircle2, MessageSquare, Star, ArrowRight, ArrowUpRight, X, ShieldCheck } from 'lucide-react';
 import GlobalSearch from '@/components/GlobalSearch';
 import PropertyCard from '@/components/PropertyCard';
+import RecentlyViewedSection from '@/components/RecentlyViewedSection';
 import clsx from 'clsx';
 import Footer from '@/components/Footer';
 
@@ -290,6 +291,9 @@ export default function HomeClient({ initialData }: HomeClientProps) {
                     </div>
                 </div>
             </section>
+
+            {/* Vistos Recentemente (Remarketing) */}
+            <RecentlyViewedSection />
 
             {/* Authority Section */}
             <section className="py-20 md:py-32 bg-white">

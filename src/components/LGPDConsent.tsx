@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -21,6 +21,8 @@ export default function LGPDConsent() {
     const handleAccept = () => {
         localStorage.setItem('lgpd-consent-v1', 'accepted');
         setIsVisible(false);
+        // Notifica outros componentes (ex: GoogleAdsPixel) sobre o consentimento
+        window.dispatchEvent(new Event('lgpd-consent-accepted'));
     };
 
     if (!isVisible) return null;

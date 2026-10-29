@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -22,6 +22,7 @@ import {
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import { normalizeNeighborhoodList } from '@/utils/neighborhood';
+import { trackPropertySearch } from '@/hooks/useRecentlyViewed';
 
 interface GlobalSearchProps {
     onClose?: () => void;

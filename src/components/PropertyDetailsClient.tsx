@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -15,6 +15,8 @@ import {
     Sofa, Utensils, ChefHat, Laptop, Tv, Sun, Wind, ShieldCheck, Cctv, Bell, DoorOpen, Thermometer, Wifi, Flame, Table, Layout, Gem, Dumbbell, Bike, CarFront, ParkingCircle, Store, Building, Warehouse, Shirt, Cpu, AirVent, Fence, Trees, Flower, Component, ArrowUp, Shovel, Palmtree, BedDouble
 } from 'lucide-react';
 import clsx from 'clsx';
+import { trackPropertyView, trackLeadConversion } from '@/hooks/useRecentlyViewed';
+import RecentlyViewedSection from '@/components/RecentlyViewedSection';
 
 const ICON_MAP: Record<string, any> = {
     Bed, Bath, Maximize2, Car, Star, Navigation, Building2, Home, Zap, Check, Info, Shield, Layers, MessageSquare, Phone, FileText, User,
@@ -154,6 +156,9 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                 setSpecs(finalSpecs);
             }
             setIsLoading(false);
+
+            // Registra imóvel como visto recentemente (remarketing local)
+            if (currentProp) trackPropertyView(currentProp);
         };
 
         fetchUserDataAndRelated();
@@ -192,6 +197,8 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                     type: 'lead_received'
                 });
             setMessageSent(true);
+            // Rastreia converso no Google Ads
+            trackLeadConversion({ source: 'property_lead', propertyId: property.reference_id || property.id, propertyTitle: property.title, value: property.price || 1.0 });
             
             if (redirectAfterLead) {
                 const text = `Olá! Gostaria de mais informações sobre o imóvel: ${property.title} (Ref: ${property.reference_id})`;
@@ -638,6 +645,11 @@ export default function PropertyDetailsClient({ initialProperty, slug }: Propert
                         </div>
                     </section>
                 )}
+
+                {/* 8. VISTOS RECENTEMENTE (REMARKETING) */}
+                <div className="mt-20">
+                    <RecentlyViewedSection excludeId={property?.id} />
+                </div>
             </main>
 
             <Footer />
